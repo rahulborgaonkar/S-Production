@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>false</enableActivities>
+    <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <fields>
+        <fullName>Customer_City__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>City</label>
+        <length>40</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Company_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Company Name</label>
+        <length>255</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Country__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Country</label>
+        <length>80</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Org_ID__c</fullName>
+        <caseSensitive>true</caseSensitive>
+        <deprecated>false</deprecated>
+        <externalId>true</externalId>
+        <label>Org ID</label>
+        <length>18</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_State__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>State/Province/Region</label>
+        <length>80</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Street__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Street</label>
+        <length>255</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_ZIP_Postal_Code__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>ZIP/Postal Code</label>
+        <length>20</length>
+        <required>true</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Customer</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Customer_Company_Name__c</columns>
+        <columns>Customer_City__c</columns>
+        <columns>Customer_Country__c</columns>
+        <columns>Customer_Org_ID__c</columns>
+        <columns>Customer_State__c</columns>
+        <columns>Customer_Street__c</columns>
+        <columns>Customer_ZIP_Postal_Code__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>C-{00000}</displayFormat>
+        <label>Name</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Customers</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Country_2_letter_code</fullName>
+        <active>true</active>
+        <errorConditionFormula>NOT(REGEX(  Customer_Country__c  , &quot;[A-Z]{2}&quot;))</errorConditionFormula>
+        <errorDisplayField>Customer_Country__c</errorDisplayField>
+        <errorMessage>Invalid Country - Country cannot contain special characters or numbers, Country is a two letter code.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Invalid_OrgID</fullName>
+        <active>true</active>
+        <description>Invalid Org Id format</description>
+        <errorConditionFormula>OR(not(begins( Customer_Org_ID__c ,&quot;00D&quot;)),AND( LEN(Customer_Org_ID__c) &lt;&gt;15))</errorConditionFormula>
+        <errorDisplayField>Customer_Org_ID__c</errorDisplayField>
+        <errorMessage>Invalid Org ID - Org IDs begin with 00D and are 15 characters in length.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>OrgID_must_be_alphanumeric</fullName>
+        <active>true</active>
+        <errorConditionFormula>NOT(REGEX(Customer_Org_ID__c , &quot;[a-zA-Z0-9]+&quot;))</errorConditionFormula>
+        <errorDisplayField>Customer_Org_ID__c</errorDisplayField>
+        <errorMessage>Org ID cannot contain special characters.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Valid_Canada_State</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(
+Customer_Country__c = &apos;CA&apos; , 
+NOT(
+CONTAINS(&apos;AB:BC:MB:NB:NL:NS:NT:NU:ON:PE:QC:SK:YT&apos;,  Customer_State__c )  
+))</errorConditionFormula>
+        <errorDisplayField>Customer_State__c</errorDisplayField>
+        <errorMessage>Invalid State - State is not valid for country CA.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Valid_US_State</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(
+Customer_Country__c = &apos;US&apos; , 
+NOT(
+CONTAINS(&apos;AL:AK:AZ:AR:CA:CO:CT:DE:DC:FL:GA:HI:ID:IL:IN:IA:KS:KY:LA:ME:MD:MA:MI:MN:MS:MO:MT:NE:NV:NH:NJ:NM:NY:NC:ND:OH:OK:OR:PA:RI:SC:SD:TN:TX:UT:VT:VA:WA:WV:WI:WY:PR&apos;,  Customer_State__c )  
+))</errorConditionFormula>
+        <errorDisplayField>Customer_State__c</errorDisplayField>
+        <errorMessage>Invalid State - State is not valid for Country US.</errorMessage>
+    </validationRules>
+</CustomObject>

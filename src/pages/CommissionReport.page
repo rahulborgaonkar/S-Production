@@ -1,0 +1,301 @@
+<apex:page action="{!init}" controller="CommissionReportController" Title="Monthly Commission Report">
+
+<apex:form >
+<apex:outputpanel rendered="{!isAllowed}">
+	<apex:sectionHeader title="Monthly Commission Report"/>
+	<apex:pageMessages />
+    <apex:pageBlock >
+        <apex:pageblockbuttons >
+            <apex:commandbutton value="Run Report" action="{!runReport}"  />            
+        </apex:pageblockbuttons>
+    
+	    <apex:pageBlockSection columns="1" id="pgbs" >
+			<apex:selectList value="{!selUser}" size="1" Label="Select Sales Rep.">
+			    <apex:selectOptions value="{!lstUsers}"/>
+			</apex:selectList>
+			<apex:selectList value="{!selMonth}" size="1" Label="Select Month">
+			    <apex:selectOptions value="{!lstMonths}"/>
+			</apex:selectList>
+		</apex:pageBlockSection>
+		
+	</apex:pageBlock>
+	
+	<apex:outputpanel rendered="{!showResult}">
+			<br />
+		    <span style="font-size:22px;font-weight:bold">{!reportTitle}</span>
+		      
+		    <br />
+			
+			<br />
+		    <span style="font-size:18px;font-weight:bold">Commission Setup Values</span>
+		    <br />
+			<table cellpadding="2" width="40%" >
+				<tr>
+					<td style="font-size:15px;font-weight:bold;" width="50%">
+				        Role
+				    </td>
+				    <td width="50%" style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{!Role}">
+				        		
+				        	</apex:outputText>
+				    </td>
+				</tr>    
+			<apex:outputpanel rendered="{!Role=='Telesales Rep'}">
+				
+				<tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        Min Completed Demos Required
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,##0.00}">
+				        		<apex:param value="{!minDemos}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+		    	
+		    	<tr>
+				    <td style="font-size:15px;font-weight:bold;" >
+				        Commission Per Demo £ (after min)
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,£###,###,##0.00}">
+				        		<apex:param value="{!DemosCommRate}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+			    
+			</apex:outputpanel>	
+			<apex:outputpanel rendered="{!Role!='Telesales Rep'}">
+				<tr>
+					<td style="font-size:15px;font-weight:bold;">
+				        Team
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{!Team}">
+				        		
+				        	</apex:outputText>
+				    </td>
+				</tr>    
+				    
+			    <tr>
+			    	
+				    <td style="font-size:15px;font-weight:bold;">
+				        Min. Licenses
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,###,###,##0.00}">
+				        		<apex:param value="{!MinSeats}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+			    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        Commission Per License
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,£###,###,##0.00}">
+				        		<apex:param value="{!PaidSeatsCommRate}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+		    	
+		    	<tr>
+				    <td style="font-size:15px;font-weight:bold;" >
+				        OTE (target)
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,##0.00}">
+				        		<apex:param value="{!OTETarget}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+			    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;" >
+				        Hardware Commission
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,##0.00%}">
+				        		<apex:param value="{!HardwareCommRate/100}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+			</apex:outputpanel>
+		    </table>
+		    
+		    <br />
+		    <span style="font-size:18px;font-weight:bold">Commission Calculated</span>
+		    <br />
+			<table cellpadding="2" width="60%" >
+			<apex:outputpanel rendered="{!Role=='Telesales Rep'}">
+				<tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        Demos Booked
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,###,###,##0.00}">
+				        		<apex:param value="{!DemosBooked}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+			    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        Demos Completed
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,###,###,##0.00}">
+				        		<apex:param value="{!DemosCompleted}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+			    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        Paid Completed Demos 
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,###,###,##0.00}">
+				        		<apex:param value="{!PaidCompDemos}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+			    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        Web Demo Commission
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+			        	<apex:outputText value="{0, number,£###,###,##0.00}">
+			        		<apex:param value="{!PaidCompDemosCommission}" />
+			        	</apex:outputText>
+				    </td>
+			    </tr>
+			</apex:outputpanel>
+			
+			<apex:outputpanel rendered="{!Role!='Telesales Rep'}">
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;" width="40%">
+				        New Licenses
+				    </td>
+				    <td width="30%" style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        <a title="click here to see details" target="_blank" href="/00OG0000004dusA?pv6={!userNamesForReport}&pv2={!monthStart}&pv7={!monthEnd}">
+				        	<apex:outputText value="{0, number,###,###,##0.00}">
+				        		<apex:param value="{!NewSeatsSold}" />
+				        	</apex:outputText>
+				        </a>				        
+				    </td>
+				    <td width="30%">
+				    	<apex:commandbutton value="Adjust License Count" action="{!gotoAdjustmentScreen}"  />
+				    </td>
+			    </tr>
+			    
+			    <apex:outputpanel rendered="{!not(isnull(adjustmentSeats))}">
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;" width="40%">
+				        Adjusted License Count
+				    </td>
+				    <td width="30%" style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+			        	<apex:outputText value="{0, number,###,###,##0.00}" >
+			        		<apex:param value="{!adjustmentSeats}" />
+			        	</apex:outputText>			        	  
+				    </td>
+				    <td width="30%">
+				    	Reason for Adjustment: <br />
+				    	<apex:outputText value="{!adjustmentNotes}">
+			        	</apex:outputText>
+				    </td>
+			    </tr>
+			    </apex:outputpanel>
+			    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        Paid Licenses
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				        	<apex:outputText value="{0, number,###,###,##0.00}">
+				        		<apex:param value="{!PaidSeats}" />
+				        	</apex:outputText>
+				    </td>
+			    </tr>
+			    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        Paid License Commission
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+			        	<apex:outputText value="{0, number,£###,###,##0.00}">
+			        		<apex:param value="{!PaidSeatsCommission}" />
+			        	</apex:outputText>
+				    </td>
+			    </tr>
+			    	    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				        OTE Bonus
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+			        	<apex:outputText value="{0, number,£###,###,##0.00}">
+			        		<apex:param value="{!OTEBonus}" />
+			        	</apex:outputText>
+				    </td>
+			    </tr>
+			    	    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				       Hardware Sold
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+				    	<a title="click here to see details" target="_blank" href="/00OG0000004dusU?pv8={!userName}&pv3={!monthStart}&pv4={!monthEnd}">
+				        	<apex:outputText value="{0, number,£###,###,##0.00}">
+				        		<apex:param value="{!HardwareSold}" />
+				        	</apex:outputText>
+				        </a>
+				    </td>
+			    </tr>
+			    	    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				       Hardware Commission
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+			        	<apex:outputText value="{0, number,£###,###,##0.00}">
+			        		<apex:param value="{!HardwareCommission}" />
+			        	</apex:outputText>
+				    </td>
+			    </tr>
+			</apex:outputpanel>
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				       Last Month's Commission Clawback
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+			        	<apex:outputText value="{0, number,£###,###,##0.00}">
+			        		<apex:param value="{!Clawback}" />
+			        	</apex:outputText>
+				    </td>
+			    </tr>
+			    	    
+			    <tr>
+				    <td style="font-size:15px;font-weight:bold;">
+				       Total Commission
+				    </td>
+				    <td style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+			        	<apex:outputText value="{0, number,£###,###,##0.00}">
+			        		<apex:param value="{!TotalCommission}" />
+			        	</apex:outputText>
+				    </td>
+			    </tr>
+			    
+		    </table>		
+	</apex:outputpanel>
+</apex:outputpanel> 
+
+<apex:outputpanel rendered="{! !isAllowed}">
+    <span style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+        Unauthorized access is denied.
+    </span>
+</apex:outputpanel>
+</apex:form>
+</apex:page>

@@ -1,0 +1,16 @@
+<apex:page standardcontroller="Account" extensions="bottomline.creditSafeWidgets" action="{!buildScoreWidgetData}" showHeader="false">
+	<head>
+		<style>
+			a.csLink { font-size:91%; color:#015ba7; text-decoration:none; vertical-align:bottom; } 
+			a.csLink:hover { text-decoration:underline; }
+		</style>
+	</head>
+	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<apex:panelGrid columns="4" cellpadding="1" cellspacing="0">
+			<apex:image value="{!URLFOR($Resource.bottomline__CreditsafeResource,todaysRatingImg)}" style="margin:-2px 6px 0px 0px;"/>
+			<apex:outputText style="padding-right:8px;" value="{!todaysRating}" escape="false"/>
+			<apex:outputLink styleClass="csLink" value="/apex/{!serviceView}&id={!account.Id}&cn={!companyNumber}" target="_top" rendered="{!renderViewReport}">View</apex:outputLink>
+			<apex:outputLink styleClass="csLink" value="/apex/creditSafeSearch?id={!account.Id}" target="_top" rendered="{!renderSearch}">Find Company</apex:outputLink>
+		</apex:panelGrid>
+	</body>
+</apex:page>

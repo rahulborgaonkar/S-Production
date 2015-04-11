@@ -1,0 +1,33 @@
+<apex:page controller="mea.activityEdit" title="Mass Edit Open Tasks">
+<apex:form >
+<apex:sectionHeader title="Activities" subtitle="Edit Open Tasks"/>
+<apex:pageBlock >
+<apex:panelGrid >
+<apex:panelGroup id="theGroup">
+<apex:outputLink value="/apex/massEditActivities?whatId={!WhatId}&whoId={!WhoId}&uId={!CurrentUserId}"><apex:outputText value="Show Only My Tasks" rendered="{!ShowMyLink}" /></apex:outputLink>
+<apex:outputLink value="/apex/massEditActivities?whatId={!WhatId}&whoId={!WhoId}"><apex:outputText value="Show All Tasks" rendered="{!NOT(ShowMyLink)}" /></apex:outputLink>
+</apex:panelGroup>
+</apex:panelGrid>
+</apex:pageBlock>
+<apex:pageBlock mode="edit" id="block">
+<apex:pageMessages id="xMessages" />
+
+<apex:pageBlockButtons >
+<apex:commandButton value="Save" action="{!saveTasks}" />
+<apex:commandButton value="Cancel" action="{!cancel}" immediate="true" />
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="" columns="1" collapsible="false" rendered="true">
+<apex:pageBlockTable value="{!OpenTasks}" var="t" rendered="true" id="Results3" rowClasses="odd,even">
+<apex:column headerValue="Assigned To"><apex:outputField value="{!t.OwnerId}" /></apex:column>
+<apex:column headerValue="Subject" width="300px"><apex:inputText value="{!t.Subject}" style="width:250px"/></apex:column>
+<apex:column headerValue="Name"><apex:inputField value="{!t.WhoId}" /></apex:column>
+<apex:column headerValue="Status"><apex:inputField value="{!t.Status}" /></apex:column>
+<apex:column headerValue="Priority"><apex:inputField value="{!t.Priority}" /></apex:column>
+<apex:column headerValue="Activity Date"><apex:inputField value="{!t.ActivityDate}" /></apex:column>
+<apex:column headerValue="Related To" rendered="{!ShowRelatedTo}" ><apex:inputField value="{!t.WhatId}" rendered="{!ShowRelatedTo}" /></apex:column>
+</apex:pageBlockTable>
+</apex:pageBlockSection>
+<apex:outputLabel id="Message" value="{!Message}"></apex:outputLabel>
+</apex:pageBlock>
+</apex:form>
+</apex:page>

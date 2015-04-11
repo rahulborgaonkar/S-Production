@@ -1,0 +1,3 @@
+<apex:page controller="bottomline.creditSafeOptions"  contentType="application/xml#creditSafeOptions.xml">
+{!ExportAsXML}
+</apex:page>

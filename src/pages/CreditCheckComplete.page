@@ -1,0 +1,6 @@
+<apex:page controller="OrderClassController" tabStyle="Account" action="{!creditCheckComplete}" title="Account Credit Check">
+  <apex:form >
+      <apex:sectionHeader title="Account Credit Check for {!objAcc.Name}"/>
+      <apex:pageMessages ></apex:pageMessages>
+  </apex:form>
+</apex:page>

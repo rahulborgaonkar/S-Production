@@ -1,0 +1,181 @@
+<apex:page controller="bottomline.creditSafeView" tabStyle="creditsafeTab__tab" action="{!logReportView}">
+    <style>
+        .rightAlign     { text-align:right; }
+        .bottomAlign    { vertical-align:bottom; padding-top:2px;}
+        a.csLink        { font-size:91%; color:#015ba7; text-decoration:none; vertical-align:bottom; } 
+        a.csLink:hover  { text-decoration:underline; }
+        a.btnLink       { margin-left:10px; font-size:91%; color:#015ba7; text-decoration:none; }
+        a.btnLink:hover { text-decoration:underline; }
+    </style>
+    <apex:outputPanel layout="block" styleClass="bPageTitle">
+		<apex:outputPanel layout="block" styleClass="ptBody secondaryPalette brandSecondaryBrd">
+			<apex:outputPanel layout="block" styleClass="content">
+				<apex:image style="background-position:0px 0px; background-image:url({!URLFOR($Resource.bottomline__CreditsafeResource,'cs.png')});" styleClass="pageTitleIcon" value="/s.gif"/>
+				<h1 class="pageType">Creditsafe</h1>
+				<apex:outputPanel styleClass="titleSeparatingColon"/>
+				<h2 class="pageDescription">{!if(nonLtdCompany.companyName=='','Company Report',nonLtdCompany.companyName)}</h2>
+			</apex:outputPanel>
+			<apex:outputPanel layout="block" styleClass="links">
+				<apex:outputLink value="http://www.creditsafeuk.com" target="_blank">
+					<apex:image value="{!URLFOR($Resource.bottomline__CreditsafeResource,'creditSafeSmall.png')}"/>
+				</apex:outputLink>
+			</apex:outputPanel>
+		</apex:outputPanel>
+	</apex:outputPanel>
+    <apex:pageMessages />
+    <apex:form >
+    <apex:pageBlock mode="maindetail" rendered="{!renderPage}">
+        <apex:pageBlockButtons location="bottom">
+            <apex:commandButton action="{!updateAccount}" value="Save" rendered="{!renderSaveAcc}" />
+            <apex:commandButton action="{!updateLead}" value="Save" rendered="{!renderSaveLead}" />
+            <apex:outputLink value="/{!accountId}" styleClass="btnLink" rendered="{!renderSaveAcc}">Cancel</apex:outputLink>
+            <apex:outputLink value="/{!leadId}" styleClass="btnLink" rendered="{!renderSaveLead}">Cancel</apex:outputLink>
+        </apex:pageBlockButtons>
+        <apex:facet name="header">
+            <apex:panelGrid columns="3" columnClasses="pbTitle,pbHelp">
+                <h2 class="mainTitle" style="white-space:nowrap">Company Information</h2>
+                <apex:outputPanel styleClass="help" style="vertical-align:baseline;">
+                    <apex:outputPanel styleClass="accountMru" rendered="{!renderCreateAcc}">
+                        <apex:image styleClass="mruIcon" url="/s.gif"/>
+                    </apex:outputPanel>
+                    <apex:outputLink style="padding-left:4px;" styleClass="linkCol" target="_blank" value="/apex/creditSafeNewAccount?{!accCreateURL}" rendered="{!renderCreateAcc}">
+                        <apex:outputPanel styleClass="linkSpan">Create an Account</apex:outputPanel>
+                    </apex:outputLink>
+                    <apex:image styleClass="mruIcon" value="{!URLFOR($Resource.bottomline__CreditsafeResource,'acrobat.png')}" rendered="{!renderAttachPDF}"/>
+                    <apex:outputLink style="padding-left:4px;" styleClass="linkCol" target="_blank" value="/apex/creditSafeNewAttachment?id={!parentId}&type=nonltd&cn={!nonLtdCompany.companyNumber}" rendered="{!renderAttachPDF}">
+                        <apex:outputPanel styleClass="linkSpan">Create PDF Attachment</apex:outputPanel>
+                    </apex:outputLink>
+                    <apex:image styleClass="mruIcon" value="{!URLFOR($Resource.bottomline__CreditsafeResource,'acrobat.png')}" rendered="{!renderAsPDF}"/>
+                    <apex:outputLink style="padding-left:4px;" styleClass="linkCol" target="_blank" value="/apex/creditSafePrintNonLtd?type=nonltd&cn={!nonLtdCompany.companyNumber}" rendered="{!renderAsPDF}">
+                        <apex:outputPanel styleClass="linkSpan">View as PDF</apex:outputPanel>
+                    </apex:outputLink>
+                </apex:outputPanel>
+            </apex:panelGrid>
+        </apex:facet>
+        <apex:pageBlockSection >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Name" />
+                <apex:outputText value="{!nonLtdCompany.companyName}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Creditsafe Rating" />
+                <apex:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                    <apex:image value="{!URLFOR($Resource.bottomline__CreditsafeResource,nonLtdCompany.todaysRatingImg)}" style="margin:-2px 6px 0px 0px;"/>
+                    <apex:outputText value="{!nonLtdCompany.todaysRating}" escape="false" style="padding:0px 6px 0px 0px;"/>
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Reg. Number" />
+                <apex:outputText value="{!nonLtdCompany.companyNumber}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Credit Limit" />
+                <apex:outputText value="{!nonLtdCompany.todaysLimit}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Telephone" />
+                <apex:outputText value="{!nonLtdCompany.companyInfo.telephone}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Fax" />
+                <apex:outputText value="{!nonLtdCompany.companyInfo.fax}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Principal Activity" />
+                <apex:outputText value="{!nonLtdCompany.companyInfo.activity}" escape="false" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Website" />
+                <apex:outputLink value="http://{!nonLtdCompany.companyInfo.website}" target="_blank">{!nonLtdCompany.companyInfo.website}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Employees" />
+                <apex:outputText value="{!nonLtdCompany.companyInfo.employees}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Email" />
+                <apex:outputLink value="http://mailto:{!nonLtdCompany.companyInfo.email}" target="_blank">{!nonLtdCompany.companyInfo.email}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Senior Executives Name" />
+                <apex:panelGrid columns="3" cellpadding="0" cellspacing="0" columnClasses=",,bottomAlign,,bottomAlign">
+                    <apex:outputText style="padding-right:4px;" value="{!nonLtdCompany.seniorExecName} ({!nonLtdCompany.seniorExecPosition})" />
+                    <apex:outputPanel styleClass="contactMru" rendered="{!renderCreateCnt}">
+                        <apex:image styleClass="mruIcon" url="/s.gif"/>
+                    </apex:outputPanel>
+                    <apex:outputLink style="padding-left:4px;" styleClass="csLink" target="_blank" value="/003/e?accid={!accountId}{!nonLtdCompany.contactURL}" rendered="{!renderCreateCnt}">Create a Contact</apex:outputLink>
+                    <apex:outputPanel styleClass="leadMru" rendered="{!renderCreateLead}">
+                        <apex:image styleClass="mruIcon" url="/s.gif"/>
+                    </apex:outputPanel>
+                    <apex:outputLink style="padding-left:4px;" styleClass="csLink" target="_blank" value="/apex/creditSafeNewLead?{!leadCreateURL}" rendered="{!renderCreateLead}">Create a Lead</apex:outputLink>
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Address" />
+                <apex:outputText value="{!nonLtdCompany.companyInfo.address}" escape="false" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Senior Executives Email" />
+                <apex:outputText value="{!nonLtdCompany.seniorExecEMail}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Telephone Preference Service" />
+                <apex:outputText value="{!nonLtdCompany.companyInfo.registeredWithTPS}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Matched CCJs" />
+                <apex:outputText value="{!nonLtdCompany.ccjMatched}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Fax Preference Service" />
+                <apex:outputText value="{!nonLtdCompany.companyInfo.registeredWithFPS}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Possible CCJs" />
+                <apex:outputText value="{!nonLtdCompany.ccjPossible}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Mail Preference Service" />
+                <apex:outputText value="{!nonLtdCompany.companyInfo.registeredWithMPS}" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    </apex:form>
+    <apex:pageBlock title="Rating & Limit History" rendered="{!renderPage}">
+		<c:creditSafeNoResults rendered="{!nonLtdCompany.ratingLimits.size<=0}" />
+        <apex:pageBlockTable value="{!nonLtdCompany.ratingLimits}" var="rl" rendered="{!nonLtdCompany.ratingLimits.size>0}">
+            <apex:column value="{!rl.label}" headerValue="Date"/>
+            <apex:column headerValue="Creditsafe Rating">
+                <apex:outputText value="{!rl.creditRating}" escape="false"/>
+            </apex:column>
+            <apex:column value="{!rl.creditLimit}" headerValue="Credit Limit"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    <apex:pageBlock title="Event History" rendered="{!renderPage}">
+    	<c:creditSafeNoResults rendered="{!nonLtdCompany.events.size<=0}" />
+        <apex:pageBlockTable value="{!nonLtdCompany.events}" var="ev" rendered="{!nonLtdCompany.events.size>0}">
+            <apex:column value="{!ev.eventDate}" headerValue="Date"/>
+            <apex:column value="{!ev.eventDetail}" headerValue="Event"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    <apex:pageBlock rendered="{!renderPage}">
+        <apex:facet name="header">
+            <apex:panelGrid columns="1" columnClasses="pbTitle">
+                <h2 class="mainTitle" style="white-space:nowrap">Record Of CCJ Payments (Last 3 Years)</h2>
+            </apex:panelGrid>
+        </apex:facet>
+        <c:creditSafeNoResults rendered="{!nonLtdCompany.recordOfPayments.size<=0}" />
+        <apex:pageBlockTable value="{!nonLtdCompany.recordOfPayments}" var="rop" rendered="{!nonLtdCompany.recordOfPayments.size>0}">
+            <apex:column value="{!rop.ccjType}" headerValue="Matched"/>
+            <apex:column value="{!rop.ccjCaseNumber}" headerValue="Case Number"/>
+            <apex:column value="{!rop.ccjDate}" headerValue="Date"/>
+            <apex:column value="{!rop.ccjCourt}" headerValue="Court"/>
+            <apex:column value="{!rop.ccjDatePaid}" headerValue="Date Paid"/>
+            <apex:column value="{!rop.ccjStatus}" headerValue="Status"/>
+            <apex:column value="£ {!rop.ccjAmount}" headerValue="Amount" headerClass="rightAlign" styleClass="rightAlign"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+</apex:page>

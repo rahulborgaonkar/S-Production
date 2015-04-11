@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <frameHeight>700</frameHeight>
+    <hasSidebar>true</hasSidebar>
+    <label>Conga Mail Merge</label>
+    <mobileReady>false</mobileReady>
+    <motif>Custom64: Compass</motif>
+    <url>https://www.appextremes.com/apps/Conga/MailMerge.aspx
+?sessionId={!API.Session_ID}
+&amp;serverUrl={!API.Partner_Server_URL_80}</url>
+    <urlEncodingKey>UTF-8</urlEncodingKey>
+</CustomTab>

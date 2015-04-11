@@ -1,0 +1,25 @@
+<apex:page standardController="Synety_Plugin__c" extensions="SynetyPluginController" action="{!mailList}">
+    <apex:pageMessages />
+    <apex:form >
+    <apex:outputPanel >
+    <br/>
+    <center><span style="font-size:26px;font-weight:bold;">Mail List</span></center>
+    <br/>
+    <br/>
+    <table width="75%" align="center">
+    <tr>
+    <td>
+    <apex:pageBlock >
+        <apex:pageBlockTable value="{!cncts}" var="t" style="width:100%">
+            <apex:column >
+                <apex:facet name="header">Email</apex:facet>
+                    {!t}
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    </td>
+    </tr>
+    </table>
+    </apex:outputPanel>
+    </apex:form>
+</apex:page>

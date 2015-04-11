@@ -1,0 +1,21 @@
+<apex:page showHeader="false" sidebar="false" >
+        <script src="/support/api/29.0/interaction.js"></script>
+
+  <button onClick="searchAndGetScreenPopUrl();return false;">click me</button>
+  <input type="text" id="txtNum" />
+  <script>
+            
+           var searchAndGetScreenPopUrl_callback = function (response) {
+               if (response.result) {
+                  alert(response.result);
+               } else {
+                  alert(response.error);
+               }
+           };
+           function searchAndGetScreenPopUrl() {
+                    //Invokes API method
+                    var num = document.getElementById('txtNum').value;
+                    sforce.interaction.searchAndGetScreenPopUrl(num , '', 'inbound', searchAndGetScreenPopUrl_callback);
+            }
+        </script>
+</apex:page>

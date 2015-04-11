@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPageWebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <availability>online</availability>
+    <description>Import AJAX toolkit for JS API Access. Having an OnClick javascript button will automatically include the AJAX toolkit and handle session IDs.</description>
+    <displayType>link</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>PhoneClicker AJAX Import</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>{!REQUIRESCRIPT(&quot;/soap/ajax/23.0/connection.js&quot;)}</url>
+</CustomPageWebLink>

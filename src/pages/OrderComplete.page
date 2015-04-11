@@ -1,0 +1,7 @@
+<apex:page controller="OrderClassController" tabStyle="Opportunity" action="{!completeOrder}" title="Order Provision Complete">
+  <apex:form >
+      <apex:sectionHeader title="Complete Order # {!objOpp.Order_Number__c} for {!objOpp.Account.Name}"/>
+      <apex:pageMessages ></apex:pageMessages>
+      <apex:commandbutton value="<<< Go Back" action="{!goBack}" />
+  </apex:form>
+</apex:page>

@@ -1,0 +1,103 @@
+<apex:page controller="teamProductivityClass" sidebar="false">
+    <style>
+    .ct{
+        text-align:center;
+    }
+    </style>
+    <apex:form >
+    <apex:pageMessages />
+    <br/>
+        <apex:outputPanel >
+            <center><span style="font-size:28px;font-weight:bold;">Team Productivity Dashboard</span></center>
+            <br/>
+                <center><span style="font-size:18px;font-weight:bold;">
+                <apex:selectList value="{!current_department}" size="1" required="true" style="font-size:18px">
+                    <apex:selectOptions value="{!departments}"/>
+                </apex:selectList>
+                <apex:outputLabel value=" - "/>
+                <apex:selectList value="{!current_month}" size="1" required="true" style="font-size:18px">
+                    <apex:selectOptions value="{!months}"/>
+                </apex:selectList>
+                <apex:outputLabel value="  "/>
+                    <!--apex:commandButton value="Refresh Report" action="{!getChangedMonth}" id="theButton" rerender="id1" status="reportStatus"/-->
+                    <!--apex:actionStatus id="reportStatus"-->
+                        <!--apex:facet name="start"-->
+                            <!--img src="/img/loading24.gif" /-->
+                            <!--span style="margin-left: 10px; font-size: 12px; font-weight: bold; color: #000000;">Refreshing...</span-->
+                        <!--/apex:facet-->
+                    <!--/apex:actionStatus-->
+
+                    <apex:actionStatus id="reportStatus">
+                        <apex:facet name="start">
+                            <span style="margin-left: 10px; font-size: 18px; font-weight: bold; color: #000000;">Refreshing...</span>
+                            <img src="/img/loading24.gif" />
+                        </apex:facet>
+                        <apex:facet name="stop">
+                            <apex:commandButton value="Refresh Report" action="{!getChangedMonth}" id="theButton" rerender="id1" status="reportStatus"/>
+                        </apex:facet>
+                    </apex:actionStatus>
+
+                </span></center>
+            <br/>
+        </apex:outputPanel>
+
+        <apex:outputPanel id="id1">
+            <apex:repeat value="{!ReportData}" var="m">
+            <table width="95%" align="center">
+            <tr>
+            <td>
+                <apex:pageBlock title="Manager - {!m.manager}" >
+                    <apex:pageBlockTable value="{!m.teammembers}" var="t">
+                        <apex:column headerValue="Name" value="{!t.Name}"/>
+                        <apex:column headerValue="No of Accounts Updated" value="{!t.NoofAccountsUpdated}" styleClass="ct"/>
+                        <apex:column headerValue="No of Opportunities Updated" value="{!t.NoofOpportunityUpdated}" styleClass="ct"/>
+                        <apex:column headerValue="No of Cases Updated" value="{!t.NoofCasesUpdated}" styleClass="ct"/>
+                        <apex:column headerValue="No of emails" value="{!t.NoofEmails}" styleClass="ct"/>
+                        <apex:column headerValue="No of Tasks" value="{!t.NoofTasks}" styleClass="ct"/>
+                        <apex:column headerValue="No of Call Notes" value="{!t.NoofCallNotes}" styleClass="ct"/>
+                        <apex:column headerValue="No of Call Categorised" value="{!t.NoofCallCategorised}" styleClass="ct"/>
+                        <apex:column headerValue="No of Calls" value="{!t.NoofCalls}" styleClass="ct"/>
+                        <apex:column headerValue="Total Call Time (Mins)" value="{!t.TotalCallTime}" styleClass="ct"/>
+                    </apex:pageBlockTable>
+                </apex:pageBlock>
+            </td>
+            </tr>
+            </table>
+            </apex:repeat>
+            
+            <br/>
+            
+            <table width="95%" border="0" align="center">
+                <tr>
+                <td>
+                    <center><span style="font-weight:bold;">Summary Accts/Oppnts/Cases per User</span></center>
+                    <apex:chart height="250" width="500" data="{!BarChart}" id="id2">
+                        <apex:legend position="right"/>
+                        <apex:axis type="Numeric" position="left" minimum="0" steps="1" fields="no_of_accounts,no_of_opportunity,no_of_cases" title="Accts/Oppnts/Cases" grid="true"/>
+                        <apex:axis type="Category" position="bottom" fields="senior_sales_manager" title="Manager"/>
+                        <apex:barSeries orientation="vertical" axis="left" xField="senior_sales_manager" yField="no_of_accounts,no_of_opportunity,no_of_cases" stacked="false"/>
+                    </apex:chart>
+                </td>
+    
+                <td>
+                    <center><span style="font-weight:bold;">Summary of Emails per User</span></center>
+                    <apex:chart height="250" width="500" data="{!EmailPieChart}" id="id3">
+                        <apex:legend position="right"/>
+                        <apex:pieSeries dataField="count"/>
+                    </apex:chart>
+                </td>
+    
+                <td>
+                    <center><span style="font-weight:bold;">Summary of Tasks per User</span></center>
+                    <apex:chart height="250" width="500" data="{!TaskPieChart}" id="id4">
+                        <apex:legend position="right"/>
+                        <apex:pieSeries dataField="count"/>
+                    </apex:chart>
+                </td>
+    
+    
+                </tr>
+            </table>
+        </apex:outputPanel>
+    </apex:form>
+</apex:page>

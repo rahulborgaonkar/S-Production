@@ -1,0 +1,18 @@
+<apex:page contentType="application/vnd.ms-excel#CommissionReport.xls" action="{!GenerateReportAndExport}" controller="CommissionReportController" showHeader="false" sideBar="false">
+
+<apex:outputpanel rendered="{!isAllowed}">
+  <apex:outputLabel escape="false" value="{!reportBody}" />
+</apex:outputpanel>  
+
+<apex:outputpanel rendered="{! !isAllowed}">
+<apex:outputLabel escape="false" >
+<table width="100%">
+	<tr>
+		<td style="font-size:12px">
+			Unauthorized access is denied.
+		</td>
+    </tr>
+</table>
+</apex:outputLabel>
+</apex:outputpanel>  
+</apex:page>

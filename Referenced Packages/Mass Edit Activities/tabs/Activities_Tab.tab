@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>The Activities Tab by Sales Optimizer provides a central location for Users to plan their day, review their day and develop plans to follow through on their committments.</description>
+    <icon>Mass_Edit_Activities_Images/Sales_Optimizer_60_x_60_head_logo_png.png</icon>
+    <label>Activities</label>
+    <mobileReady>false</mobileReady>
+    <motif>Custom235: TV Widescreen</motif>
+    <page>ActivitiesTab</page>
+</CustomTab>

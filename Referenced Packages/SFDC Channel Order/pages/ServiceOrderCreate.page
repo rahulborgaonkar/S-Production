@@ -1,0 +1,682 @@
+<apex:page controller="CHANNEL_ORDERS.ServiceOrderCreateController" tabStyle="Orders__tab" sidebar="false" action="{!validateParams}" >
+	<apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/external/jquery.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/coaui.js')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'css/coaui.css')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'css/coa-overlayMenu.css')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'css/coa-extraStyle.css')}" />
+
+	<apex:form id="svcOrderForm" styleClass="OrderForm">
+		<apex:actionFunction action="{!next}" name="nextJS" />
+
+        <div id="formHeader">
+        	<h1>{!$Label.channel_orders__OrderUI_Title} - {!pagetitle}</h1>
+        </div>
+     	
+     	<div id="wrap">
+     	<apex:actionRegion >
+     		<apex:actionFunction action="{!syncCatalog}" name="syncCatalogJS" rerender="pbsOrderDetails, pbsOrderLevelMsg, pbsOrderLevel, pbsOrder, OrderSvc_Item, invoiceDescription" oncomplete="coa.refreshpicklists(), coa.syncCatalogCompleted(),COA.initAppActionMenu(); "/>
+	     	<apex:actionFunction action="{!getCustomerData}" name="customerDataJS" rerender="pbs2, pbs3, pbs4, pbs6, pageMessages" oncomplete="coa.searching = false;">
+				<apex:param name="lookupvalue" assignTo="{!sCustomerQuery}" value="" />
+				<apex:param name="filterBy" assignTo="{!sCustomerQueryFilterBy}" value="" />
+				<apex:param name="showErrorMessage" assignTo="{!sCustomerQueryShowErrorMessage}" value="" />
+			</apex:actionFunction>
+			<apex:actionFunction action="{!getCatalog}" name="getCatalogJS" rerender="pageMessages, pbsOrderDetails, pbsOrderLevelMsg, pbsOrderLevel, pbsOrder, OrderSvc_Item, invoiceDescription" oncomplete="coa.refreshpicklists(), coa.syncCatalogCompleted();COA.initAppActionMenu()">
+				<apex:param name="contractTermId" assignTo="{!sContractTermsId}" value=""  />
+			</apex:actionFunction>
+        <apex:pageBlock id="pb0" mode="detail" >    
+        	<p class="errortxt"><apex:outputText value="{!oSvcOrder.ErrorComment}" rendered="{!oSvcOrder.IsErrorStatus}"/></p>
+        	
+           	<apex:pageMessages id="pageMessages"></apex:pageMessages>
+           	
+            <apex:pageBlockSection columns="1" id="CustInfo_Item1" title="{!$Label.channel_orders__OrderUI_Customer}" collapsible="false" >
+                <p class="helptxt">{!$Label.channel_orders__OrderUI_CustomerMsg}</p>    
+            </apex:pageBlockSection>
+            	
+			<apex:pageBlockSection columns="2" id="pbs2">
+            	<apex:pageBlockSectionItem id="pbsi1">
+                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_Company_Name__c.label}" for="custname"/>
+                    <apex:outputPanel >
+                    	<div class="searchbox">
+                    		<apex:inputText value="{!oCust.CustomerCompanyName}" id="custname" styleClass="companyName searchboxInput" >
+					    		<c:Autocomplete input_id="{!$Component.custname}" lookup_id="{!$Component.pb0.pbs2.pbsi1.customerlookup}" queryField="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_Company_Name__c.Name}" queryObj="{!$ObjectType.CHANNEL_ORDERS__Customer__c.Name}" />
+							</apex:inputText>
+							<apex:inputText value="{!customerId}" id="customerlookup" styleClass="customerlookup hideInput" />
+							<a onclick="coa.acData('{!$Component.pb0.pbs2.pbsi1.custname}', '{!$Component.pb0.pbs2.pbsi1.customerlookup}', '{!$Label.channel_orders__ErrorMsg_NoCustomerResults}', true, true, true)" class="autoPopDataBtn" ></a>
+                    	</div>
+                    	<apex:outputPanel styleClass="customerACError" rendered="{!AND(oCust.Id = null, sCustomerQueryFilterBy = 'NAME', sCustomerQueryShowErrorMessage)}">{!$Label.channel_orders__ErrorMsg_NoCustomerResults}</apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem id="pbsi2">
+                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_Org_ID__c.label}" for="orgid"/>
+                    <apex:outputPanel >
+                    	<div class="searchbox orgIdbox">
+		                    <apex:inputText value="{!oCust.CustomerOrgId}" id="orgid" styleClass="orgId searchboxInput">
+		                    	<c:Autocomplete input_id="{!$Component.orgid}" lookup_id="{!$Component.pb0.pbs2.pbsi1.customerlookup}" queryField="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_Company_Name__c.Name}" queryObj="{!$ObjectType.CHANNEL_ORDERS__Customer__c.Name}" />
+							</apex:inputText>
+							<a onclick="coa.acData('{!$Component.pb0.pbs2.pbsi2.orgid}', '{!$Component.pb0.pbs2.pbsi1.customerlookup}', '{!$Label.channel_orders__ErrorMsg_NoCustomerResultsByOrgId}', true, true, true)" class="autoPopDataBtn" ></a>
+						</div>
+						<apex:outputPanel styleClass="customerACError" rendered="{!AND(oCust.Id = null, sCustomerQueryFilterBy = 'ORG_ID', sCustomerQueryShowErrorMessage)}">{!$Label.channel_orders__ErrorMsg_NoCustomerResultsByOrgId}</apex:outputPanel>
+					</apex:outputPanel>
+                </apex:pageBlockSectionItem>
+			
+			</apex:pageBlockSection>
+		
+			<apex:pageBlockSection columns="1" id="pbs3">
+                <apex:pageBlockSectionItem id="pbsi3" labelStyleClass="streetLabel">
+                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_Street__c.label}" for="street"/>
+                    <apex:inputText value="{!oCust.CustomerStreet}" id="street" styleClass="street" />
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+			<apex:pageBlockSection columns="2" id="pbs4" >
+		
+
+<apex:pageBlockSectionItem id="pbsi4" labelStyleClass="cityLabel">
+                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_City__c.label}" for="city"/>
+                    <apex:inputText value="{!oCust.CustomerCity}" id="city" styleClass="city" />
+                </apex:pageBlockSectionItem>
+
+		<apex:pageBlockSectionItem id="pbsi6">
+                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_Country__c.label}" for="country"/>
+                    <apex:selectList value="{!oCust.CustomerCountry}" id="country" size="1" styleClass="country">
+			            <apex:selectOption itemValue="" itemLabel="{!$Label.channel_orders__None_selected}"/>
+			            <apex:selectOptions value="{!countriesList}"/>
+			            <apex:actionSupport event="onchange" rerender="pbs6"/>
+			        </apex:selectList>
+                </apex:pageBlockSectionItem>
+                
+                
+			</apex:pageBlockSection>
+			<apex:pageBlockSection columns="2" id="pbs6">
+                <apex:pageBlockSectionItem id="pbsi5_1" rendered="{!ShowStateInput}">
+                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_State__c.label}" for="state"/>
+                    <apex:inputText value="{!oCust.CustomerState}" id="state" styleClass="state" size="80"/>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="pbsi5_2" rendered="{!!ShowStateInput}">
+                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_State__c.label}" for="state"/>
+                    <apex:selectList value="{!oCust.CustomerState}" id="state2" size="1" styleClass="state">
+			            <apex:selectOption itemValue="" itemLabel="{!$Label.channel_orders__None_selected}"/>
+			            <apex:selectOptions value="{!StatesList}"/>
+			        </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlockSectionItem id="pbsi7">
+                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_ZIP_Postal_Code__c.label}" for="zip"/>
+                    <apex:inputText value="{!oCust.CustomerZIPPostalCode}" id="zip" styleClass="zip" size="20"/>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+            
+            <div class="cataloglevelsection">
+	            <apex:pageBlockSection columns="2" id="pbs5" title="{!$Label.channel_orders__OrderUI_Contract}" collapsible="false" >
+	                <apex:pageBlockSectionItem id="pbsi8">
+	                    <apex:outputLabel value="" for="soContractTerms"/>
+	                    <apex:outputPanel id="soContractTerms" >
+                    		<div class="picklistbox">
+                    			<span class="picklisttext" ></span>
+		                    	<apex:selectList size="1" value="{!oSvcOrder.PartnerContractRules}" onchange="getCatalogJS(this.value);"  styleClass="originalPickList catalogtrigger"  >
+			                    	<apex:selectOptions value="{!contractTermOptions}"/>
+			                	</apex:selectList>
+			           		</div>
+			        	</apex:outputPanel>
+	                </apex:pageBlockSectionItem>
+	            </apex:pageBlockSection>    
+            </div>
+            
+			<div id="orderTypeSection">
+				<apex:pageBlockSection columns="4" title="{!$Label.channel_orders__OrderUI_Order}" collapsible="false" id="pbsOrder">
+					<apex:pageBlockSectionItem rendered="{!NOT(oSvcOrder.HasPartnerContractRules)}" >
+						<p class="helptxt">{!$Label.channel_orders__OrderUI_OrderMsg}</p>
+					</apex:pageBlockSectionItem>
+					
+					<!-- This pageblocksections are needed to make sure all cases have same columns -->
+					<apex:pageBlockSectionItem rendered="{!NOT(oSvcOrder.HasPartnerContractRules)}"><div class="emptyDiv"></div></apex:pageBlockSectionItem>
+					<apex:pageBlockSectionItem rendered="{!NOT(oSvcOrder.HasPartnerContractRules)}"><div class="emptyDiv"></div></apex:pageBlockSectionItem>
+					<apex:pageBlockSectionItem rendered="{!NOT(oSvcOrder.HasPartnerContractRules)}"><div class="emptyDiv"></div></apex:pageBlockSectionItem>
+					 
+					<apex:pageBlockSectionItem >
+					<apex:outputLabel styleClass="orderTypeLabel" rendered="{!oSvcOrder.HasPartnerContractRules}" value="{!$ObjectType.CHANNEL_ORDERS__Service_Order__c.fields.CHANNEL_ORDERS__Order_Type__c.label}" for="soOrderType"/>
+						<apex:outputPanel styleClass="orderTypePicklist" id="soOrderType" rendered="{!oSvcOrder.HasPartnerContractRules}">
+							<div class="picklistbox">
+								<span class="picklisttext" ></span>
+								<apex:selectList size="1" value="{!oSvcOrder.OrderType}" styleClass="originalPickList ordertype_pkl" onchange="coa.cancellationOrderCheck();">
+									<apex:selectOptions value="{!OrderTypeOptions}"/>
+								</apex:selectList>
+							</div>	
+						</apex:outputPanel>
+					</apex:pageBlockSectionItem>
+
+					<apex:pageBlockSectionItem rendered="{!oSvcOrder.HasPartnerContractRules && NOT(oSvcOrder.IsCancellationOrder)}" >
+						<apex:outputLabel styleClass="SFDCDescriptionLabel largelabel" style="display:inline !important;" value="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__Product_Line_Description__c.label}" for="invoiceDesc"  />
+						<apex:inputText styleClass="SFDCDescriptionInput invoiceDesc" id="invoiceDesc" value="{!invoiceDescription}"/>
+					</apex:pageBlockSectionItem>
+					
+                   
+					<!-- refresh catalog button goes here -->
+					<apex:pageBlockSectionItem rendered="{!oSvcOrder.HasPartnerContractRules && oSvcOrder.Object.CHANNEL_ORDERS__Order_Type__c != 'Cancellation Order'}" >
+						<apex:outputPanel >						
+							<button type="button" id="SyncCatalog" onclick="coa.syncCatalogOnOrder(this);" coa-btn-orig-class="coa-btn-default largeBtn" coa-btn-label="{!$Label.OrderUIBtn_SyncCatalog}" ></button>
+							<br/>
+							<apex:outputText rendered="{!syncStatus != null && syncStatus != ''}" value="{!syncStatus}"  styleClass="{!IF(bSyncSuccess,'SuccessStatus','FailStatus')}"/>
+						</apex:outputPanel>
+					</apex:pageBlockSectionItem>
+
+					<apex:pageBlockSectionItem ><div class="emptyDiv"></div></apex:pageBlockSectionItem> 
+                  
+			                    <div align="center">
+                    				<apex:pageBlockSectionItem rendered="{!oSvcOrder.HasPartnerContractRules && NOT(oSvcOrder.IsCancellationOrder)}">                        
+			                        	<apex:outputLabel styleClass="SFDCDescriptionLabel largelabel"  value="{!$ObjectType.CHANNEL_ORDERS__Service_Order__c.fields.CHANNEL_ORDERS__Related_Opportunity__c.label}" for="relatedOpportunity" style="display:inline !important;" />
+			                            	<apex:inputField styleClass="relatedOpportunity" value="{!oSvcOrder.object.CHANNEL_ORDERS__Related_Opportunity__c}" id="relatedOpportunity"  />
+			                        </apex:pageBlockSectionItem>
+			                    </div>					
+			   </apex:pageBlockSection>
+			</div>
+        </apex:pageBlock>
+        
+        <apex:pageblock id="pbsOrderDetails">
+            <apex:pageBlockSection columns="1">
+            	<input type="hidden" value="{!pct.IsOrderItemLevelOverride}" id="orderitemleveloverride" />
+            	
+            	<apex:pageBlockSectionItem rendered="{!oSvcOrder.HasPartnerContractRules && oSvcOrder.IsCancellationOrder}">
+                	<p class="cancellationtxt">{!$Label.channel_orders__OrderUI_OrderCancelMsg}</p>
+                </apex:pageBlockSectionItem>
+           </apex:pageBlockSection>    
+
+<apex:variable var="index" value="{!-1}" />  
+           <apex:pageBlockTable value="{!oSvcOrderDetails}" var="o" align="center" styleClass="detailDataTable" rendered="{!oSvcOrder.HasPartnerContractRules && NOT(oSvcOrder.IsCancellationOrder)}">
+
+<apex:column >
+					<apex:variable var="index" value="{!index + 1}" />
+					<span class="coa-menu-opener"><span class="coa-icon"></span></span>
+					<div
+						class="coa-overlay-menu coa-overlay-menu-action coa-overlay-menu-all"
+						style="display: none;"
+						data-submenu-block-id="submenu_block_{!o.ProductName}">
+					<div class="coa-overlay-section">
+
+					<p><a onClick="window.open('/{!o.ProductName}')"> <span
+						class="coa-link-text"> <apex:outputText value="{!$Label.channel_orders__View_Product_Details}" /> </span> </a></p>
+
+					<p><apex:commandLink action="{!cloneThisProduct}"
+						rerender="pbsOrderDetails"
+						rendered="{!if(o.IsPricingTypePNR,true,false)}"
+						onComplete="COA.initAppActionMenu();Calculate();">
+
+						<apex:param name="currentObject" assignTo="{!currentObjectIndex}"
+							value="{!index}" />
+
+						<span class="coa-link-text"> <apex:outputText value="{!$Label.channel_orders__Clone_This_Product}" /> </span>
+					</apex:commandLink></p>
+					<p>
+                     	<apex:outputpanel >
+	                     <a>
+			<!-- If the input is already visible, then we do not show this option -->
+    	                 <apex:actionSupport event="onclick" rendered="{!IF(OR(index== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),false, true)}"
+ rerender="pbsOrderDetails" onComplete="COA.initAppActionMenu();" >
+    	                 <apex:param name="currentIterator" assignTo="{!currentObjectIndex}" value="{!index}" />
+                         	<span class="coa-link-text">
+                            	<apex:outputText value="{!$Label.channel_orders__Add_Invoice_Description}" />
+                            </span>
+                            </apex:actionSupport>    	                 
+        	             </a>                     
+            	         </apex:outputpanel>                         
+                    </p>
+
+					</div>
+					<span class="coa-arrow coa-arrow-a"></span> <span
+						class="coa-arrow coa-arrow-b"></span></div>
+				</apex:column>
+
+				<apex:column headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__Product_Name__c.label}"
+					headerClass="thnowrap">
+
+					<apex:outputField value="{!o.Object.CHANNEL_ORDERS__Product_Name__c}" />
+					<apex:outputPanel id="individualInvoiceTextField" layout="block" style="{!IF(OR(index == currentObjectIndex,AND(o.ProductLineDescription <> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'display:inherit', 'display:none;')}">
+						<br />						
+						<apex:outputLabel style="white-space:nowrap;" styleClass="SFDCDescriptionLabel largelabel" value="{!$Label.channel_orders__SFDC_Line_Item_Invoice_Description}" for="SFDCLineItemInvoiceDescription" /> 	
+	 					<apex:inputText value="{!o.ProductLineDescription}" styleClass="SFDCDescriptionInput invoiceDesc" id="SFDCLineItemInvoiceDescription"/>		
+						</apex:outputpanel>
+				</apex:column>
+						
+				<apex:column headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__Application__c.label}" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+			                <apex:outputText value="{!IF(LEN(o.Application) > 26, LEFT(o.Application,26- 1) & '...', o.Application)}" title="{!o.Application}"/>
+
+						</apex:column>
+						
+						<apex:column headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Pricing_Type__c.label}"  styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:outputText escape="false" value="{!o.PricingTypeUI}"/>
+						</apex:column>
+						
+						<apex:column headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Pricing_Unit__c.label}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:outputText escape="false" value="{!SUBSTITUTE(o.PricingUnitUI, ' ', '<br>')}"/>
+						</apex:column>
+						
+						<apex:column headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__Quantity__c.label}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:inputText value="{!o.QuantityUI}" styleClass="smallInput calculate quantity" id="quantity" maxlength="9"/>
+						</apex:column>
+						
+						<apex:column headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__Customer_Price_Per_Month__c.label}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:inputText value="{!o.CustomerPricePerMonth}" styleClass="calculate price" id="pricepm1" rendered="{!o.IsPricingTypePNR}" maxlength="9"/>
+							<apex:outputText value="{!o.CustomerPricePerMonth}" styleClass="smallOutput" id="pricepm2" rendered="{!NOT(o.IsPricingTypePNR)}" />
+						</apex:column>
+					
+						<apex:column headerValue="{!$Label.channel_orders__CustomerPriceMonthUI}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:outputText value="{!o.TotalPriceUI}" styleClass="totalprice" />
+						</apex:column>
+						
+						<apex:column headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__Estimated_SFDC_Price_Per_Month__c.label}" styleClass="tbCol" rendered="{!oSvcOrder.Id == null || oSvcOrder.CreatedWithNewCOA == true}" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:inputText value="{!o.PNR}" styleClass="hideInput catalog-pnr "/>
+							<apex:inputText value="{!o.FloorPrice}" styleClass="hideInput catalog-floor"/>
+							<apex:inputText value="{!o.FixedPrice}" styleClass="hideInput catalog-fixed"/>
+							<apex:inputText value="{!o.PricingType}" styleClass="hideInput catalog-type"/>
+							
+							<apex:outputText value="{!o.EstimatedSFDCPrice}" styleClass="totalsfdcprice" />
+<script>var currencySymbol = "{!o.CurrencySymbol}";
+</script>
+						</apex:column>
+						
+						<apex:column rendered="{!pct.IsOrderItemLevelOverride}" headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Contract_Length__c.label}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">							
+							<apex:outputPanel >
+		                    	<apex:inputText value="{!o.ContractLength}" styleClass="numValCL" rendered="{!o.ProductCatalogReference.AllowContractLengthOverride && NOT(pct.NoOverrideLevelSelected)}"/>
+		                    	<apex:outputText value="{!o.ContractLength}" styleClass="smallOutput" rendered="{!NOT(o.ProductCatalogReference.AllowContractLengthOverride) || pct.NoOverrideLevelSelected}"/>
+		                    </apex:outputPanel>
+						</apex:column>
+						
+						<apex:column rendered="{!pct.IsOrderItemLevelOverride}" headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Billing_Frequency__c.label}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:outputText value="{!o.BillingFrequency}" styleClass="smallOutput" />
+						</apex:column>
+						
+						<apex:column rendered="{!pct.IsOrderItemLevelOverride}" headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Contract_Auto_Renew__c.label}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:outputPanel >
+		           				<apex:outputPanel rendered="{!o.ProductCatalogReference.AllowAutoRenewOverride && NOT(pct.NoOverrideLevelSelected)}">
+			                    	<div class="picklistbox oilevel">
+			                    		<span class="picklisttext" ></span>
+			                     		<apex:inputField value="{!o.Object.CHANNEL_ORDERS__pc_Contract_Auto_Renew__c}" styleClass="originalPickList" />
+			                     	</div>	
+
+			                    </apex:outputPanel>
+			                    
+		           				<apex:outputText value="{!o.ContractAutoRenew}" styleClass="smallOutput" rendered="{!NOT(o.ProductCatalogReference.AllowAutoRenewOverride) || pct.NoOverrideLevelSelected}"/>
+		                    </apex:outputPanel>
+						</apex:column>
+						
+						<apex:column rendered="{!pct.IsOrderItemLevelOverride}" headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Renewal_Terms__c.label}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:outputPanel >
+		           				<apex:inputText value="{!o.RenewalTerms}" styleClass="numValRT" rendered="{!o.ProductCatalogReference.AllowRenewalLengthOverride && NOT(pct.NoOverrideLevelSelected)}"/>
+		           				<apex:outputText value="{!o.RenewalTerms}" styleClass="smallOutput" rendered="{!NOT(o.ProductCatalogReference.AllowRenewalLengthOverride) || pct.NoOverrideLevelSelected}"/>
+		                    </apex:outputPanel>
+						</apex:column>
+						
+						<apex:column rendered="{!pct.IsOrderItemLevelOverride}" headerValue="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Cancellation_Terms__c.label}" styleClass="tbCol" headerClass="thnowrap" style="{!IF(OR(index
+							== currentObjectIndex,AND(o.ProductLineDescription<> '', o.ProductLineDescription <> null, o.ProductLineDescription <> invoiceDescription)),'vertical-align:top !important','')}">
+							<apex:outputPanel id="autorenew">
+		           				<apex:inputText value="{!o.CancellationTerms}" styleClass="numValCT" rendered="{!o.ProductCatalogReference.AllowCancellationTermsOverride && NOT(pct.NoOverrideLevelSelected)}"/>
+		           				<apex:outputText value="{!o.CancellationTerms}" styleClass="smallOutput" rendered="{!NOT(o.ProductCatalogReference.AllowCancellationTermsOverride) || pct.NoOverrideLevelSelected}"/>
+		                    </apex:outputPanel>
+						</apex:column>
+            	</apex:pageBlockTable>
+		  </apex:pageBlock>
+
+		  <apex:pageBlock >
+			<div class="orderlevelsection">
+				<apex:pageBlockSection columns="1" id="pbsOrderLevelMsg" collapsible="false" >
+					<apex:pageBlockSectionItem rendered="{!ShowOrderLevel}" >
+	                	<p class="helptxt">{!$Label.channel_orders__OrderUI_OverrideTermsMsg}</p> 
+	                </apex:pageBlockSectionItem>   
+	            </apex:pageBlockSection>
+				
+				<div class="invoicedescriptionsection">
+					<apex:pageBlockSection columns="2" id="pbsOrderLevel" >
+							<apex:pageBlockSectionItem rendered="{!ShowOrderLevel}" >
+								<apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Contract_Length__c.label}" for="contractLength"/>
+								<apex:outputPanel id="contractLength">
+									<apex:inputText value="{!sContractLength}" styleClass="numValCL" rendered="{!pct.AllowContractLengthOverride}"/>
+									<apex:outputText value="{!sContractLength}" styleClass="smallOutput" rendered="{!NOT(pct.AllowContractLengthOverride)}"/>
+								</apex:outputPanel>
+							</apex:pageBlockSectionItem>
+							
+							<apex:pageBlockSectionItem rendered="{!ShowOrderLevel}" >
+								<apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Billing_Frequency__c.label}" for="billfreq"/>
+								<apex:outputText value="{!sBillingFreq}" id="billfreq" styleClass="smallOutput"/>
+							</apex:pageBlockSectionItem>
+							
+							<apex:pageBlockSectionItem rendered="{!ShowOrderLevel}" >
+								<apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Renewal_Terms__c.label}" for="renewalterms" />
+								<apex:outputPanel id="renewalterms">
+									<apex:inputText value="{!sRenewalTerms}" styleClass="numValRT" rendered="{!pct.AllowRenewalLengthOverride}"/>
+									<apex:outputText value="{!sRenewalTerms}" styleClass="smallOutput" rendered="{!NOT(pct.AllowRenewalLengthOverride)}"/>
+								</apex:outputPanel>
+							</apex:pageBlockSectionItem>
+							
+							<apex:pageBlockSectionItem rendered="{!ShowOrderLevel}" >
+								<apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Contract_Auto_Renew__c.label}" for="autorenew" />
+									<apex:outputPanel id="autorenew">
+										<apex:outputPanel rendered="{!pct.AllowAutoRenewOverride && NOT(pct.NoOverrideLevelSelected)}">
+											<div class="picklistbox">
+												<span class="picklisttext" ></span>
+												<apex:selectList size="1" value="{!sAutoRenew}" styleClass="originalPickList" >
+													<apex:selectOptions value="{!AutoRenewOptions}"/>
+												</apex:selectList>
+											</div>	
+										</apex:outputPanel>
+							
+									<apex:outputText value="{!sAutoRenew}" styleClass="smallOutput" rendered="{!NOT(pct.AllowAutoRenewOverride)}"/>
+								</apex:outputPanel>
+							</apex:pageBlockSectionItem>
+							
+							<apex:pageBlockSectionItem rendered="{!ShowOrderLevel}" >
+								<apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Service_Order_Detail__c.fields.CHANNEL_ORDERS__pc_Cancellation_Terms__c.label}" for="cancelterms" />
+								<apex:outputPanel id="cancelterms">
+									<apex:inputText value="{!sCancellationTerms}" styleClass="numValCT" rendered="{!pct.AllowCancellationTermsOverride}"/>
+									<apex:outputText value="{!sCancellationTerms}" styleClass="smallOutput" rendered="{!NOT(pct.AllowCancellationTermsOverride)}"/>
+								</apex:outputPanel>
+							</apex:pageBlockSectionItem>
+					
+					</apex:pageBlockSection>
+				</div>
+			</div>
+			</apex:pageBlock>
+			<apex:pageBlock >			
+	    		<apex:pageBlockSection columns="1" id="OrderSvc_Item" title="{!$Label.channel_orders__OrderUI_OrderServiceDates}" collapsible="false">
+	    			<apex:pageBlockSectionItem >
+	                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Service_Order__c.fields.CHANNEL_ORDERS__Service_Start_Date__c.label}" for="soOrderType"/>
+	                    <apex:inputField value="{!oSvcOrder.Object.CHANNEL_ORDERS__Service_Start_Date__c}" id="soOrderType" required="false" styleClass="datebox so_startdate"/>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem >
+	                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Service_Order__c.fields.CHANNEL_ORDERS__Date_Partner_Received_Customer_Order__c.label}" for="soOrderType"/>
+	                    <apex:inputField value="{!oSvcOrder.Object.CHANNEL_ORDERS__Date_Partner_Received_Customer_Order__c}" id="soOrderType" styleClass="datebox so_partnerreceiveddate"/>
+	                </apex:pageBlockSectionItem>
+	                
+	                <apex:pageBlockSectionItem rendered="{!pct.IsOEM || pct.IsVAR}">
+	                    <apex:outputLabel value="{!$ObjectType.CHANNEL_ORDERS__Service_Order__c.fields.CHANNEL_ORDERS__Date_Customer_Accepted_SFDC_Svc_Agrmnt__c.label}" for="soOrderType"/>
+	                    <apex:inputField value="{!oSvcOrder.Object.CHANNEL_ORDERS__Date_Customer_Accepted_SFDC_Svc_Agrmnt__c}" id="soOrderType" styleClass="datebox so_acceptedagmtdate"/>
+	                </apex:pageBlockSectionItem>
+	    		</apex:pageBlockSection>
+    		</apex:pageBlock>
+    		</apex:actionRegion>
+    		<apex:pageBlock >
+				<apex:pageBlockSection columns="2" id="OrderSvc_CustomFields" title="5. Enter Custom Details" collapsible="false" rendered="{!!oSvcOrder.isCustomFieldsSetEmpty}">
+					<apex:repeat value="{!oSvcOrder.CustomFields}" var="cf">
+	    				  <apex:pageBlockSectionItem >
+		                   <apex:outputLabel value="{!cf.Label}"/>
+		                   <apex:inputField value="{!oSvcOrder.Object[cf.FieldPath]}" required="{!OR(cf.Required, cf.DBRequired)}" /> 
+		                </apex:pageBlockSectionItem>
+					</apex:repeat>
+				</apex:pageBlockSection>
+				
+    		<div class="btnContainer">
+                <apex:outputLink value="/apex/ServiceOrderTab" styleClass="coa-btn-secondary smallBtn">{!$Label.channel_orders__OrderUIBtn_Cancel}</apex:outputLink>
+                <button type="button" id="SaveOrderBtn" onclick="coa.orderValidation.validate();" coa-btn-orig-class="coa-btn-primary largeBtn" coa-btn-label="{!$Label.OrderUIBtn_Submit}" ></button>
+            </div>
+            
+    	</apex:pageBlock>
+    	</div>
+	</apex:form>
+	
+<script type="text/javascript">
+	var $jk = jQuery.noConflict();
+	var load_on_lost_focus_name = false;
+	var load_on_lost_focus_orgid = false;
+	var COA = {}; // global object container
+</script>
+
+
+<apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/coa-overlayMenu.js')}" />
+
+
+
+	<script>
+         jQuery(document).ready(function() {
+            // all overlay menus (the menu type)
+            COA.createOverlayMenus();
+        });
+        
+        COA.createOverlayMenus = function() {
+            jQuery('.coa-select-filter-overlaymenu').each(function(j) {
+                var $thisMenuOrigin = $(this);
+                $thisMenuOrigin.id = $thisMenuOrigin.attr('id');
+                if ($thisMenuOrigin.id === undefined) {
+                    $thisMenuOrigin.id = 'id_' + (+new Date()) + '_' + j + '_' + Math.floor(Math.random()*1000001);
+                    $thisMenuOrigin.attr('id',$thisMenuOrigin.id);
+                }
+                var extraCssClasses = '';
+                if ($thisMenuOrigin.hasClass('coa-select-optionlist')) {
+                    extraCssClasses += ' coa-overlaymenu-opener-optionlist';
+                }
+                if ($thisMenuOrigin.hasClass('coa-overlay-menu-optionlist')) {
+                    
+                }        
+                var $newOpener = $('<div class="coa-overlaymenu-opener' + extraCssClasses + '" id="' + $thisMenuOrigin.id + '_opener"><span class="coa-icon"></span><span id="' + $thisMenuOrigin.id + '_opener_text" class="coa-overlay-opener-text"></span></div>');
+                $newOpener.insertBefore($thisMenuOrigin);
+                //$newOpener.width($thisMenuOrigin.outerWidth());
+                $thisMenuOrigin.overlayMenu('init',{
+                    opener: $newOpener,
+                    arrowOffset: 'openerIcon'
+                });
+                $thisMenuOrigin.addClass('coa-select-filter-overlaymenu-modified');
+                $thisMenuOrigin.css('opacity',0);
+                COA.selectOptionChange($thisMenuOrigin.get(0),$thisMenuOrigin.id + '_opener_text');
+                $thisMenuOrigin.on('change',function() {
+                    var $thisMenuOrigin = $(this);
+                    COA.selectOptionChange($thisMenuOrigin.get(0),$thisMenuOrigin.attr('id') + '_opener_text');
+                });
+                // if pulldown --> set width to whatever the max width would be
+                if ($thisMenuOrigin.hasClass('coa-select-optionlist')) {
+                    // document.getElementById(displayElId).innerHTML = newText;
+                    // clone the opener and fill it up with all options. now it should be max width.
+                    $newOpener.clone().insertBefore($thisMenuOrigin).attr('id','opener_clone').css('position','absolute').css('left','-999px');
+                    $thisClone = jQuery('#opener_clone');
+                    $thisCloneText = $thisClone.find('.coa-overlay-opener-text');
+                    var maxW = 0;
+                    $thisMenuOrigin.find('option').each(function() {
+                        $thisOption = jQuery(this);
+                        $thisCloneText.html($thisOption.html());
+                        var currentW = $thisClone.outerWidth();
+                        maxW = currentW > maxW ? currentW : maxW;
+                    });
+                    $newOpener.width(maxW);
+                    $thisClone.remove();
+                }
+                
+            });
+        };
+
+        /**
+         * Check to see what state the site is in
+         * There are test elements on the page that get shown/hidden using media queries.
+         * @returns {String} phone, small, medium, large
+         */
+         COA.getCurrentSiteState = function() {
+            var state = 'medium';
+            // since the COA probably doesn't have these test elements on the page, 
+            // this function will always return state=medium
+            if (jQuery('#phone-test').css('display') === 'block') { state = 'phone'; }
+            else if (jQuery('#small-test').css('display') === 'block') { state = 'small'; }
+            else if (jQuery('#large-test').css('display') === 'block') { state = 'large'; }
+            return state;
+        };
+    
+    </script>
+
+
+<script type="text/javascript">
+	
+	$jk(document).ready(function() {
+		//this binds the calculate functionality to every element with the calculate class
+		//every time document.body changes
+		$jk(document.body).delegate('.calculate', 'keyup', function() {
+			var q = $jk(this).closest('tr').find('.quantity').val();
+			var p = $jk(this).closest('tr').find('.price').val();
+			var pnr = $jk(this).closest('tr').find('.catalog-pnr').val();
+			var floor = $jk(this).closest('tr').find('.catalog-floor').val() *100/100;
+			var fixed = $jk(this).closest('tr').find('.catalog-fixed').val() *100/100;
+			var type = $jk(this).closest('tr').find('.catalog-type').val();
+			
+			var resultElem = $jk(this).closest('tr').find('.totalprice');
+			var resultElemSFDC = $jk(this).closest('tr').find('.totalsfdcprice');
+			var resValue = q * p *100/100;
+			
+			if(resValue == '0' || !$jk.isNumeric(resValue)){
+				$jk(resultElem).text('--');
+			}else{
+				$jk(resultElem).text(currencySymbol + resValue.toFixed(2));
+			}
+			if((type == 'PNR' && (q == '' || q == '0' || p == '' || p == '0' || !$jk.isNumeric(pnr) || !$jk.isNumeric(p))) || !$jk.isNumeric(q) ||
+			   (type != 'PNR' && (q == '' || q == '0'))){
+				$jk(resultElemSFDC).text('--');
+			}else{
+				if(type == 'PNR') {
+					var priceVal = (q*p * (pnr / 100) *100)/100;
+					$jk(resultElemSFDC).text(currencySymbol + (priceVal < floor ? floor.toFixed(2) : priceVal.toFixed(2)) );
+					
+				} else $jk(resultElemSFDC).text(currencySymbol + (q*fixed).toFixed(2));
+			}
+				
+		});
+		
+		//this function makes sure we clean customer lookup when changing customer on order
+		$jk('.orgId,.companyName').bind('keyup', function() {
+			if($jk(this).val() == ''){
+				var lkup_id = $jk('.hideInput').attr('id');
+				$jk(coa.escapecolon(lkup_id)).val('');
+			}
+		});
+
+COA.initAppActionMenu = function() {
+               $jk('.coa-overlay-menu-action').each(function() {
+                    $thisMenu = $jk(this);
+                    $thisOpener = $thisMenu.prev('.coa-menu-opener');
+                    $thisMenu.overlayMenu('init',{
+                        opener: $thisOpener
+                    });
+                });
+            }
+         COA.initAppActionMenu();   
+        //this function makes sure we clean customer lookup when changing customer on order
+        $jk('.orgId,.companyName').bind('keyup', function() {
+            if($jk(this).val() == ''){
+                var lkup_id = $jk('.hideInput').attr('id');
+                $jk(coa.escapecolon(lkup_id)).val('');
+            }
+        });
+		
+		//searchbox functions
+		$jk('.searchboxInput').focus(function(){
+			$jk(this).parent().addClass('searchboxFocus');
+		}).focusout(function(){
+			$jk(this).parent().removeClass('searchboxFocus');
+		});
+		
+		//picklist functions
+		coa.refreshpicklists();
+		
+		$jk(document.body).delegate('.originalPickList', 'change', function() {
+			var pkl_val = $jk(this).val();
+			var optTxt_val = $jk("option[value='"+pkl_val+"']", this).text();
+			
+			$jk(this).closest('span').find('.picklisttext').text(optTxt_val);
+		});
+		
+		//adjusts customer info row width
+		coa.companyRowAdjust();
+		
+		$jk(window).bind('resize',function() {
+			coa.companyRowAdjust();
+		});
+		
+		//initialize all button elements
+		$jk(':button').each(function(){
+			var COABtn = $jk(this).attr('coa-btn-label');
+			if(COABtn != null){
+				coa.initializeBtn(this);
+			}
+		});
+		
+		//this is needed to be able to show the right msgs on errors
+		coa.orderValidation.emsgtotalquantity = '{!$Label.ErrorMsg_TotalQuantity}';
+		coa.orderValidation.emsgrenewalinvalid = '{!$Label.ErrorMsg_RenewalTermsInvalid}';
+		coa.orderValidation.emsgcancellationinvalid = '{!$Label.ErrorMsg_CancellationTermsInvalid}';
+		coa.orderValidation.emsgcontractinvalid = '{!$Label.ErrorMsg_ContractLengthInvalid}'; 
+		coa.orderValidation.emsgrenewalrequired = '{!$Label.ErrorMsg_RenewalTermsRequired}';
+		coa.orderValidation.emsgcancellationrequired = '{!$Label.ErrorMsg_CancellationTermsRequired}';
+		coa.orderValidation.emsgcontractrequired = '{!$Label.ErrorMsg_ContractLengthRequired}';
+		coa.orderValidation.emsgcompanyname = '{!$Label.ErrorMsg_CompanyName}';
+		coa.orderValidation.emsgcorgid = '{!$Label.ErrorMsg_OrgId}';
+		coa.orderValidation.emsgstreet = '{!$Label.ErrorMsg_Street}';
+		coa.orderValidation.emsgcity = '{!$Label.ErrorMsg_City}';
+		coa.orderValidation.emsgstate = '{!$Label.ErrorMsg_State}';
+		coa.orderValidation.emsgzip = '{!$Label.ErrorMsg_Zip}';
+		coa.orderValidation.emsgzip_USA = '{!$Label.ErrorMsg_Zip_USA}';
+		coa.orderValidation.emsgzip_CA = '{!$Label.ErrorMsg_Zip_CA}';
+		coa.orderValidation.emsgcountry = '{!$Label.ErrorMsg_Country}';
+		coa.orderValidation.emsgcustpricerequired = '{!$Label.ErrorMsg_CustPriceRequired}';
+		coa.orderValidation.emsgcustpriceinvalid = '{!$Label.ErrorMsg_CustPriceInvalid}';
+		coa.orderValidation.emsgstartdate = '{!$Label.ErrorMsg_StartDate}';
+		coa.orderValidation.emsgcontract = '{!$Label.ErrorMsg_Contract}'; 
+		coa.orderValidation.emsgordertype = '{!$Label.ErrorMsg_OrderType}';
+		coa.orderValidation.emsgpartnerreceivedorder = '{!$Label.ErrorMsg_DatePartnerReceiveOrder}'; 
+		coa.orderValidation.emsgacceptsfdcagmt = '{!$Label.ErrorMsg_AcceptedSFDCAgmt}'; 
+		 
+		$jk(document.body).delegate('.companyName', 'change', function() { load_on_lost_focus_name = true; });
+		$jk(document.body).delegate('.companyName', 'keydown', function(e) { if (e.keyCode == 13) loadDataWithCustomerName(true, true); });
+		$jk(document.body).delegate('.companyName', 'autocompleteselect', function() { loadDataWithCustomerName(true, true); });
+		
+        $jk(document.body).delegate('.orgId', 'change', function() { load_on_lost_focus_orgid = true; });
+        $jk(document.body).delegate('.orgId', 'keydown', function(e) { if (e.keyCode == 13) loadDataWithOrgId(true, true); });
+        $jk(document.body).delegate('.orgId', 'autocompleteselect', function() { loadDataWithOrgId(true, true) }); 
+	});
+	function loadDataWithOrgId(forceLoad, showErroMessageOnLoad) {
+		load_on_lost_focus_orgid = coa.acData('.orgId', '.customerlookup','{!$Label.channel_orders__ErrorMsg_NoCustomerResultsByOrgId}', false, (forceLoad || load_on_lost_focus_orgid), showErroMessageOnLoad);
+	}
+	function loadDataWithCustomerName(forceLoad, showErroMessageOnLoad) {
+		load_on_lost_focus_name = coa.acData('.companyName', '.customerlookup','{!$Label.channel_orders__ErrorMsg_NoCustomerResults}', false, (forceLoad || load_on_lost_focus_name), showErroMessageOnLoad);
+	}
+	
+	//this prevents first input focus on page load
+	function setFocusOnLoad() {} 
+	
+	//This recalculates every element with the calculate class after rerendering the partner order details
+		function Calculate(){
+			$jk('.calculate').each(function() {
+				var q = $jk(this).closest('tr').find('.quantity').val();
+				var p = $jk(this).closest('tr').find('.price').val();
+				var pnr = $jk(this).closest('tr').find('.catalog-pnr').val();
+				var floor = $jk(this).closest('tr').find('.catalog-floor').val() *100/100;
+				var fixed = $jk(this).closest('tr').find('.catalog-fixed').val() *100/100;
+				var type = $jk(this).closest('tr').find('.catalog-type').val();
+				
+				var resultElem = $jk(this).closest('tr').find('.totalprice');
+				var resultElemSFDC = $jk(this).closest('tr').find('.totalsfdcprice');
+				var resValue = q * p *100/100;
+				
+				if(resValue == '0' || !$jk.isNumeric(resValue)){
+					$jk(resultElem).text('--');
+				}else{
+					$jk(resultElem).text(currencySymbol + resValue.toFixed(2));
+				}
+				if((type == 'PNR' && (q == '' || q == '0' || p == '' || p == '0' || !$jk.isNumeric(pnr) || !$jk.isNumeric(p))) || !$jk.isNumeric(q) ||
+				   (type != 'PNR' && (q == '' || q == '0'))){
+					$jk(resultElemSFDC).text('--');
+				}else{
+					if(type == 'PNR') {
+						var priceVal = (q*p * (pnr / 100) *100)/100;
+						$jk(resultElemSFDC).text(currencySymbol + (priceVal < floor.toFixed(2) ? floor : priceVal.toFixed(2)) );
+						
+					} else $jk(resultElemSFDC).text(currencySymbol + (q*fixed).toFixed(2));
+				}
+			});
+		}
+	
+</script>
+</apex:page>

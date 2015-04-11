@@ -1,0 +1,44 @@
+<apex:page controller="webDemoBookingPerformanceClass">
+    <apex:form >
+    <apex:outputPanel >
+    <br/>
+    <center><span style="font-size:26px;font-weight:bold;">Opportunities By Web Demo Bookings</span></center>
+    <br/>
+    <br/>
+    <table width="75%" align="center">
+    <tr>
+    <td>
+    <apex:pageBlock title="Opportunity List" id="id1">
+        <apex:pageBlockTable value="{!OpportunityList}" var="t" style="width:100%">
+            <apex:column >
+                <apex:facet name="header">Account Name</apex:facet>
+                    <apex:outputLink value="/{!t.account.id}">
+                        {!t.account.name}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Opportunity Name</apex:facet>
+                    <apex:outputLink value="/{!t.id}">
+                        {!t.name}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Probability (%)</apex:facet>
+                    {!t.probability}
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Total Seats</apex:facet>
+                    {!t.Total_Seats__c}
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Account Owner</apex:facet>
+                    {!t.account.owner.name}
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    </td>
+    </tr>
+    </table>
+    </apex:outputPanel>
+    </apex:form>
+</apex:page>

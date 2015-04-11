@@ -1,0 +1,13 @@
+<apex:page standardController="Opportunity" >
+    <!-- 
+    <script>
+        function openPage(){
+            var wnd = window.open('/apex/OpportunityContact?id={!Opportunity.Id}','MakeCall','scrollbars=1,width=800, height=320,left=270,top=170');
+            wnd.focus();
+        }
+    </script>
+    <apex:form >
+        <apex:commandButton image="{!$Resource.tinyPhoneIconrr}"  style="height:35px;" onclick="openPage(); return false;" value="Synety"/>
+    </apex:form>
+    -->
+</apex:page>

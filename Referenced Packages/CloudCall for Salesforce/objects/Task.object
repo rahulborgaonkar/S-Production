@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <webLinks>
+        <fullName>Call_Recording</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Play Call Recording</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>var recordingLink = &quot;{!Task.Recording__c}&quot;;
+
+var link = &quot;/apex/synety__gotoCallRecording?id={!Task.Id}&amp;play=true&amp;url={!Task.Recording__c}?type=mp3&quot;;
+
+if(recordingLink == &quot;&quot;)
+{
+  alert(&quot;Call recording not found for this activity.&quot;);
+}
+else
+{
+  var wnd = window.open(link,&apos;_blank&apos;,&apos;width=800,height=500&apos;);
+  wnd.focus();
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Download_Call_Recording</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Download Call Recording</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>var recordingLink = &quot;{!Task.Recording__c}&quot;;
+
+var link = &quot;/apex/synety__gotoCallRecording?id={!Task.Id}&amp;url={!Task.Recording__c}?type=mp3&quot;;
+
+if(recordingLink == &quot;&quot;)
+{
+alert(&quot;Call recording not found for this activity.&quot;);
+}
+else
+{
+var wnd = window.open(link,&apos;_blank&apos;,&apos;width=800,height=500&apos;);
+wnd.focus();
+}</url>
+    </webLinks>
+</CustomObject>

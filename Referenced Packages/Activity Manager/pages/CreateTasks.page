@@ -1,0 +1,34 @@
+<apex:page controller="activities.CreateTasksController">
+ <apex:sectionHeader title="Task" subtitle="New Task" help="/help/doc/user_ed.jsp?loc=help&target=creating_tasks.htm&section=Activities"/>
+ <apex:form >
+     <apex:pageMessages ></apex:pageMessages>
+     <apex:pageBlock title="Task Edit"  mode="edit">
+         <apex:pageBlockSection columns="2" title="Task Information"  >        
+                 <apex:inputField value="{!newTask.OwnerId}" />
+                 <apex:inputField value="{!newTask.status}" />
+                 <apex:inputField value="{!newTask.subject}" />
+                 <!--
+                 <apex:inputField value="{!newTask.whoId}" id="whoId" />
+                  <script>document.getElementById('{!$Component.whoId}').disabled = true; </script>
+                  --> 
+                 <apex:inputField value="{!newTask.ActivityDate}" />
+                 <apex:inputField value="{!newTask.priority}" />
+                 <!--
+                 <apex:inputField id="whatId" value="{!newTask.whatId}" /> 
+                 <script>document.getElementById('{!$Component.whatId}').disabled = true; </script> 
+                 -->     
+         </apex:pageBlockSection>
+         <apex:pageBlockSection columns="1" title="Description Information" >
+             <apex:inputField value="{!newTask.Description}" style="width:500px;height:100px"/>
+             <apex:pageblocksectionItem >
+                 <apex:inputCheckbox value="{!sendNotification}"  title="Send Notification Email"/>
+                 <label>Send Notification Email</label>
+             </apex:pageblocksectionItem>         
+         </apex:pageBlockSection>    
+         <apex:pageBlockButtons >
+             <apex:commandButton value="Save" action="{!insertTasks}" />
+             <apex:commandButton value="Cancel" action="{!cancel}" immediate="true" />
+         </apex:pageBlockButtons>
+     </apex:pageBlock>
+ </apex:form>
+</apex:page>

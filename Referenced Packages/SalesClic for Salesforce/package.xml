@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SalesClic for Salesforce</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <description>SalesClic for Salesforce is a user-friendly and powerful way to manage and analyse your sales pipeline, notably enabling you to:
+- gain time on date inputs (drag-and-drop opportunity updating);
+- gain understanding (immediate visual assessment of your pipeline);
+- gain reliability (detailed simulation of multiple sales scenarios).</description>
+    <namespacePrefix>NA_SC_Pipe_SR2</namespacePrefix>
+    <types>
+        <members>JSONObject</members>
+        <members>ListViewRecords</members>
+        <members>ListViewTests</members>
+        <members>ListViewWebService</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>User.SalesClic_Pipeline__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>SalesClic</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>SalesClic_folder</members>
+        <members>SalesClic_folder/SalesClic_logo_for_web_tab.png</members>
+        <name>Document</name>
+    </types>
+    <version>29.0</version>
+</Package>

@@ -1,0 +1,86 @@
+<apex:page standardController="Synety_Plugin__c" tabStyle="Synety_Plugin__c" extensions="SynetyPluginController" action="{!initialise}" id="pageid">
+<apex:sectionHeader title="SynetyPlugins" subtitle="Submit New Synety Plugin Version For Review"/>
+    <apex:form id="allpage">
+        <apex:pageBlock title="SynetyPlugins Edit" mode="edit" id="blockid">
+        <apex:pageMessages id="error"/>
+            <apex:actionRegion >
+                <apex:actionfunction action="{!getCRM}" name="actionFunction" reRender="crmid,keyid,qastatusid,verid,vernoid,reldtid,nftid,bugid,installid,releaseoptionid,prdid,bwrid,noteid,vernoid2,vernoid3">
+                    <apex:param assignto="{!selectedPlugin}" name="param1" value=""/>
+                </apex:actionfunction>
+            </apex:actionRegion>
+
+            <apex:actionRegion >
+                <apex:actionfunction action="{!releaseFunctionMethod}" name="releaseFunction" reRender="fileid,linkid">
+                    <apex:param assignto="{!releaseOption}" name="param1" value=""/>
+                </apex:actionfunction>
+            </apex:actionRegion>
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton value="Save" action="{!newsave}"/>
+                <apex:commandButton value="Cancel" action="{!newcancel}" />
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection id="showField1">
+
+                <apex:selectList label="Plugin Name" value="{!selectedPlugin}" id="sp_id" size="1" onchange="javaScript('{!$Component.sp_id}')">
+                    <apex:selectOptions value="{!plugins}"/>
+                </apex:selectList>
+
+                <apex:outputText label="CRM" value="{!selectedCRM}" id="crmid"/>
+                <apex:outputText label="License Key" value="{!licenseKey}" id="keyid"/>
+                <apex:outputText label="QA Status" value="{!qastatus}" id="qastatusid"/>
+                <apex:outputText label="Plugin Version" value="{!pluginVersion}" id="verid"/><p/>
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="New Plugin Version Number" for="vernoid"/>
+                <apex:panelGroup >
+                <apex:inputText label="New Plugin Version Number" value="{!pluginVersionNumber}" id="vernoid"/>
+                <apex:outputText value="{!prevPluginVersionNumber}" title="(Previous Version Number)" id="vernoid2"/>
+                </apex:panelGroup>
+                </apex:pageBlockSectionItem>
+                <apex:outputText label="Release Date" value="{!releaseDate}" id="reldtid"/>
+                <apex:inputTextArea label="New Features" value="{!newFeatures}" id="nftid" cols="75" rows="5" />
+                <apex:inputTextArea label="Bug Fixes" value="{!bugFixes}" id="bugid" cols="75" rows="10" />
+                <apex:inputTextArea label="Install Instruction" value="{!installInstruction}" id="installid" cols="75" rows="5" />
+                <apex:inputTextArea label="Release Notes" value="{!releaseNotes}" id="noteid" cols="75" rows="5" />
+                <apex:inputTextArea label="Supported Product Versions" value="{!supportedProductVersion}" id="prdid" cols="75" rows="1" /><p/>
+                <apex:inputTextArea label="Supported Browser Versions" value="{!supportedBrowserVersion}" id="bwrid" cols="75" rows="1" />
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Additional Document" for="addnoteid"/>
+                <apex:inputFile value="{!additional_notes.body}" filename="{!additional_notes.name}" contentType="{!additional_notes.contenttype}" id="addnoteid"/>
+                </apex:pageBlockSectionItem>
+
+                <!--p/-->                
+                <apex:selectList label="Release Code" value="{!releaseOption}" id="roid" size="1" onchange="releaseScript('{!$Component.roid}')">
+                    <apex:selectOption itemValue="None" itemLabel="-None-"/>
+                    <apex:selectOption itemValue="Upload Software File" itemLabel="Upload Software File"/>
+                    <apex:selectOption itemValue="Paste Link" itemLabel="Paste Link"/>
+                </apex:selectList>
+                <p/>
+
+                <apex:inputText label="Link" value="{!installLink}" id="linkid" size="75" disabled="{!isFile}" /><p/>
+                <apex:pageBlockSectionItem >
+                <apex:outputLabel value="File" for="fileid"/>
+                <apex:inputFile value="{!attachment.body}" filename="{!attachment.name}" id="fileid" disabled="{!isLink}"/>
+                </apex:pageBlockSectionItem>
+
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+
+    
+    <script>
+    function javaScript(selectedPlugin)
+    {
+        var selectedplug = document.getElementById(selectedPlugin).value;
+        actionFunction(selectedplug);
+    }
+    </script>
+
+    <script>
+    function releaseScript(releaseOption)
+    {
+        var releaseOption = document.getElementById(releaseOption).value;
+        releaseFunction(releaseOption);
+    }
+    </script>
+
+</apex:page>

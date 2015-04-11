@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Pardot</description>
+    <frameHeight>1000</frameHeight>
+    <hasSidebar>false</hasSidebar>
+    <label>Pardot</label>
+    <mobileReady>false</mobileReady>
+    <motif>Custom96: Street Sign</motif>
+    <url>https://pi.pardot.com?sessionid={!API.Session_ID}&amp;serverurl={!API.Partner_Server_URL_90}</url>
+    <urlEncodingKey>UTF-8</urlEncodingKey>
+</CustomTab>

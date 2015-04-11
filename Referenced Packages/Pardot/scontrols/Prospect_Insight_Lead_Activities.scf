@@ -1,0 +1,1 @@
+https://pi.pardot.com/prospect/activity/email/{!Lead.Email}?sessionid={!$Api.Session_ID}&serverurl={!$Api.Partner_Server_URL_90}

@@ -1,0 +1,10 @@
+<apex:page controller="synety.OAuthAuthorizationController" action="{!init}" tabstyle="synety__Synety_Configuration__c" >
+<apex:form >
+    <apex:pageMessages />
+    <apex:outputPanel >
+        <br />
+        <h1><apex:outputText value="{!message}" /></h1><br /><br />
+        <apex:commandButton value="<<< Go Back" onclick="window.location='/apex/SynetyConfigViewPage?uid={!configId }';return false;" />
+    </apex:outputPanel>
+</apex:form>
+</apex:page>

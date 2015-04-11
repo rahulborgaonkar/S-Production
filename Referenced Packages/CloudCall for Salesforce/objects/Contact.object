@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Call_Asst__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>if(AssistantPhone != &quot;&quot;, HYPERLINK(&apos;/apex/synety__ContactPhone?id=&apos;+Id+&apos;&amp;pn=&apos;+SUBSTITUTE(AssistantPhone, &quot;+&quot;, &quot;%2B&quot;), AssistantPhone+ &quot;&quot; + IMAGE(&quot;/resource/synety__tinyPhoneIcon&quot;,
+&quot;Click to Call&quot;), &apos;_blank&apos;), &quot;&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Call Asst.</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Home__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>if(HomePhone != &quot;&quot;, HYPERLINK(&apos;/apex/synety__ContactPhone?id=&apos;+Id+&apos;&amp;pn=&apos;+SUBSTITUTE(HomePhone, &quot;+&quot;, &quot;%2B&quot;), HomePhone+ &quot;&quot; + IMAGE(&quot;/resource/synety__tinyPhoneIcon&quot;,
+&quot;Click to Call&quot;), &apos;_blank&apos;), &quot;&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Call Home</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Mobile__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>if(MobilePhone != &quot;&quot;, HYPERLINK(&apos;/apex/synety__ContactPhone?id=&apos;+Id+&apos;&amp;pn=&apos;+SUBSTITUTE(MobilePhone, &quot;+&quot;, &quot;%2B&quot;), MobilePhone+ &quot;&quot; + IMAGE(&quot;/resource/synety__tinyPhoneIcon&quot;,
+&quot;Click to Call&quot;), &apos;_blank&apos;), &quot;&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Call Mobile</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Other__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>if(OtherPhone != &quot;&quot;, HYPERLINK(&apos;/apex/synety__ContactPhone?id=&apos;+Id+&apos;&amp;pn=&apos;+SUBSTITUTE(OtherPhone, &quot;+&quot;, &quot;%2B&quot;), OtherPhone+ &quot;&quot; + IMAGE(&quot;/resource/synety__tinyPhoneIcon&quot;,
+&quot;Click to Call&quot;), &apos;_blank&apos;), &quot;&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Call Other</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Phone__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>if(Phone != &quot;&quot;, HYPERLINK(&apos;/apex/synety__ContactPhone?id=&apos;+Id+&apos;&amp;pn=&apos;+SUBSTITUTE(Phone, &quot;+&quot;, &quot;%2B&quot;), Phone + &quot;&quot; + IMAGE(&quot;/resource/synety__tinyPhoneIcon&quot;,
+&quot;Click to Call&quot;), &apos;_blank&apos;), &quot;&quot;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Call Phone</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Synety_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Synety ID</label>
+        <length>100</length>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <webLinks>
+        <fullName>Click_to_Call_Salesforce1</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>page</linkType>
+        <masterLabel>Click to Call (Salesforce1)</masterLabel>
+        <openType>replace</openType>
+        <page>Click2CallContact</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
+        <fullName>Synety</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Click to Call</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>var wnd = window.open(&apos;/apex/synety__ContactPhone?id={!Contact.Id}&apos;,&apos;Make_Call&apos;,&apos;scrollbars=0,width=550, height=400,left=370,top=170&apos;);
+wnd.focus();</url>
+    </webLinks>
+    <webLinks>
+        <fullName>SynetyListButton</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Click to Call</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>var ids = {!GETRECORDIDS($ObjectType.Contact)};
+
+if(ids.length &lt; 1) {
+alert(&apos;Please select one Contact record.&apos;);
+}
+
+if(ids.length &gt;1){
+alert(&apos;Please select only one Contact record.&apos;);
+}
+
+if(ids.length ==1){
+var wnd = window.open(&apos;/apex/synety__ContactPhone?id=&apos;+ids[0]+&apos;&amp;returnURL=003&apos;,&apos;Make_Call&apos;,&apos;scrollbars=0,width=550,height=400,left=370,top=170&apos;);
+wnd.focus();
+}</url>
+    </webLinks>
+</CustomObject>

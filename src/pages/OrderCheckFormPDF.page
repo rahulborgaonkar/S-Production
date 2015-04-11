@@ -1,0 +1,426 @@
+<apex:page id="pageMain" standardStylesheets="false" showHeader="false" sidebar="false" controller="OrderCheckFormController" action="{!init}" title="SYNETY Order Check Form">
+<style>
+.outBorder
+{
+    border:solid;
+    border-width:thin;
+}
+.inBorder
+{
+    border-top:dotted;
+    border-width:thin;
+    text-align:center    
+}
+
+</style>
+<html>
+    <head>
+        <title>SYNETY Order Check Form</title>
+        
+    </head>
+    <body style="font-family: Arial, Helvetica, sans-serif;font-size: 12px; ">  
+        
+        <div style="padding: 10px;">
+          
+            <div id="conf_info_panel" class="panel_box white_bg top_space">
+                <div style="text-align:center">
+                    <img src="{!urlfor($Resource.CreditForm,'synety__synety_logo.png')}" width="212" height="77" alt="SYNETY Logo" />
+                </div>
+                
+                <h1 style="width:100%; text-align:center">
+                    Customer Order Check Form 
+                </h1>
+                
+                <div style="width:100%;">
+                    
+                    <table class="data_tbl" style="width:100%;">
+                        <tr>
+                            <td style="width:30%;" class="form_label">Account Manager:
+                            </td>
+                            <td style="width:70%;"><b>{!objOpp.Account.Owner.Name}</b></td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">Company Name: </td>
+                            <td><b>{!objOpp.Account.Name}</b></td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">Order Number:</td>
+                            <td><b>{!objOpp.Order_Number__c}</b></td>
+                        </tr>   
+                        <tr>
+                            <td class="form_label">
+                                Percentage Complete:
+                            </td>
+                            <td>
+                                <b>{!objForm.Percentage_Complete__c}%</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">Status:</td>
+                            <td>
+                                <b>{!objForm.Status__c}&nbsp;<apex:image rendered="{!objForm.Status__c=='Completed'}" value="{!URLFOR($Resource.CreditForm,'images/icon_green_tick.gif')}" /></b>
+                            </td>
+                        </tr>
+                    </table>   
+                </div>
+                
+            </div>
+            
+            <h3>
+                CloudCall Service Administrator Details &nbsp;<apex:image rendered="{!sec1Complete}" value="{!URLFOR($Resource.CreditForm,'images/icon_green_tick.gif')}" />                
+            </h3>
+            <div id="conf_info_panel" class="panel_box white_bg top_space">
+                <div style="width:100%;">
+                    <table class="data_tbl" style="width:100%;">
+                        <tr>
+                            <td style="width:30%;" class="form_label">
+                                
+                                First Name: 
+                            </td>
+                            <td style="width:70%;">
+                                <apex:outputText style="width:60%" value="{!objForm.First_Name__c}" styleclass="form_input" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Last Name:  
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Last_Name__c}" styleclass="form_input" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Email Address:
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Email_Address__c}" styleclass="form_input" />
+                             </td>
+                         </tr>   
+    <tr>
+                             <td class="form_label">
+                                Landline Number:
+                             </td>
+                             <td>
+                                 <apex:outputText style="width:60%" value="{!objForm.Landline_Number__c}" styleclass="form_input" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Mobile Number:
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Mobile_Number__c}" styleclass="form_input" />
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="form_label">
+                                Second Site info / Additional Notes:
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Second_Site_info_Additional_Notes__c}" styleclass="form_textarea" />
+                                
+                            </td>
+                        </tr>
+                        
+                    </table>   
+                </div>                    
+            </div>
+            
+<apex:outputpanel rendered="{!showSiteAddressSection}" >
+            <h3>
+                Site Provisioning (Installation) Address&nbsp;<apex:image rendered="{!sec2Complete}" value="{!URLFOR($Resource.CreditForm,'images/icon_green_tick.gif')}" />
+            </h3>
+            <div id="conf_info_panel" class="panel_box white_bg top_space">
+                <div style="width:100%;">
+                    <table class="data_tbl" style="width:100%;">
+                        <tr>
+                            <td style="width:30%;" class="form_label">
+                                Site Name:  
+                            </td>
+                            <td style="width:70%;">
+                                <apex:outputText style="width:60%" value="{!objForm.Site_Name__c}" styleclass="form_input" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Site Contact:   
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Site_Contact__c}" styleclass="form_input" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Technical Contact:  
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Technical_Contact__c}" styleclass="form_input" />
+                            </td>
+                        </tr>   
+                            
+                        
+                        <tr>
+                            <td class="form_label">
+                                Office Type*:
+                            </td>
+                            <td>
+                                <apex:outputtext style="width:60%" value="{!objForm.Type__c}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Site Address:
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Site_Address__c}" styleclass="form_textarea" />
+                                
+                            </td>
+                        </tr>
+                        
+                        
+                        
+                        <tr>
+                            <td colspan="2">
+                                <span style="color:red; font-size:11px">
+                                * If you selected serviced office and you are using our VOIP service, we will need to have your serviced office network
+                                    provider alter their network setting for you in order for your service to work correctly. You will automatically receive
+                                    a serviced office  network instructions document as soon as you submit this form.
+                                </span>
+                            </td>
+                        </tr>  
+                         
+                    </table>   
+                  </div>
+                
+            </div>
+
+</apex:outputpanel>
+
+<apex:outputpanel rendered="{!showNetworkInfoSection}" >            
+            <h3>
+                Network Information&nbsp;<apex:image rendered="{!sec3Complete}" value="{!URLFOR($Resource.CreditForm,'images/icon_green_tick.gif')}" />
+            </h3>
+            <div id="conf_info_panel" class="panel_box white_bg top_space">
+                    Important: Failure to set quality of service may result in poor call quality
+                    <div style="width:100%;">
+                    <table class="data_tbl" style="width:100%;">
+                        <tr>
+                            <td style="width:30%;" class="form_label">
+                                Internet Connection Type:
+                            </td>
+                            <td style="width:70%;">
+                                <apex:outputtext style="width:80%" value="{!objForm.Internet_Connection_Type__c}">
+                                </apex:outputtext>    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Internet Connection Speed*: 
+                            
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Upload_Speed_mb_s__c}" styleclass="form_input" /> mb/s upload <br />
+                                <apex:outputText style="width:60%" value="{!objForm.Download_Speed_mb_s__c}" styleclass="form_input" /> mb/s download
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label" colspan="2" style="font-size:11px; color:red">
+                            * If you are unsure of this, you can check your speed at <a target="_blank" href="http://www.broadbandspeedchecker.co.uk">http://www.broadbandspeedchecker.co.uk</a>. Peform this check during your busiest internet usage time
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Shared or Dedicated Internet:   
+                            </td>
+                            <td>
+                                <apex:outputtext style="width:80%" value="{!objForm.Shared_or_Dedicated_Internet__c}">
+                                </apex:outputtext>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="form_label">
+                                Internet Connection Provider:   
+                            </td>
+                            <td>
+                                <apex:outputText style="width:60%" value="{!objForm.Internet_Connection_Provider__c}" styleclass="form_input" />
+                            </td>
+                        </tr>   
+                        <tr>
+                            <td class="form_label">
+                                Use VoIP:
+                            </td>
+                            <td>
+                                
+                                <apex:outputtext value="{!objForm.Use_VoIP__c}">
+                                </apex:outputtext>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Network Type:
+                            </td>
+                            <td>
+                                <apex:outputtext style="width:60%" value="{!objForm.Network_Type__c}">
+                                </apex:outputtext>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Make and model of your ethernet switch:
+                            </td>
+                            <td>
+                                <apex:outputText style="width:80%" value="{!objForm.Make_and_model_of_ethernet_switch__c}" styleclass="form_input" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Is it POE:
+                            </td>
+                            <td>
+                                <apex:outputtext style="width:60%" value="{!objForm.Is_it_POE__c}">
+                                </apex:outputtext>    
+                            </td>
+                        </tr>    
+                        
+                        <tr>
+                            <td class="form_label">
+                                Make and model of your wireless access point:
+                            </td>
+                            <td>
+                                <apex:outputText style="width:80%" value="{!objForm.Make_and_model_of_wireless_access_point__c}" styleclass="form_input" />
+                            </td>
+                        </tr> 
+                        
+                        <tr>
+                            <td class="form_label">
+                                Phone System Connection:
+                            </td>
+                            <td>
+                                <apex:outputText style="width:80%" value="{!objForm.Phone_System_Connection__c}" styleclass="form_input" />
+                            </td>
+                        </tr> 
+                        
+                        <tr>
+                            <td class="form_label">
+                                Additional Network Information:
+                            </td>
+                            <td>
+                                <apex:outputText style="width:80%" value="{!objForm.Additional_Network_Information__c}" styleclass="form_input" />
+                            </td>
+                        </tr> 
+                    </table>   
+                  </div>
+            </div>
+
+</apex:outputpanel>
+            
+            <h3>
+                Telephone Number Information&nbsp;<apex:image rendered="{!sec4Complete}" value="{!URLFOR($Resource.CreditForm,'images/icon_green_tick.gif')}" />
+            </h3>
+            <div id="conf_info_panel" class="panel_box white_bg top_space">
+                <div class="left" style="width:100%">
+                    <table style="width:100%;" class="data_tbl">
+                        <tr>
+                            <td style="width:30%;" class="form_label">
+                                Port existing phone numbers?
+                            </td>
+                            <td style="width:70%;">
+                                <apex:outputtext style="width:40%" value="{!objForm.Port_existing_phone_numbers__c}">
+                                </apex:outputtext>    
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                <apex:outputText rendered="{!objForm.Port_existing_phone_numbers__c=='Yes'}">
+                                    Phone numbers to be Ported:
+                                </apex:outputText>
+                                    
+                            </td>
+                            <td>
+                                <apex:outputText rendered="{!objForm.Port_existing_phone_numbers__c=='Yes'}" style="width:60%" value="{!objForm.Phone_numbers_to_be_Ported__c}" styleclass="form_textarea" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Additional New Phone<br />Numbers Required:
+                            </td>
+                            <td>
+                                <apex:outputText value="{!objForm.New_Phone_Numbers__c}" styleclass="form_textarea" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                Display existing phone number when dialing out?
+                            </td>
+                            <td>
+                                <apex:outputtext style="width:60%" value="{!objForm.Display_existing_number_when_dialing_out__c}">
+                                </apex:outputtext>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="form_label">
+                                <apex:outputtext rendered="{!objForm.Display_existing_number_when_dialing_out__c=='Yes'}">Phone number to be displayed:
+                                </apex:outputtext>
+                            </td>
+                            <td>
+                                <apex:outputText rendered="{!objForm.Display_existing_number_when_dialing_out__c=='Yes'}" id="numToDisplay" style="width:60%" value="{!objForm.Phone_number_to_be_displayed__c}" styleclass="form_input" />
+                            </td>
+                        </tr>  
+                        <tr>
+                            <td class="form_label">
+                                <apex:outputtext rendered="{!objForm.CloudCall_Communicator_SoftPhone__c=='Yes'}">CloudCall Communicator Soft-phone:
+                                </apex:outputtext>
+                            </td>
+                            <td>
+                                <apex:outputText rendered="{!objForm.CloudCall_Communicator_SoftPhone__c=='Yes'}" id="lstUseSoftPhone" style="width:60%" value="{!objForm.CloudCall_Communicator_SoftPhone__c}" styleclass="form_input" />
+                            </td>
+                        </tr>  
+                        <tr >
+                            <td class="form_label">
+                                <apex:outputtext rendered="{!Order_Form_Check_Detail_Size > 0}" style="width:60%">List of the account names and click devices (DDI phone numbers) to use on the click accounts </apex:outputtext>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td class="form_label">
+                                <apex:outputPanel id="clickdevice" rendered="{!Order_Form_Check_Detail_Size > 0}">
+                                    <apex:pageBlock >
+                                        <apex:dataTable width="100%" value="{!FetchAccount}" var="acc" styleClass="outBorder">
+                                            <apex:column headerValue="Account Name" width="70%" value="{!acc.AccName__c}" styleClass="inBorder"/>
+                                            <apex:column headerValue="Click Device" value="{!acc.AccDDINumber__c}" styleClass="inBorder"/>
+                                        </apex:dataTable>
+                                    </apex:pageBlock>
+                                </apex:outputPanel>
+                            </td>
+                        </tr >
+                        <tr >
+                            <td class="form_label" colspan="2">
+                                <apex:outputpanel rendered="{!objForm.Display_existing_number_when_dialing_out__c=='Yes'}">
+                                    <apex:outputfield value="{!objForm.Owns_or_has_the_right_to_use_the_number__c}" id="persmissionToUse" />
+                                    <label for="persmissionToUse">I confirm I own or have the right to use this phone number. </label>
+                                    <br />
+                                    <span style="color:red">
+                                        It is an offence to present a phone number which you do not have permission to use. 
+                                    </span>
+                                </apex:outputpanel>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td class="form_label" colspan="2">
+                                <img src="/orders/img/checkbox_checked.gif" alt="Checked" width="21" height="16" class="checkImg" title="Checked" />
+                                <label style="font-size:12px; font-weight:bold">
+                                    I CONFIRM THAT THE INFORMATION SUPPLIED IS TRUE AND ACCURATE TO THE BEST OF MY KNOWLEDGE AND UNDERSTAND THAT INCORRECT INFORMATION SUPPLIED COULD LEAD TO ADDITIONAL CHARGES    
+                                </label>
+                            </td>
+                        </tr>
+                    </table>   
+                </div>
+            </div>
+    </div>
+
+
+    </body>
+</html>
+</apex:page>

@@ -1,0 +1,24 @@
+<apex:page controller="CommissionSetupController" title="Commission Config Setup" action="{!init}">
+<apex:outputpanel rendered="{!showFrame}">
+    <script>
+        document.location = '/a0d/o';
+    </script>
+    <!--
+    <br />
+    <apex:form>
+    <apex:commandButton value="Click here to Open Commission Rates Setup Window" onClick="javascript:window.open('/a0d?isdtp=vw');return false;" />
+    </apex:form>
+    -->
+  <!--
+  <iframe src="/a0d?isdtp=vw" width="100%" height="600px" frameborder="0" seamless="seamless" scrolling="yes" >
+  
+  </iframe>
+  -->
+</apex:outputpanel>  
+
+<apex:outputpanel rendered="{! !showFrame}">
+    <span style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+        Unauthorized access is denied.
+    </span>
+</apex:outputpanel>  
+</apex:page>

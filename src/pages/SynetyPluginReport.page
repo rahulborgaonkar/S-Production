@@ -1,0 +1,63 @@
+<apex:page standardController="Synety_Plugin__c" extensions="SynetyPluginController" tabStyle="Synety_Plugin__c">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+    <apex:form >
+        <apex:outputPanel >
+            <br/>
+                <center><span style="font-size:26px;font-weight:bold;">QA Performance Report</span></center>
+            <br/>
+            <center>
+                <span style="font-size:15px;font-weight:normal;">
+                    <apex:outputLabel value="Owner - " for="ownerid"/>        
+                    <apex:selectList value="{!current_user}" size="1" required="true" id="ownerid">
+                        <apex:selectOptions value="{!users}"/>
+                    </apex:selectList>
+
+                    <apex:outputLabel value="Start Date >= " for="stid" style="font-size:15px;font-weight:bold;"/>
+                    <apex:inputField value="{!tmp_plugin.stDate__c}" id="stid" onselect="stfunction()"/>
+                    <apex:outputLabel value="End Date < " for="enid"  style="font-size:15px;font-weight:bold;"/>
+                    <apex:inputField value="{!tmp_plugin.enDate__c}" id="enid"/>
+                    <apex:outputLabel value=" " for="repid"  style="font-size:15px;font-weight:normal;"/>
+                    <apex:commandButton value="Run Report" action="{!getChangedMonth}" id="repid" style="font-size:13px;font-weight:bold;"/>
+                </span>
+            </center>
+            <br/>
+
+            <table width="75%" align="center">
+            <tr>
+            <td>
+                <apex:pageBlock title="Plugin Summary Report"  id="id1">
+                    <apex:pageBlockTable value="{!PluginSummary}" var="p" style="width:100%">
+                        <apex:column headerValue="Plugin Name">
+                            <apex:outputLink value="/{!p.PluginId}">{!p.PluginName}</apex:outputlink>
+                        </apex:column>
+                        <apex:column headerValue="Plugin Version" value="{!p.PluginVersion}"/>
+                        <apex:column headerValue="Current Version" value="{!p.PluginVersionNumber}"/>
+                        <apex:column headerValue="Last Submitted">
+                            <apex:outputText value="{0,date,dd-MMM-yyyy}">
+                                <apex:param value="{!p.LastModifiedDate}" />
+                            </apex:outputText>
+                        </apex:column>
+                        <apex:column headerValue="Total Submission" value="{!p.submission}"/>
+                        <apex:column headerValue="Total Passed" value="{!p.passed}"/>
+                        <apex:column headerValue="Total Failed" value="{!p.Failed}"/>
+                        <apex:column headerValue="First Time Passed %" value="{!p.firstTimePassedPluginCount}"/>
+                        <apex:column headerValue="Average Failures" value="{!p.averageFailure}"/>
+                    </apex:pageBlockTable>
+                </apex:pageBlock>
+            </td>
+            </tr>
+            </table>
+        </apex:outputPanel>
+    </apex:form>
+    <script>
+        $(".dateFormat").css("display","none");
+    </script>
+
+    <script type="text/javascript">
+        window.onload = setFocus
+        function setFocus() 
+        {
+            document.getElementById('ownerid').focus();
+        }
+    </script>
+</apex:page>

@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fieldSets>
+        <fullName>Custom_Fields</fullName>
+        <description>Custom fields to be included in the View and Create/​Update Service Order pages.</description>
+        <label>Custom Fields</label>
+    </fieldSets>
+    <fields>
+        <fullName>Auto_Renew__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Auto Renew</label>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Billing_Currency__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>Text( Partner_Contract_Rules__r.Default_Contract_Currency__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Billing Currency</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contract_Length__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Length of Contract (In Months).  If your contract does not allow you to override the default Contract Length policy, this field should be left blank.</inlineHelpText>
+        <label>Contract Length (Months)</label>
+        <precision>2</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Created_with_new_COA__c</fullName>
+        <defaultValue>true</defaultValue>
+        <deprecated>false</deprecated>
+        <description>This represents the Service Order record being created with a COA version higher than 1.17.</description>
+        <externalId>false</externalId>
+        <label>Created with new COA</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Customer_Billing_City__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Billing City</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Billing_Country__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Billing Country</label>
+        <length>50</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Billing_State__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Billing State</label>
+        <length>50</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Billing_Street__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Billing Street</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Billing_Zip_Postal_Code__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Billing Zip/Postal Code</label>
+        <length>20</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Company Name</label>
+        <length>50</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Org_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Please note that Org IDs are case sensitive.</inlineHelpText>
+        <label>Customer Org ID (Case Sensitive)</label>
+        <length>20</length>
+        <required>true</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Shipping_City__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Shipping City</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Shipping_Country__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Shipping Country</label>
+        <length>50</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Shipping_State__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Shipping State</label>
+        <length>50</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Shipping_Street__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Shipping Street</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Shipping_Zip_Postal_Code__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Shipping Zip/Postal Code</label>
+        <length>20</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Company Name</label>
+        <referenceTo>Customer__c</referenceTo>
+        <relationshipLabel>Service Orders</relationshipLabel>
+        <relationshipName>Service_Orders</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Date_Customer_Accepted_SFDC_Svc_Agrmnt__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Date that the customer accepted the SFDC Service Agreement (FOR OEMs only)</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Date that the customer accepted the SFDC Service Agreement (FOR OEMs only)</inlineHelpText>
+        <label>Date Customer Accepted SFDC Service Agmt</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Date_Partner_Received_Customer_Order__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Date Partner Received Customer Order</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>Date_Service_Order_Received_by_SFDC__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>The date the service order was received by salesforce.com</inlineHelpText>
+        <label>Date Service Order Received by SFDC</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>Default_Auto_Renew_Policy__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>text( Partner_Contract_Rules__r.Default_Auto_Renew_Policy__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Default Auto Renew Policy</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Default_Contract_Length_Policy_Months__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>text( Partner_Contract_Rules__r.Default_Contract_Length_Months__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Default Contract Length Policy (Months)</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Error_Comment__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Error Comment</label>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Full_Customer_Company_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <description>This formula field should be only used in places where we need to show both old and new orders.</description>
+        <externalId>false</externalId>
+        <formula>IF( Created_with_new_COA__c,
+    Customer__r.Customer_Company_Name__c,
+    Customer_Name__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Full Customer Company Name</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>I_certify__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Certification that a corresponding customer order has been received.  This is a required field</inlineHelpText>
+        <label>I Certify a Corresponding Order Is Rec&apos;d</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Note__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>&quot;Auto Renew and Contract Term are established on Initial orders.  All Add on orders will follow the terms as defined in your agreement with salesforce.com.&quot;</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Note:</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Order_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Order Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Initial</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Add-On</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Reduction Order</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Cancellation Order</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Upgrade - Partner App</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Upgrade - Org Edition</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Org_Edition_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Org Edition Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>GE</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>PE</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>EE</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>UE</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Override_Level__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Override Level</label>
+        <picklist>
+            <picklistValues>
+                <fullName>None</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Order</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Order Item</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Partner_Contract_Rules__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Contract</label>
+        <referenceTo>Partner_Contract_Terms__c</referenceTo>
+        <relationshipLabel>Service Orders</relationshipLabel>
+        <relationshipName>Service_Orders</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Product_Lines__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label># of Products Lines</label>
+        <summaryForeignKey>Service_Order_Detail__c.Partner_Order__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
+        <fullName>Related_Opportunity__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Lookup to all opportunities in the org
+User selects one opportunity which is stored on the Service Order</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Lookup to all opportunities in the org, you can select one opportunity which is stored on the Service Order.</inlineHelpText>
+        <label>Related Opportunity</label>
+        <referenceTo>Opportunity</referenceTo>
+        <relationshipLabel>Service Orders</relationshipLabel>
+        <relationshipName>Service_Orders</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Send_Order__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Send Order</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Service_Order_Status1__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>text( Service_Order_Status__c )</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Service Order Status</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Service_Order_Status__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Service Order Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Draft</fullName>
+                <default>true</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Submitted</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Received</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>In Process</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Error</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Activated</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Provisioned</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Service_Start_Date__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Service Start Date</label>
+        <required>true</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
+        <fullName>X62Org_To_Partner_Org_Email__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>62Org To Partner Org Email</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Service Order</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Customer_Name__c</columns>
+        <columns>Customer_Org_ID__c</columns>
+        <columns>Auto_Renew__c</columns>
+        <columns>Contract_Length__c</columns>
+        <columns>Service_Order_Status__c</columns>
+        <columns>CREATEDBY_USER</columns>
+        <columns>CREATED_DATE</columns>
+        <columns>OBJECT_ID</columns>
+        <columns>Customer_Shipping_Zip_Postal_Code__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Monica_Service_Order</fullName>
+        <booleanFilter>1</booleanFilter>
+        <columns>NAME</columns>
+        <columns>Service_Order_Status1__c</columns>
+        <columns>Partner_Contract_Rules__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Mine</filterScope>
+        <filters>
+            <field>CREATEDBY_USER</field>
+            <operation>contains</operation>
+            <value>lam</value>
+        </filters>
+        <label>Monica Service Order</label>
+    </listViews>
+    <nameField>
+        <displayFormat>SO-{00000000}</displayFormat>
+        <label>Service Order ID</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Service Orders</pluralLabel>
+    <searchLayouts/>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Autorenew_cannot_be_changed</fullName>
+        <active>true</active>
+        <errorConditionFormula>and (not(Partner_Contract_Rules__r.Allow_Auto_Renew_Override__c ) , not(Auto_Renew__c ),ispickval(Order_Type__c,&quot;Initial&quot;))</errorConditionFormula>
+        <errorDisplayField>Auto_Renew__c</errorDisplayField>
+        <errorMessage>Your contract does not allow you to override the default Auto Renew policy.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Autorenew_cannot_be_changed_addon</fullName>
+        <active>true</active>
+        <errorConditionFormula>and (not(Auto_Renew__c ),not(ispickval(Order_Type__c,&quot;Initial&quot;)))</errorConditionFormula>
+        <errorDisplayField>Auto_Renew__c</errorDisplayField>
+        <errorMessage>Auto Renew follows the terms of the active customer contract.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Billing_Country_Code</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(
+   ISCHANGED(Customer_Billing_Country__c ), 
+      OR (LEN( Customer_Billing_Country__c) &gt; 2, LEN( Customer_Billing_Country__c) &lt; 2, 
+      NOT( 
+         CONTAINS(&quot;JP:US:CA:AD:AE:AL:AM:AO:AT:AZ:BA:BE:BF:BG:BH:BI:BJ:BW:CD:&quot; &amp; 
+&quot;CF:CG:CH:CI:CM:CY:CZ:DE:DJ:DK:DZ:EE:EG:EH:ER:ES:ET:FI:FO:FR:&quot; &amp; 
+&quot;GA:GB:GE:GH:GI:GL:GM:GN:GQ:GR:GW:HR:HU:IE:IL:IQ:IR:IS:IT:JO:&quot; &amp; 
+&quot;KE:KM:KW:LB:LI:LR:LS:LT:LU:LV:LY:MA:MC:MD:ME:MK:ML:MT:MW:MR:&quot; &amp; 
+&quot;MU:MZ:NA:NE:NG:NL:NO:OM:PL:PS:PT:QA:RE:RO:RS:RU:RW;SA:SC:&quot; &amp; 
+&quot;SD:SE:SI:SK:SL:SM:SN:SO:SY:SZ:TD:TG:TN:TR:TZ:UA:UG:VA:YE:YT:&quot; &amp; 
+&quot;YU:ZA:ZM:ZW:AI:AG:AR:AW:BS:BB:BZ:BM:BO:BR:KY:CL:CX:CO:CR:&quot; &amp; 
+&quot;CU:DM:DO:EC:SV:FK:GF:GD:GP:GT:GY:HT:HN:JM:KI:MQ:MX:MS:AN:&quot; &amp; 
+&quot;NI:PA:PY:PE:PR:KN:LC:VC:GS:SR:TT:TC:UM:UY:VE:VG:VI&quot; &amp; 
+&quot;AF:AS:AU:BD:BY:BT:IO:KH:CN:CC:CK:TL:FJ:PF:GU:HM:HK:IN:ID:&quot; &amp; 
+&quot;KZ:KP:KR:KG:LA:MO:MG:MY:MV:MH:FM:MN:MM:NR:NP:NC:NZ:NU:NF:MP:&quot; &amp; 
+&quot;PK:PW:PG:PH:PN:WS:SG:SB:LK:TW:TJ:TH:TK:TO:TM:TV:UZ:VU:VN:WF&quot;, 
+       Customer_Billing_Country__c)
+       )))</errorConditionFormula>
+        <errorDisplayField>Customer_Billing_Country__c</errorDisplayField>
+        <errorMessage>Please enter a capital 2 digit ISO Country Code.  If you do not know the 2 digit ISO code for your Country, please look at the ISO website at  http://tinyurl.com/isocountrycode</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Contract_Length_cannot_be_changed</fullName>
+        <active>true</active>
+        <errorConditionFormula>and (not(Partner_Contract_Rules__r.Allow_Contract_Length_Override__c ) , not(isnull( Contract_Length__c ) ),ispickval(Order_Type__c,&quot;Initial&quot;))</errorConditionFormula>
+        <errorDisplayField>Contract_Length__c</errorDisplayField>
+        <errorMessage>Your contract does not allow you to override the default Contract Length policy.  The Contract length policy for this order will be determined by your contract with salesforce.com.  This field should remain blank</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Contract_Length_cannot_be_changed_addon</fullName>
+        <active>true</active>
+        <errorConditionFormula>and ( not(isnull( Contract_Length__c ) ),not(ispickval(Order_Type__c,&quot;Initial&quot;)))</errorConditionFormula>
+        <errorDisplayField>Contract_Length__c</errorDisplayField>
+        <errorMessage>Contract Length will follow the terms of the existing customer contract.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Contract_is_Required</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISBLANK( Partner_Contract_Rules__c )</errorConditionFormula>
+        <errorDisplayField>Partner_Contract_Rules__c</errorDisplayField>
+        <errorMessage>Contract is a required field.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Corresponding_Order_Required</fullName>
+        <active>true</active>
+        <description>Service orders to salesforce.com require that your organization has received a corresponding customer order</description>
+        <errorConditionFormula>ISPICKVAL( I_certify__c , &apos;No&apos;)</errorConditionFormula>
+        <errorDisplayField>I_certify__c</errorDisplayField>
+        <errorMessage>Service orders to salesforce.com require that your organization has received a corresponding customer order</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>DateCustomerAcceptedSfdcServiceAgmt</fullName>
+        <active>true</active>
+        <description>DateCustomerAcceptedSfdcServiceAgmt is  required when Service Order is not a cancellation order</description>
+        <errorConditionFormula>AND(
+NOT(ISPICKVAL(Partner_Contract_Rules__r.Type__c,&quot;ISVForce&quot;)), ISNULL(Date_Customer_Accepted_SFDC_Svc_Agrmnt__c), 
+    OR(ISPICKVAL(Order_Type__c , &quot;Initial&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Add-On&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Reduction Order&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Upgrade - Partner App&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Upgrade - Org Edition&quot;) 
+    )
+)</errorConditionFormula>
+        <errorDisplayField>Date_Customer_Accepted_SFDC_Svc_Agrmnt__c</errorDisplayField>
+        <errorMessage>Date Partner Accepted Salesforce Agreement is a required field for this contract type.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>DatePartnerReceivedCustomerOrder</fullName>
+        <active>true</active>
+        <description>Date_Partner_Received_Customer_Order__c  is  required when Service Order is not a cancellation order</description>
+        <errorConditionFormula>AND(ISNULL(Date_Partner_Received_Customer_Order__c ), 
+    OR(ISPICKVAL(Order_Type__c , &quot;Initial&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Add-On&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Reduction Order&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Upgrade - Partner App&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Upgrade - Org Edition&quot;) 
+    )
+)</errorConditionFormula>
+        <errorDisplayField>Date_Partner_Received_Customer_Order__c</errorDisplayField>
+        <errorMessage>Date Partner Received Order is a required field.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>ICertify</fullName>
+        <active>true</active>
+        <description>I_certify__c  is  required when Service Order is not a cancellation order</description>
+        <errorConditionFormula>AND(ISPICKVAL(I_certify__c,&quot;&quot;), 
+    OR(ISPICKVAL(Order_Type__c , &quot;Initial&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Add-On&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Reduction Order&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Upgrade - Partner App&quot;),
+       ISPICKVAL(Order_Type__c , &quot;Upgrade - Org Edition&quot;) 
+    )
+)</errorConditionFormula>
+        <errorDisplayField>I_certify__c</errorDisplayField>
+        <errorMessage>Error: You must enter a value</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>OrderTypeRequired</fullName>
+        <active>true</active>
+        <description>Need to select a type of Order</description>
+        <errorConditionFormula>ISBLANK( TEXT(Order_Type__c))</errorConditionFormula>
+        <errorDisplayField>Order_Type__c</errorDisplayField>
+        <errorMessage>You must select an Order Type.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Org_ID_is_invalid</fullName>
+        <active>true</active>
+        <errorConditionFormula>OR(not(begins( Customer_Org_ID__c ,&quot;00D&quot;)),AND( LEN(Customer_Org_ID__c) &lt;&gt;15))</errorConditionFormula>
+        <errorDisplayField>Customer_Org_ID__c</errorDisplayField>
+        <errorMessage>The Org ID you entered does not follow the valid format.  Org IDs should begin with &quot;00D&quot; and be 15 characters in length.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>SendOrderOnInsert</fullName>
+        <active>false</active>
+        <description>Send order checkbox must be always false on insert</description>
+        <errorConditionFormula>AND (
+       ISNEW(),
+       Send_Order__c = true
+)</errorConditionFormula>
+        <errorDisplayField>Send_Order__c</errorDisplayField>
+        <errorMessage>Send order must be false when first creating a Service order</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Service_Order_Start_Date</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISPICKVAL(Service_Order_Status__c, &quot;Draft&quot;)  &amp;&amp; Service_Start_Date__c &lt; TODAY()</errorConditionFormula>
+        <errorDisplayField>Service_Start_Date__c</errorDisplayField>
+        <errorMessage>Invalid Service Start Date - Service Start Date cannot be entered for past dates.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Shipping_Country_Code</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(
+   ISCHANGED(Customer_Shipping_Country__c), 
+      OR (LEN(Customer_Shipping_Country__c) &gt; 2, LEN(Customer_Shipping_Country__c) &lt; 2, 
+      NOT( 
+         CONTAINS(&quot;JP:US:CA:AD:AE:AL:AM:AO:AT:AZ:BA:BE:BF:BG:BH:BI:BJ:BW:CD:&quot; &amp; 
+&quot;CF:CG:CH:CI:CM:CY:CZ:DE:DJ:DK:DZ:EE:EG:EH:ER:ES:ET:FI:FO:FR:&quot; &amp; 
+&quot;GA:GB:GE:GH:GI:GL:GM:GN:GQ:GR:GW:HR:HU:IE:IL:IQ:IR:IS:IT:JO:&quot; &amp; 
+&quot;KE:KM:KW:LB:LI:LR:LS:LT:LU:LV:LY:MA:MC:MD:ME:MK:ML:MT:MW:MR:&quot; &amp; 
+&quot;MU:MZ:NA:NE:NG:NL:NO:OM:PL:PS:PT:QA:RE:RO:RS:RU:RW;SA:SC:&quot; &amp; 
+&quot;SD:SE:SI:SK:SL:SM:SN:SO:SY:SZ:TD:TG:TN:TR:TZ:UA:UG:VA:YE:YT:&quot; &amp; 
+&quot;YU:ZA:ZM:ZW:AI:AG:AR:AW:BS:BB:BZ:BM:BO:BR:KY:CL:CX:CO:CR:&quot; &amp; 
+&quot;CU:DM:DO:EC:SV:FK:GF:GD:GP:GT:GY:HT:HN:JM:KI:MQ:MX:MS:AN:&quot; &amp; 
+&quot;NI:PA:PY:PE:PR:KN:LC:VC:GS:SR:TT:TC:UM:UY:VE:VG:VI&quot; &amp; 
+&quot;AF:AS:AU:BD:BY:BT:IO:KH:CN:CC:CK:TL:FJ:PF:GU:HM:HK:IN:ID:&quot; &amp; 
+&quot;KZ:KP:KR:KG:LA:MO:MG:MY:MV:MH:FM:MN:MM:NR:NP:NC:NZ:NU:NF:MP:&quot; &amp; 
+&quot;PK:PW:PG:PH:PN:WS:SG:SB:LK:TW:TJ:TH:TK:TO:TM:TV:UZ:VU:VN:WF&quot;, 
+       Customer_Shipping_Country__c)
+       )))</errorConditionFormula>
+        <errorDisplayField>Customer_Shipping_Country__c</errorDisplayField>
+        <errorMessage>Please enter a capital 2 digit ISO Country Code. If you do not know the 2 digit ISO code for your Country, please look at the ISO website at http://tinyurl.com/isocountrycode</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>StartDate_is_Required</fullName>
+        <active>true</active>
+        <errorConditionFormula>ISNULL( Service_Start_Date__c )</errorConditionFormula>
+        <errorDisplayField>Service_Start_Date__c</errorDisplayField>
+        <errorMessage>Service Start Date is a required field.</errorMessage>
+    </validationRules>
+    <webLinks>
+        <fullName>Send_Order</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>page</linkType>
+        <masterLabel>Send Order</masterLabel>
+        <openType>replace</openType>
+        <page>SendServiceOrder</page>
+        <protected>false</protected>
+    </webLinks>
+</CustomObject>

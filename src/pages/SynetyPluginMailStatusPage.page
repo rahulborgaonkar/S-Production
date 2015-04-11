@@ -1,0 +1,6 @@
+<apex:page standardController="Synety_Plugin__c" extensions="SynetyPluginController">
+    <apex:pageMessages />
+    <apex:outputPanel rendered="{!sp.IsMailSent__c == false}">
+    Release Date and Version Number is updated. Please send mail to customer for latest updates.
+    </apex:outputPanel>
+</apex:page>

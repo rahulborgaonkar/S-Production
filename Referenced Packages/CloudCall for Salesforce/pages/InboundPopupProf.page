@@ -1,0 +1,163 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false">
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <!-- 
+  <link href="/resource/synety__synetySignalR2/cc_accordion.css" rel="stylesheet" />
+  -->
+  <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  <script src="/resource/synety__synetySignalR2/cc_synetypushnotify_prof.js"></script>
+  <!--<link rel="stylesheet" href="/resources/demos/style.css" />-->
+  <!-- 
+  <script>
+  
+  $(function() {
+    $( "#accordion" ).accordion({
+      event: "click hoverintent"
+    });
+  });
+  
+  
+  /*
+   * hoverIntent | Copyright 2011 Brian Cherne
+   * http://cherne.net/brian/resources/jquery.hoverIntent.html
+   * modified by the jQuery UI team
+   */
+  $.event.special.hoverintent = {
+    setup: function() {
+      $( this ).bind( "mouseover", jQuery.event.special.hoverintent.handler );
+    },
+    teardown: function() {
+      $( this ).unbind( "mouseover", jQuery.event.special.hoverintent.handler );
+    },
+    handler: function( event ) {
+      var currentX, currentY, timeout,
+        args = arguments,
+        target = $( event.target ),
+        previousX = event.pageX,
+        previousY = event.pageY;
+ 
+      function track( event ) {
+        currentX = event.pageX;
+        currentY = event.pageY;
+      };
+ 
+      function clear() {
+        target
+          .unbind( "mousemove", track )
+          .unbind( "mouseout", clear );
+        clearTimeout( timeout );
+      }
+ 
+      function handler() {
+        var prop,
+          orig = event;
+ 
+        if ( ( Math.abs( previousX - currentX ) +
+            Math.abs( previousY - currentY ) ) < 7 ) {
+          clear();
+ 
+          event = $.Event( "hoverintent" );
+          for ( prop in orig ) {
+            if ( !( prop in event ) ) {
+              event[ prop ] = orig[ prop ];
+            }
+          }
+          // Prevent accessing the original event since the new event
+          // is fired asynchronously and the old event is no longer
+          // usable (#6028)
+          delete event.originalEvent;
+ 
+          target.trigger( event );
+        } else {
+          previousX = currentX;
+          previousY = currentY;
+          timeout = setTimeout( handler, 100 );
+        }
+      }
+ 
+      timeout = setTimeout( handler, 100 );
+      target.bind({
+        mousemove: track,
+        mouseout: clear
+      });
+    }
+  };
+  
+  var buttonCount = 0;
+  function addAccordian()
+  {
+	  buttonCount++;
+	  $('#accordion').prepend("<h3 id='customH3'>Incoming call from 1234567890 </h3><div><p id='contactDiv_"+buttonCount+"'>Contact: Mohsin Raza</p><input type=\"button\" id=\"myClicker_"+buttonCount+"\" value=\"Dismiss "+buttonCount+"\" onclick=\"javascript:dismissThis(this);\" /></div>");  
+	  $('#accordion').accordion("refresh");
+	  /*
+	  $(function() {
+		$( "#accordion" ).accordion({
+		  event: "click hoverintent"
+		});		
+	  });
+	  */
+  }
+  
+  
+  function addContact()
+  {
+	  var delId = document.getElementById('txtDelId').value;
+	  //alert('removing myClicker_'+delId);
+	  var contactDiv = document.getElementById('contactDiv_'+delId);
+	  $(contactDiv).append("Contact: Mohsin Raza<br />");
+  }
+  
+  function dismissThis(thisButton)
+  {
+	  //alert(thisButton.id);
+	var parent = $(thisButton).closest('div');
+    var head = parent.prev('h3');
+	//var parent = $(thisButton).closest('div');
+	//alert(head.innerHTML);
+    parent.add(head).fadeOut('slow',function(){$(this).remove();});
+	//$('#accordion').accordion("refresh"); 
+  }
+  
+  function dismissButton()
+  {
+	  var delId = document.getElementById('txtDelId').value;
+	  //alert('removing myClicker_'+delId);
+	  var thisButton = document.getElementById('myClicker_'+delId);
+	  dismissThis(thisButton);
+  }
+  
+  	$(document).ready(function()
+	{
+		OnLoad();	
+	});
+  </script>
+   -->
+   
+  <script>
+   $(document).ready(function()
+	{
+		OnLoad();	
+	});
+  </script>
+</head>
+<body style="font-size: 50%; font-family: 'Arial','Helvetica',sans-serif;">
+<!-- 
+<a href="javascript:addAccordian();">+</a>
+<input size="2" type="text" id="txtDelId" />
+<a href="javascript:addContact();">++</a>
+-->
+<!-- 
+<a href="javascript:dismissButton();">Click to Remove</a>
+-->
+<!--   
+<div id="accordion">
+</div>
+-->
+ 
+</body>
+</html>
+
+</apex:page>

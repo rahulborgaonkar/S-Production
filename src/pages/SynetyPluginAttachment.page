@@ -1,0 +1,13 @@
+<apex:page standardController="Synety_Plugin__c" tabStyle="Synety_Plugin__c">
+    <apex:relatedList subject="{!Synety_Plugin__c}" list="CombinedAttachments" pageSize="2">
+        <apex:facet name="header">
+            <table>
+                <tr>
+                    <td class="pbTitle">
+                        <h3>Attachments</h3>
+                    </td>
+                </tr>
+            </table>
+        </apex:facet>
+    </apex:relatedList>
+</apex:page>

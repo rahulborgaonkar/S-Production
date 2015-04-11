@@ -1,0 +1,37 @@
+<!-- 
+* Copyright (c) 2013 Salesforce.com
+* @author Luis Campos
+* @date 03/20/2013
+* @description vf page embedded on Partner Contract Terms Layout and displays a button to sync Partner Data using COA Rest Service
+ -->
+<apex:page standardController="CHANNEL_ORDERS__Partner_Contract_Terms__c" Extensions="CHANNEL_ORDERS.PartnerTermsSyncBtnController" contentType="text/html">
+
+<style>
+	.SuccessStatus { color:green; font-weight:bold; line-height:162%; margin:0 0 0 35%; }
+	.FailStatus { color:red; font-weight:bold; line-height:100%; }
+	.sync_Item { width: 100%; float:left; line-height: 162%; }
+	.sync_Item input { margin:0 0 0 35%; }
+</style>
+
+	<apex:form >
+		<apex:pageBlock id="ContainerForm" mode="maindetail" >
+			<apex:pageBlockSection columns="1" >
+                <apex:pageBlockSectionItem >
+                	<apex:outputPanel id="syncOutput" styleClass="sync_Item">
+                		<apex:commandButton value="{!$Label.channel_orders__ServiceOrderSyncConfig}" action="{!syncData}" rendered="{!!bShowStatus}"/>
+                		<apex:outputLabel value="{!status}" rendered="{!bShowStatus}" styleClass="{!IF(bSuccess,'SuccessStatus','FailStatus')}">
+                			<script type="text/javascript">
+							        if('{!bSuccess}' == 'true'){
+							            setTimeout(function(){refreshPage()},1000);
+							        }  
+							        function refreshPage(){            
+							            top.location.href = '{!JSENCODE(sUrl)}';
+							        }
+							 </script>
+                		</apex:outputLabel>
+                	</apex:outputPanel>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+		</apex:pageBlock>
+	</apex:form>
+</apex:page>

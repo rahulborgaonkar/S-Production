@@ -1,0 +1,577 @@
+<apex:page id="pg" controller="synety.AgentPanelController" showHeader="false" sidebar="false" 
+standardStylesheets="false">
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>Salesforce Sidebar</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="/resource/synety__dialerStyles/css/normalize.min.css" />
+        <link rel="stylesheet" href="/resource/synety__dialerStyles/css/main.css?v13" />
+        <script src="/resource/synety__dialerStyles/js/vendor/modernizr-2.6.2.min.js"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/resource/synety__dialerStyles/js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+        <script src="/resource/synety__dialerStyles/js/main.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+        
+        <style>
+        	.message {
+        	
+			-moz-border-radius: 4px;
+			-webkit-border-radius: 4px;
+			border-radius: 4px;
+			}
+			.errorM6, .errorM4, .errorM3, .errorM2, .errorS1 {
+			border-color: #c00;
+			}
+			.message {
+			background-color: #ffc;
+			border-style: solid;
+			border-width: 1px;
+			color: #000;
+			padding: 6px 8px 6px 6px;
+			margin: 4px 20px;
+			}
+			.message {
+			-moz-border-radius: 4px;
+			-webkit-border-radius: 4px;
+			border-radius: 4px;
+			}
+
+        	
+        	.messageCell{
+        		font-size: 10px;
+        	}
+        		
+			.clear {
+				clear: both;
+			}
+			#info_pop_box { 
+			   	display: none; 
+			   	position: fixed; 
+			   	bottom: 25px; 
+			   	right: 10px; 
+			   	padding: 15px; 
+			   	z-index: 99999; 
+			   	font-size: 10px; 
+			}
+			.info_pop_yellow { 
+				background: lightyellow; 
+			}
+			.info_pop_red { 
+				background: lightpink; 
+			}
+			
+			body{
+				background-color: white;
+			}
+		</style>
+    </head>
+    <body>
+	    <!-- Imports Open CTI JavaScript library. It should point to a valid Salesforce domain. -->
+	    <script src="/support/api/29.0/interaction.js"></script>
+	    <script type="text/javascript">
+	        var namespacePrefix = "{!if($Organization.Id=='00DG0000000Ce3tMAC','','synety.')}";//"synety.";
+	        var agentDisplayName = '{!$User.FirstName + ' ' + $User.LastName}';
+	        var statusId = '{!status}';
+	        var onCall = '{!isOnCall}';
+	        var statuses = {};
+	        var CampaignActiveCalls = '{!CampaignActiveCalls}';
+	        var sInWrapUpTime = '{!InWrapUp}';
+	        var InWrapUpTime = null;
+	        var agentActiveCall = '';
+	        var SynetyConfigDetails = '{!SynetyConfigDetails}';
+	        var ServerTime = '{!ServerTime}';
+	        
+	        var sPresenceObj = '{!accountPresenceString}';
+	        var presenceObj = null;
+	        var accountId = '{!accountId}';
+	        
+	        var isInTransfer = false;
+	        
+	        var clickDevices = {};
+	        
+	        var hasTokenExpired = {!hasTokenExpired};
+	        
+	        var isNoteRequired = {!isNoteRequired};
+	        var isCallCatRequired = {!isCallCatRequired};
+	        var hideCategory_Subject = {!hideCategory_Subject};
+	        var CallNotificationsEnabled = {!CallNotificationsEnabled};
+	    </script>
+	    <script src="/resource/synety__agentSignalR3/jquery-1.9.0.js" type="text/javascript"></script>
+	  	<script src="/resource/synety__agentSignalR3/jquery.signalR-1.0.1.js" type="text/javascript"></script>
+	  	<script src="https://notifications.cloudcallcontact.com/signalr/hubs" type="text/javascript"></script>
+	  	<script src="/resource/synety__agentSignalR3/signalr_functions.js?v13" type="text/javascript"></script>
+	
+	    <!-- Import jQuery from google CDN, could also be static resource-->
+	    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+	    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	    <script src="/resource/synety__jqueryCookie?v13"></script>
+		<script src="https://malsup.github.io/jquery.blockUI.js"></script>
+		
+		<script type="text/javascript">
+	        
+	        $(function () {
+				if(sPresenceObj != '')
+					presenceObj = JSON.parse(sPresenceObj);
+				
+				if(hasTokenExpired == false)
+				{	
+					getWrapupTime();
+		        	//onload methods
+		        	statuses["Online"] = "13";
+		        	statuses["Busy"] = "25";
+			        statuses["Offline"] = "17";
+			        statuses["In wrap up"] = "6";
+			        
+			        <apex:repeat value="{!mapDeviceOpt}" var="deviceNum">
+			        	clickDevices["{!deviceNum}"] = "{!mapDeviceOpt[deviceNum]}";
+					</apex:repeat>
+					
+					//document.getElementById('user_number').innerHTML = clickDevices["{!}"];
+								
+								
+			        //Invokes CTI API method
+			        sforce.interaction.cti.enableClickToDial(enableClickToDialCallBack);
+			        sforce.interaction.cti.onClickToDial(click2Diallistener);
+			        getPageInfo();
+			        
+			        initAccordion();
+		        				
+		        	loadAgentCampaigns();
+		        	initSignalR(); 
+		        	showCurrentStatus();
+		        	
+		        	getSavedPageState();
+	        	}
+	        	
+	        	changeHeight();
+	        	//setInterval(changeHeight, 1000);
+	        	
+	        });
+	        		
+			var currentServerTime= convertDateTime(ServerTime);
+			var ConfCallWindow = null;
+			
+	    </script>
+	<div id="divMsg" style="display:block">
+		<apex:pageMessages id="msg"/>
+	</div> 
+	<!-- 
+	<apex:outputpanel rendered="{!lstDeviceOpt.size>0}">
+	 -->
+	<apex:outputpanel rendered="{!doShowPanel}">
+    <apex:form id="frm">
+        <div class="sidebar">
+        	<div class="box" id="divUserPresenceStatus" style="overflow: visible;" >
+        		
+				<!-- <font color="red" size="1">Welcome {!displayName}</font> -->
+				<div class="head">
+					<!-- 
+					<input title="update availability" type="button" value="Update" class="rtbtn" id="cmdPresence" onClick="login_logout();return false;" />
+					 -->
+					<h1>Availability</h1>
+				</div>
+				<div>
+					Number / Click Device:
+					<div class="dropdown_handler">
+						<div id="user_number" class="value" title="set your click device or available phone number by clicking here">{!mapDeviceOpt[phNumber]}</div>
+						<ul class="options" id="numberOptions">
+							<apex:repeat value="{!mapDeviceOpt}" var="deviceNum">
+								<li id="num_{!deviceNum}">{!mapDeviceOpt[deviceNum]}</li>
+							</apex:repeat>
+						</ul>	
+					</div>
+					<input type="hidden" id="lstPhNum"  value="{!phNumber}"/>
+					<!-- 
+					<label for="lstPhNum">Available Number / Click Device:</label>
+					<apex:selectList size="1" id="lstPhNum" value="{!phNumber}">
+				        <apex:selectOptions value="{!lstDeviceOpt}"/>
+				    </apex:selectList>
+					 -->
+					 
+				</div>
+				
+				<div>
+					Presence:
+					<div class="dropdown_handler">
+						<div id="currentStatusText" class="value" title="set your presence status by clicking here">&nbsp;</div>
+						<ul class="options" id="statusOptions">
+							<li>Online</li>
+							<li>Busy</li>
+							<li>Offline</li>
+						</ul>
+					</div>
+					<input type="hidden" id="lstStatus"  value="{!status}"/>
+				</div>
+				<!-- 
+				<div>	
+					<label for="lstStatus">Presence:
+					<span id="currentStatusText"
+        				style="font-size: 10px"></span>
+					</label>
+					
+					<apex:selectList id="lstStatus" value="{!status}" size="1">
+    
+				        <apex:selectOption itemLabel="Available for Calls" 
+				            itemValue="13"/>
+				        <apex:selectOption itemLabel="Unavailable for Calls" 
+				            itemValue="25"/>
+				        <apex:selectOption itemLabel="Offline/Logout" 
+				            itemValue="17"/>
+				         
+				    </apex:selectList>
+				</div>
+				 -->
+        	</div>
+        	
+        	<div id="divCallInfo" class="box"> <!-- style="display:none"> --> 
+        		<!--<div id="callTime" class="calltime" style="display:none">0:10:05</div>
+        		<div class="callstatus">In Call</div>-->
+        		<div id="callStatus_Cli" class="outgoing" style="display: none;">
+        			<span id="callStatus" style="font-size: 11px;" title="current call status">&nbsp;</span><br />
+        			<span id="cli" title="phone number">&nbsp;</span>
+       			</div>
+       			<div id="campName" class="callcampaign" style="font-size: 11px; display: none;" title="SYNETY campaign name">&nbsp;</div>
+       			
+       			<!-- 
+                <div class="incoming" style="display: none;">In Call: <span id="cli">0446009893332</span></div>
+                <div class="calling" style="display: none;">In Call: <span id="cli">0446009893332</span></div>
+        		-->
+        		
+        		<div id="divDialpad"> <!-- style="display:none"> -->
+        			<div class="number">
+        				<input type="text" name="number" id="callNum" onkeypress="return isNumberKey(event)" />
+        				<div id="clear">X</div>
+        				<div id="backspace">&larr;</div>
+        			</div>
+        			<ul class="keypad">
+        				<li>1</li>
+        				<li>2</li>
+        				<li>3</li>
+        				<li>4</li>
+        				<li>5</li>
+        				<li>6</li>
+        				<li>7</li>
+        				<li>8</li>
+        				<li>9</li>
+        				<li>*</li>
+        				<li>0</li>
+        				<li>#</li>
+        			</ul>
+        			<!-- 
+	        		<div class="number">
+		    			<input type="text" name="number" id="callNum" value="" title="use dialpad or enter number here to dial it or transfer an active call" />
+		    			<div title="clear number" id="clear" onClick="clearNumber();">X</div>
+		    		</div>
+	       			<ul class="keypad">
+	       				<li onClick="enterNumber('1');">1</li>
+	       				<li onClick="enterNumber('2');">2</li>
+	       				<li onClick="enterNumber('3');">3</li>
+	       				<li onClick="enterNumber('4');">4</li>
+	       				<li onClick="enterNumber('5');">5</li>
+	       				<li onClick="enterNumber('6');">6</li>
+	       				<li onClick="enterNumber('7');">7</li>
+	       				<li onClick="enterNumber('8');">8</li>
+	       				<li onClick="enterNumber('9');">9</li>
+	       				<li onClick="enterNumber('*');">*</li>
+	       				<li onClick="enterNumber('0');">0</li>
+	       				<li onClick="enterNumber('#');">#</li>
+	       			</ul>
+	       			-->
+	       			
+	       			<ul class="keypad2">
+                        <li id="cmdDial" class="dial" onClick="dialNumber();">Dial</li>
+                        
+                        <li id="cmdHangup" class="hangup disabled" style="display: none; " >Hangup</li>
+        				<li id="cmdMute" class="disabled" >Mute</li>
+        				<li id="cmdCallRecording" class="disabled" >||</li>
+        				<li id="cmdTransfer" class="disabled" >Trnsf</li>
+        				<li id="cmdHold"  class="disabled" >Hold</li>
+        				<li id="cmdConf" class="conf disabled" >Conf</li>
+        				
+                        <!-- 
+        				<li id="cmdHangup" class="hangup disabled" style="display: none; cursor: pointer;" onClick="hangupCall();" >Hangup</li>
+        				<li id="cmdMute" class="disabled" onClick="muteMe();">Mute</li>
+        				<li id="cmdCallRecording" class="disabled" onClick="pauseRecording();">||</li>
+        				<li id="cmdTransfer" class="disabled" onClick="transferCall();">Trnsf</li>
+        				<li id="cmdHold"  class="disabled" onClick="holdUnholdCall();">Hold</li>
+        				<li id="cmdConf" class="conf disabled" onClick="startConferenceCall();">Conf</li>
+        				 -->
+        			</ul>
+        			<!-- 
+	       			<ul class="keypad2">
+	       				<li title="dial number" id="cmdDial" class="dial" onClick="dialNumber();">Dial</li>
+	       				<li title="hangup call" id="cmdHangup" class="hangup" onClick="hangupCall();" style="display:none">Hangup</li>
+	       				<li title="mute me" id="cmdMute" onClick="muteMe();">Mute</li>
+	       				<li title="pause call recording" id="liCallRecording" onClick="pauseRecording();">||</li>
+	       				<li title="transfer call" id="cmdTransfer" onClick="transferCall();">Trnsf</li>
+	       				<li title="hold call" id="cmdHold" onClick="holdUnholdCall();">Hold</li>
+	       				<li title="start conference call" onClick="startConferenceCall();" class="conf">Conference</li>
+	       				<li>VM</li>
+	       			</ul>
+	       			-->
+	       			
+	       			<!-- 
+	       		 	<ul class="keypad2">
+	       		 		<li class="hangup" style="display:none" onClick="hangupCall();return false;">Hangup</li>
+	       		 	</ul>
+	       		 	-->
+       		 	</div>
+       		 	<div id="countdown" style="font-weight:bold; color:red; font-size:10px; text-align:center">&nbsp;<!-- Wrapup in 90 Seconds --></div>
+        	</div>
+        	
+        	<div id="divCallNotes" class="box" style="display:none">
+        			
+				<div class="head">
+					<!-- <input title="save call notes" type="button" id="cmdSaveNotes" onClick="saveNotes();return false;" value="Save" class="rtbtn" />-->
+					<h1>Call Details</h1>
+				</div>
+				<div id="divClickCallContact" style="color: red; font-size: 12px;">
+				
+				</div>
+       			<ul id="accordion">
+       				
+       			</ul>
+       			
+       			<div id="divSelectContact" style="display:none">
+		        	<apex:selectList id="lstContactType" size="1" onChange="typeChanged(this);">
+		    	        <apex:selectOption itemLabel="Select Record Type..." 
+				            itemValue=""/>
+		    	        <apex:selectOption itemLabel="Contact" 
+				            itemValue="contact"/>
+				        <apex:selectOption itemLabel="Account" 
+				            itemValue="account"/>
+				        <apex:selectOption itemLabel="Lead" 
+				            itemValue="lead"/>
+				    </apex:selectList>
+				    
+			        <div id="divContact" style="display:none">
+			        	<input type="button" class="rtaddbtn" onClick="openNewRecordWindow('contact');return false;" value="Add New Contact" /> 
+			        	<span style="font-size:10px">or search Contact</span><br />
+			        	<apex:inputField id="contact" value="{!oCallUpdate.synety__Contact__c}" label="" style="width:160px" />
+			        </div>
+			        <div id="divAccount" style="display:none">
+			        	<input type="button" class="rtaddbtn" onClick="openNewRecordWindow('account');return false;" value="Add New Account" />
+						<span style="font-size:10px">or search Account</span><br />
+			        	<apex:inputField id="account" value="{!oCallUpdate.synety__Account__c}" label="" style="width:160px" />
+			        </div>
+			        <div id="divLead" style="display:none">
+			        	<input type="button" class="rtaddbtn" onClick="openNewRecordWindow('lead');return false;" value="Add New Lead" />
+			        	<span style="font-size:10px">or search Lead</span><br />
+			        	<apex:inputField id="lead" value="{!oCallUpdate.synety__Lead__c}" label="" style="width:160px" />
+			        </div>
+		        </div>
+		        
+       			<div>
+       				<label for="lstCat">Call Category:</label>
+       				<apex:selectList id="lstCat" size="1" value="{!selCat}">
+			           <apex:selectOptions value="{!lstCallCatOpt}"/>
+			        </apex:selectList>
+       			</div>
+       			<div>
+       				<label for="txtNote">Notes:</label>
+       				<apex:inputTextArea id="txtNote" rows="5"></apex:inputTextArea>
+       				<div class="more">...</div>
+       				<input type="button" value="Save" class="save" title="save call notes" id="cmdSaveNotes" onClick="saveNotes();return false;" />
+       			</div>
+       			<div class="morebox">
+                    <input type="button" value="Save & Create Followup Task" class="save" id="cmdSaveNote_Task"  title="save call notes and create a followup task" onClick="saveNotes('create task');return false;"  />
+                    <input type="button" value="Save & Create Followup Event" class="save" id="cmdSaveNote_Event"  title="save call notes and create a followup event" onClick="saveNotes('create event');return false;" />	
+                </div>
+                <!-- 
+       			<div class="head">
+					<input title="save call notes" type="button" id="cmdSaveNotes" onClick="saveNotes();return false;" value="Save" class="rtbtn" />
+					<h1>&nbsp;</h1>
+				</div>
+				-->
+        	</div>
+        </div>
+     </apex:form>   
+     </apex:outputpanel>   
+        <script>
+	    	window.onbeforeunload = function(e) 
+		    {
+		    	savePageState();
+		    	
+		    	if(onCall == 'false' && document.getElementById('divCallNotes').style.display != 'none')
+		    	{	
+		    		return 'You have not saved the call notes yet.';
+		    	}
+		    	
+		    };
+		    
+		    startTime();
+		    /*
+		    $(".more").bind("click", function() {
+   				$(".morebox").slideToggle(100);
+   			});
+			
+			$("#cmdSaveNote_Task").bind("click", function() {
+   				$(".morebox").slideToggle(100);
+   			});
+			
+			$("#cmdSaveNote_Event").bind("click", function() {
+   				$(".morebox").slideToggle(100);
+   			});
+   			*/
+   			
+   				$('html').click(function() {
+					$(".morebox").slideUp(100);
+					$(".options").slideUp(100);
+				});
+				$(".value").bind("click", function() {
+    				$(this).next().slideToggle(100);
+    				event.stopPropagation();
+    			});
+				
+				$(".options li").bind("click", function() {
+    				
+    				var newvalue = $(this).html(); // this is value you can send to API
+    				//alert(newvalue);
+    				if(this.id != '')
+    				{
+    					//click device change option was clicked
+    					var phNum = this.id;
+    					phNum = phNum.replace('num_','');
+    					//alert(phNum);
+    					//alert(clickDevices[phNum]);
+    					document.getElementById('lstPhNum').value=phNum;
+    					
+    					$(this).parent().prev().html(newvalue); 
+    				}
+    				else
+    				{
+    					var statusId = statuses[newvalue];
+    					//alert(statusId);
+    					document.getElementById('lstStatus').value=statusId;
+    				}
+    				
+    				//return;
+    				
+    				event.stopPropagation();
+    				$(".options").slideUp(100);
+    				
+    				login_logout();
+    			});
+    			    			
+    			$("#cmdDial").click(function() {
+    				// this is mostly to simulate how things will change when on call, but you can use those scripts
+    				$(this).hide();
+    				$(this).next().show();
+    				
+    			});
+    			
+    			$("#cmdHangup").click(function() {
+    				if ($(this).hasClass("disabled")!=true) 
+    				{
+    				
+	    				// this is mostly to simulate how things will change when on call, but you can use those scripts
+	    				$(this).hide();
+	    				$(this).prev().show();
+	    				hangupCall();
+	    			}
+    			});
+    			
+    			$("#cmdConf").click(function() {
+    				if ($(this).hasClass("disabled")!=true) 
+    				{
+    				
+	    				startConferenceCall();
+	    			}
+    			});
+    			
+    			$(".more").bind("click", function() {
+    				$(".morebox").slideToggle(100);
+    				event.stopPropagation();
+    			});
+    			
+    			$(".keypad li").click(function(){
+    				var number = $(this).html();
+    				var callnumber = $('#callNum').val();
+    				
+    				if(callnumber.length <= 13)
+						$('#callNum').val(callnumber + number);
+    				
+    				$('#callNum').focus();
+    			});
+    			$("#clear").click(function() {
+    				$('#callNum').val("");
+    				$('#callNum').focus();
+    			});
+    			$("#backspace").click(function() {
+    				var value = $("#callNum").val();
+    				value = value.substr(0, value.length-1);
+    				$("#callNum").val(value);
+    				$('#callNum').focus();
+    			});
+    			
+    			$("#cmdCallRecording").click(function() {
+    				if ($(this).hasClass("disabled")!=true) {
+    					pauseRecording();
+    				}
+					
+    			});
+    			
+    			$("#cmdHold").click(function() {
+    				if ($(this).hasClass("disabled")!=true) {
+    					holdUnholdCall();
+    				}
+					
+    			});
+    			
+    			$("#cmdMute").click(function() {
+    				if ($(this).hasClass("disabled")!=true) {
+    					muteMe();
+    				}
+					
+    			});
+    			
+    			$("#cmdTransfer").click(function() {
+    				if ($(this).hasClass("disabled")!=true) {
+    					transferCall();
+    				}
+					
+    			});
+		   		
+			   function isNumberKey(evt)
+		       {
+		          var charCode = (evt.which) ? evt.which : event.keyCode;
+		          
+		          
+		          if(charCode == 35 || charCode == 42)
+		          	return true;
+		          	
+		          if (charCode != 46 && charCode > 31 
+		            	&& (charCode < 48 || charCode > 57)
+		             )
+		             return false;
+					
+					var callnumber = $('#callNum').val();
+					if(callnumber.length > 13)
+						return false;
+						
+		          return true;
+		       }
+		       
+	    </script>
+	   
+	    <div id="divCallTransfer" style="display:none; cursor: default; width: 150px"> 
+	        Transferring call.<br />Please wait....<br /> 
+	        <input style="width:120px" type="button" id="cancelTransfer" value="Cancel Tranfer" onClick="cancelTransfer();return false;" />
+		</div>
+		<div id="info_box" class="clear"></div>
+		<div id="info_pop_box"></div>
+		<input type="hidden" id="recordingPaused" value="false" /> 
+		<input type="hidden" id="pIsMute" value="false" />
+		
+    </body>
+</html>
+
+</apex:page>

@@ -1,0 +1,60 @@
+<apex:page controller="CHANNEL_ORDERS.ServiceOrderSubmitController" tabStyle="Orders__tab" sidebar="false">
+	<apex:stylesheet value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'css/coaui.css')}" />
+	<apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/external/jquery.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/coaui.js')}" />
+	
+	<apex:form id="OrderSubmitForm">
+		<apex:actionFunction action="{!confirm}" name="confirmJS" rerender="pb0" oncomplete="coa.submitOrderCompleted()"/>
+		
+        <div id="formHeader">
+        	<h1>{!$Label.channel_orders__OrderUI_Title} - {!$Label.channel_orders__OrderUI_OrderConfirmation}</h1>
+        </div>
+        <div id="wrap">
+        	<apex:pageBlock id="pb0">    
+	        	<apex:pageMessages ></apex:pageMessages>
+	            
+	            <div class="wrapper">
+		            <p class="open">{!orderText} <apex:outputText value=" {!so.CustomerReference.CustomerCompanyName}" /> (Org ID:<apex:outputText value="{!so.CustomerOrgId}" />):</p>
+		            
+		            <apex:pageBlockSection columns="1" >
+		            	<apex:pageBlockSectionItem rendered="{!!so.IsCancellationOrder}">
+		            		<apex:outputPanel >
+		            			<div class="sodlist" >
+				            	<apex:repeat value="{!lsod}" var="o" >
+									<ul>
+										<li><apex:outputText value="{!ROUND(o.Quantity, 0)}"/></li>
+										<li><apex:outputText value="{!o.ProductNameReference.Name}"/><apex:outputText value="," rendered="{!NOT(ISBLANK(o.Application))}"/></li>
+										<li><apex:outputText value="{!o.Application}"/></li>
+									</ul>
+								</apex:repeat>
+								</div>
+		            		</apex:outputPanel>
+		            	</apex:pageBlockSectionItem>
+		            </apex:pageBlockSection>
+		            
+					<p>{!orderLegalText}</p>
+				
+					<div class="btnContainer">
+		                <apex:commandLink action="{!modify}" value="{!$Label.channel_orders__OrderUIBtn_Modify}" styleClass="coa-btn-secondary smallBtn"/>
+		                <button type="button" id="ConfirmBtn" onclick="coa.confirmsubmitOrder(this);" coa-btn-orig-class="coa-btn-primary largeBtn" coa-btn-label="{!$Label.OrderUIBtn_Confirm}" ></button>
+		            </div>
+				</div>
+			</apex:pageBlock>
+			</div>
+		</apex:form>
+	
+	<script type="text/javascript">
+		var $jk = jQuery.noConflict();
+		
+		$jk(document).ready(function() {
+			//initialize all button elements
+			$jk(':button').each(function(){
+				var COABtn = $jk(this).attr('coa-btn-label');
+				if(COABtn != null){
+					coa.initializeBtn(this);
+				}
+			});
+		});
+	</script>		
+			
+</apex:page>

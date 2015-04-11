@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <webLinks>
+        <fullName>Upload_to_Synety</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Upload to Synety</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>window.open(&apos;/apex/synety__campaignContactUpload?id={!Campaign.Id}&apos;,&quot;upoloadContactWindow&quot;,&quot;width=700,height=400&quot;);</url>
+    </webLinks>
+</CustomObject>

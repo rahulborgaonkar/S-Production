@@ -1,0 +1,34 @@
+<apex:page controller="synety.CampaignContactUpload" tabStyle="Campaign" showHeader="false" sidebar="false" 
+		action="{!initialMethod}" title="Upload to Synety Campaign">
+<apex:sectionHeader title="{!oCampaign.Name}"/>
+    <apex:PageMessages id="msgs" />
+    <apex:form >
+        <apex:pageBlock >
+            <apex:pageBlockSection title="Upload Campaign Members to Synety Campaign" collapsible="false">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Synety Campaign"/>
+                    <apex:outputPanel >
+                        <apex:selectList rendered="{!selCampaign == ''}" size="1" id="lstCampaigns" value="{!selCampaign}" style="font-size: 15px;">
+					        <apex:selectOptions value="{!lstCampaigns}"/>
+					    </apex:selectList>
+					    <apex:outputLabel rendered="{!selCampaign != ''}" value="{!synCampaignName}" style="font-size: 15px;"/>
+					    
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+                
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Total Campaign Member(s)"/>
+                    <apex:outputLabel value="{!(oCampaign.NumberOfContacts + oCampaign.NumberOfLeads)}" style="font-size: 15px;"/>
+                </apex:pageBlockSectionItem>
+			</apex:pageBlockSection>
+			<apex:pageblockbuttons >
+                <apex:commandbutton value="Proceed with Upload" action="{!processUpload}" rendered="{!not(isProcessAlreadyRunning)}" />
+                <apex:commandbutton value="Cancel" onClick="window.close();return false;" rendered="{!not(isProcessAlreadyRunning)}" />
+                
+                <!-- <button onClick="window.close();return false;">Cancel</button> -->
+            </apex:pageblockbuttons>
+		</apex:pageBlock>
+	</apex:form>
+	
+</apex:page>

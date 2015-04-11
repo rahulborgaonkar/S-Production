@@ -1,0 +1,35 @@
+<apex:page id="pg" controller="synety.ContactListController" cache="false" showHeader="false" sidebar="false">
+    <apex:form id="frm">
+        <apex:actionFunction name="callAction" action="{!redirectCall}" reRender="frm">
+            <apex:param name="xyz"  value="" assignTo="{!contactId}"/>
+        </apex:actionFunction>
+        <apex:pageBlock id="pgb">
+            <input type="hidden" name="hid" id="hid"/>
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Next" action="{!redirectCall}"/>
+            </apex:pageBlockButtons>
+            <apex:outputLabel value="Select a contact" style="font-weight:bold;font-size:120%"/><br/><br/>
+            <apex:pageMessages />
+            <apex:pageBlockTable value="{!listContactModel}" var="mod">
+                <apex:column >
+                    <input type="radio" selected="{!mod.flag}" name="rd" onclick="selRadio('{!JSENCODE(mod.conId)}');return true;"/>   
+                </apex:column>
+                <apex:column headerValue="First Name" value="{!mod.fname}"/>
+                <apex:column headerValue="Last Name" value="{!mod.lname}"/>
+                <apex:column headerValue="Email" value="{!mod.email}"/>
+                <apex:column headerValue="Phone" value="{!mod.phone}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+    <script>
+        var contactid;
+        function selRadio(fl){
+            document.getElementById('hid').value = fl;
+            contactid = fl;
+        }
+        
+        function callController(){
+            callAction(contactid);
+        }
+    </script>
+</apex:page>

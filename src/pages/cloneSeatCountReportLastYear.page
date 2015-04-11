@@ -1,0 +1,388 @@
+<apex:page showHeader="false" showChat="false" sidebar="false" >
+    <script type="text/javascript">
+        var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <script src="../../soap/ajax/27.0/connection.js" type="text/javascript"></script>
+    <script type="text/javascript"> 
+    
+    function formatNumber (obj, decimal) {
+     //decimal  - the number of decimals after the digit from 0 to 3
+     //-- Returns the passed number as a string in the xxx,xxx.xx format.
+       anynum=obj;//eval(obj.value);
+       divider =10;
+       switch(decimal){
+            case 0:
+                divider =1;
+                break;
+            case 1:
+                divider =10;
+                break;
+            case 2:
+                divider =100;
+                break;
+            default:       //for 3 decimal places
+                divider =1000;
+        } 
+
+       workNum=Math.abs((Math.round(anynum*divider)/divider)); 
+
+       workStr=""+workNum 
+
+       if (workStr.indexOf(".")==-1){workStr+="."} 
+
+       dStr=workStr.substr(0,workStr.indexOf("."));dNum=dStr-0
+       pStr=workStr.substr(workStr.indexOf(".")) 
+
+       while (pStr.length-1< decimal){pStr+="0"} 
+
+       if(pStr =='.') pStr =''; 
+
+       //--- Adds a comma in the thousands place.
+       if (dNum>=1000) {
+          dLen=dStr.length
+          dStr=parseInt(""+(dNum/1000))+","+dStr.substring(dLen-3,dLen)
+       } 
+
+       //-- Adds a comma in the millions place.
+       if (dNum>=1000000) {
+          dLen=dStr.length
+          dStr=parseInt(""+(dNum/1000000))+","+dStr.substring(dLen-7,dLen)
+       }
+       retval = dStr + pStr
+       //-- Put numbers in parentheses if negative.
+       if (anynum<0) {retval="("+retval+")";} 
+
+    //You could include a dollar sign in the return value.
+      //retval =  "$"+retval
+      //obj.value = retval;
+      return retval;
+}
+    var state;    
+    window.onload = setupPage;
+    function setupPage() 
+    {
+      //function contains all code to execute after page is rendered
+
+      state = { //state that you need when the callback is called
+          output : document.getElementById("output"),
+          startTime : new Date().getTime()};
+        
+        var callback1 = {
+          onSuccess: showTotalLicensesThisMonth,
+
+          onFailure: queryFailed,
+          source: state};
+          
+        sforce.connection.query(
+          "SELECT sum(Total_Seats__c) totallicensethismonth FROM Opportunity where Order_Processed__c = True and Next_Steps__c = 'Customer - Provisioned' and CloseDate = LAST_YEAR and StageName not in ('Closed Lost','Closed Cancelled') and accountid not in (select id from account where name like '%zzz%')",
+           callback1);
+        
+        var callback2 = {
+          onSuccess: showTotalLicensesInProcess,
+
+          onFailure: queryFailed,
+          source: state};
+          
+        sforce.connection.query(
+          //"SELECT sum(Total_Seats__c), sum(total_yearly_value__c) FROM Opportunity where Order_Processed__c = True and Next_Steps__c not in ('Customer - Provisioned','Customer - Awaiting network check form completion','Customer - Network checks completed - Awaiting DocuSign', 'Customer - Order Cancelled') and StageName not in ('Closed Lost','Closed Cancelled') and accountid not in (select id from account where name like '%zzz%')",
+          "SELECT sum(Total_Seats__c) totallicensetoprocess  FROM Opportunity where Order_Processed__c = True and Next_Steps__c not in ('Customer - Provisioned','Customer - Awaiting network check form completion','Customer - Network checks completed - Awaiting DocuSign', 'Customer - Order Cancelled') and StageName not in ('Closed Lost','Closed Cancelled') and accountid not in (select id from account where name like '%zzz%')  and lastmodifieddate = LAST_YEAR",
+           callback2);
+
+        var callbackAccountIdProvisioned = {
+          onSuccess: GetAccountIdProvisioned,
+
+          onFailure: queryFailed,
+          source: state};
+
+        sforce.connection.query(
+          "select id, name from account where name like '%zzz%'",
+           callbackAccountIdProvisioned);
+        
+
+        var callbackAccountIdInProgress = {
+          onSuccess: GetAccountIdInProgress,
+
+          onFailure: queryFailed,
+          source: state};
+
+        sforce.connection.query(
+          "select id, name from account where name like '%zzz%'",
+           callbackAccountIdInProgress);
+    }
+
+    function queryFailed(error, source) 
+    {
+        //alert("An error has occurred: " + error);
+        console.log("An error has occurred: " + error);
+
+    }
+
+    function GetAccountIdProvisioned(queryResult, source) 
+    {
+        //alert(queryResult);
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            var accIds = '';
+            
+            for(var a=0; a<records.length; a++)
+            {
+                if(accIds != '')
+                    accIds += ',';
+                    
+                accIds += '\''+records[a].Id+'\'';
+            }
+           
+            var callback3 = {
+              onSuccess: showTotalOrdersThisMonth,
+
+              onFailure: queryFailed,
+              source: state};
+        
+            sforce.connection.query(
+              "SELECT sum(Total_Initial_Fee__c) OneTimeCharges, sum(Set_Up_Disc__c) SetUpDiscount, sum(License_Fee_Mth__c) RecurringMonthlyFees, sum(Total_Annual_Value__c) AnnualLicneseFees FROM OpportunityLineItem where OpportunityId in (select id FROM Opportunity where Next_Steps__c = 'Customer - Provisioned' and CloseDate = LAST_YEAR and Order_Processed__c = True and StageName not in ('Closed Lost','Closed Cancelled') and accountid not in ("+accIds+"))",
+               callback3);
+        }
+    }
+
+    
+    function GetAccountIdInProgress(queryResult, source) 
+    {
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            var accIds = '';
+            
+            for(var a=0; a<records.length; a++)
+            {
+                if(accIds != '')
+                    accIds += ',';
+                    
+                accIds += '\''+records[a].Id+'\'';
+            }
+           
+            var callback4 = {
+              onSuccess: showTotalOrdersInProgress,
+    
+              onFailure: queryFailed,
+              source: state};
+            
+            sforce.connection.query(
+              "SELECT sum(Total_Initial_Fee__c) OneTimeCharges2, sum(License_Fee_Mth__c) RecurringMonthlyFees2, sum(Total_Annual_Value__c) AnnualLicenseFees2 FROM OpportunityLineItem where OpportunityId in (select id FROM Opportunity where Order_Processed__c = True and Next_Steps__c not in ('Customer - Provisioned','Customer - Awaiting network check form completion','Customer - Network checks completed - Awaiting DocuSign', 'Customer - Order Cancelled') and StageName not in ('Closed Lost','Closed Cancelled') and accountid not in ("+accIds+") and lastmodifieddate = LAST_YEAR )",
+               callback4);
+        }
+    }
+    
+    function showTotalLicensesThisMonth(queryResult, source) 
+    {
+        //alert(queryResult);
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            //var totallicensethismonth = parseFloat(records[0].totallicensethismonth);
+            var totallicensethismonth = isNaN(parseFloat(records[0].totallicensethismonth)) ? 0 : parseFloat(records[0].totallicensethismonth);
+            //alert(isNaN(totallicensethismonth) ? 0 : parseFloat(records[0].totallicensethismonth));
+            //var totalValue = parseFloat(records[0].expr1);
+            //alert(seatCount);
+            document.getElementById('totallicensethismonth').innerHTML = totallicensethismonth;
+            //document.getElementById('totalThisMonthValue').innerHTML = '£'+formatNumber(totalValue,2);
+        }
+    }
+    
+    function showTotalLicensesInProcess(queryResult, source) 
+    {
+        //alert(queryResult);
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            //var seatCount = parseFloat(records[0].expr0);
+            //var totallicensetoprocess = parseFloat(records[0].totallicensetoprocess);
+            var totallicensetoprocess = isNaN(parseFloat(records[0].totallicensetoprocess)) ? 0 : parseFloat(records[0].totallicensetoprocess);
+            //var totalValue = parseFloat(records[0].expr1);
+            //alert(seatCount);
+            //document.getElementById('totalOutstandingSeatsCount').innerHTML = seatCount;
+
+            document.getElementById('totallicensetoprocess').innerHTML = totallicensetoprocess;
+            //document.getElementById('totalOutstandingValue').innerHTML = '£'+formatNumber(totalValue,2);
+        }
+    }
+    
+    function showTotalOrdersThisMonth(queryResult, source) 
+    {
+        //alert(queryResult);
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            //var totalOneTimeCharges = parseFloat(records[0].OneTimeCharges);
+            var totalOneTimeCharges = isNaN(parseFloat(records[0].OneTimeCharges)) ? 0 : parseFloat(records[0].OneTimeCharges);
+
+            //var totalSetUpDiscount = parseFloat(records[0].SetUpDiscount);
+            var totalSetUpDiscount = isNaN(parseFloat(records[0].SetUpDiscount)) ? 0 : parseFloat(records[0].SetUpDiscount);
+
+            //var totalRecurringMonthlyFees = parseFloat(records[0].RecurringMonthlyFees);
+            var totalRecurringMonthlyFees = isNaN(parseFloat(records[0].RecurringMonthlyFees)) ? 0 : parseFloat(records[0].RecurringMonthlyFees);
+            
+            //var totalAnnualLicenseFees = parseFloat(records[0].AnnualLicneseFees);
+            var totalAnnualLicenseFees = isNaN(parseFloat(records[0].AnnualLicneseFees)) ? 0 : parseFloat(records[0].AnnualLicneseFees);
+            
+            var totalOrdervalueProvisioned = totalOneTimeCharges + (12 * totalRecurringMonthlyFees);
+            document.getElementById('totalOneTimeCharges').innerHTML = '£'+formatNumber(totalOneTimeCharges,2);
+            document.getElementById('totalSetUpDiscount').innerHTML = '£'+formatNumber(totalSetUpDiscount,2);
+            document.getElementById('totalRecurringMonthlyFees').innerHTML = '£'+formatNumber(totalRecurringMonthlyFees,2);
+            document.getElementById('totalAnnualLicenseFees').innerHTML = '£'+formatNumber(totalAnnualLicenseFees,2);
+            document.getElementById('totalOrdervalueProvisioned').innerHTML = '£'+formatNumber(totalOrdervalueProvisioned,2);
+        }
+    }
+    
+    function showTotalOrdersInProgress(queryResult, source) 
+    {
+        //alert(queryResult);
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+
+            //var totalOneTimeCharges2 = parseFloat(records[0].OneTimeCharges2);
+            var totalOneTimeCharges2 = isNaN(parseFloat(records[0].OneTimeCharges2)) ? 0 : parseFloat(records[0].OneTimeCharges2);
+            
+            //var totalRecurringMonthlyFees2 = parseFloat(records[0].RecurringMonthlyFees2);
+            var totalRecurringMonthlyFees2 = isNaN(parseFloat(records[0].RecurringMonthlyFees2)) ? 0 : parseFloat(records[0].RecurringMonthlyFees2);
+            
+            //var totalAnnualLicenseFees2 = parseFloat(records[0].AnnualLicenseFees2);
+            var totalAnnualLicenseFees2 = isNaN(parseFloat(records[0].AnnualLicenseFees2)) ? 0 : parseFloat(records[0].AnnualLicenseFees2);
+            
+            var totalOrdervalueInProgress = totalOneTimeCharges2 + (12 * totalRecurringMonthlyFees2);
+            document.getElementById('totalOneTimeCharges2').innerHTML = '£'+formatNumber(totalOneTimeCharges2,2);
+            document.getElementById('totalRecurringMonthlyFees2').innerHTML = '£'+formatNumber(totalRecurringMonthlyFees2,2);
+            document.getElementById('totalAnnualLicenseFees2').innerHTML = '£'+formatNumber(totalAnnualLicenseFees2,2);
+            document.getElementById('totalOrdervalueInProgress').innerHTML = '£'+formatNumber(totalOrdervalueInProgress,2);
+        }
+    }
+    
+  
+  </script>
+    <table cellpadding="3" width="100%" >
+
+    <tr>
+    <td style="font-size:12px;font-weight:bold;" width="70%">
+        Licenses Provisioned last year: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000005VbzK" title="click to see report" target="_blank"><span id="totallicensethismonth" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <!--tr>
+    <td style="font-size:12px;font-weight:bold;" width="70%">
+        Licences – Order Complete, Awaiting Provisioning:
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004eh9r" title="click to see report" target="_blank"><span id="totallicensetoprocess" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr-->
+
+    <tr>
+    <td style="font-size:12px;font-weight:bold;" width="80%">
+        Order values last year (Provisioned): 
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Set-up / one-time charges: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000005VbzK" title="click to see report" target="_blank"><span id="totalOneTimeCharges" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Discount Given: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000005VbzK" title="click to see report" target="_blank"><span id="totalSetUpDiscount" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Recurring monthly fees: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000005VbzK" title="click to see report" target="_blank"><span id="totalRecurringMonthlyFees" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Annual licenses fees: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000005VbzK" title="click to see report" target="_blank"><span id="totalAnnualLicenseFees" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Total order value (Provisioned): 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000005VbzK" title="click to see report" target="_blank"><span id="totalOrdervalueProvisioned" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <!--tr>
+    <td style="font-size:12px;font-weight:bold;" width="70%">
+        Order values last year (In Process): 
+    </td>
+    </tr-->
+
+    <!--tr>
+    <td style="font-size:12px;" width="70%">
+        - Set-up / one-time charges: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004eh9r" title="click to see report" target="_blank"><span id="totalOneTimeCharges2" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr-->
+
+    <!--tr>
+    <td style="font-size:12px;" width="70%">
+        - Recurring monthly fees: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004eh9r" title="click to see report" target="_blank"><span id="totalRecurringMonthlyFees2" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr-->
+
+    <!--tr>
+    <td style="font-size:12px;" width="70%">
+        - Annual licenses fees: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004eh9r" title="click to see report" target="_blank"><span id="totalAnnualLicenseFees2" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr-->
+
+    <!--tr>
+    <td style="font-size:12px;" width="70%">
+        - Total order value (In Process): 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004eh9r" title="click to see report" target="_blank"><span id="totalOrdervalueInProgress" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr-->
+
+    </table>
+</apex:page>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Activity Manager</fullName>
+    <apiAccessLevel>Unrestricted</apiAccessLevel>
+    <description>Mass update task  due dates, task status, task subject and task owner.
+Mass create task related to Leads, Accounts, Contacts, Opportunities, Cases.</description>
+    <namespacePrefix>activities</namespacePrefix>
+    <types>
+        <members>CreateTasksController</members>
+        <members>TestCreateTasksController</members>
+        <members>TestUpdateTasksController</members>
+        <members>UpdateTasksController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Activities</members>
+        <members>CreateTasks</members>
+        <members>UpdateTasks</members>
+        <name>ApexPage</name>
+    </types>
+    <types>
+        <members>Activities</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Activity.Tomorrow_s_Tasks</members>
+        <name>ListView</name>
+    </types>
+    <types>
+        <members>Account.Create_Tasks_Accounts</members>
+        <members>Case.Create_Tasks_Cases</members>
+        <members>Contact.Create_Tasks_Contacts</members>
+        <members>Lead.Create_Tasks_Lead</members>
+        <members>Opportunity.Create_Tasks_Opp</members>
+        <members>Task.Mass_Update</members>
+        <name>WebLink</name>
+    </types>
+    <version>29.0</version>
+</Package>

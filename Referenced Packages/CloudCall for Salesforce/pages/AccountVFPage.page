@@ -1,0 +1,13 @@
+<apex:page standardController="Account" >
+	<!-- 
+    <script>
+        function openPage(){
+            var wnd = window.open('/apex/ContactListPage?id={!Account.Id}','_blank','scrollbars=1,width=800, height=320,left=270,top=170');
+            wnd.focus();
+        }
+    </script>
+    <apex:form >
+         <apex:commandButton image="{!$Resource.tinyPhoneIconrr}" style="height:35px;" onclick="openPage(); return false;" value="Synety"/>
+    </apex:form>
+    -->
+</apex:page>

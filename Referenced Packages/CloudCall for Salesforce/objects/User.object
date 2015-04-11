@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <namedFilters>
+        <fullName>nf_01IG00000023BGKMA2_00NG0000008f0yfMAA</fullName>
+        <active>true</active>
+        <errorMessage>Users with only Standard profile(s) are allowed.</errorMessage>
+        <field>Synety_Configuration__c.Salesforce_User__c</field>
+        <filterItems>
+            <field>User.Profile.UserType</field>
+            <operation>equals</operation>
+            <value>Standard</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+        <name>Synety Configuration_Salesforce User</name>
+    </namedFilters>
+</CustomObject>

@@ -1,0 +1,7 @@
+<apex:page controller="OrderClassController" tabStyle="Opportunity" action="{!cancelOrder}" title="Order Cancellation Process">
+  <apex:form >
+      <apex:sectionHeader title="Cancelling Order # {!objOpp.Order_Number__c} for {!objOpp.Account.Name}"/>
+      <apex:pageMessages ></apex:pageMessages>
+      <apex:commandbutton value="<<< Go Back" action="{!goBack}" />
+  </apex:form>
+</apex:page>

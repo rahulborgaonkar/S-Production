@@ -1,0 +1,107 @@
+<apex:page controller="bottomline.creditSafeView" tabStyle="creditsafeTab__tab" showHeader="false" renderas="pdf">
+	<apex:stylesheet value="{!URLFOR($Resource.bottomline__CreditsafeResource,'PDF.css')}" />
+	<c:creditSafePDFBox type="header" position="center">
+		<table width="100%" cellpadding="0" cellspacing="0">
+			<tr colspan="2">
+				<td>&nbsp;</td>
+			</tr>
+			<tr colspan="2">
+				<td>&nbsp;</td>
+			</tr>
+			<tr colspan="2">
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="left" valign="top">
+					<apex:image value="{!URLFOR($Resource.bottomline__CreditsafeResource,'creditSafePrint.png')}" style="height:15mm;" />
+				</td>
+				<td align="right" valign="top">
+					<span style="font-size: 125%; font-weight: bold; color:#818085; padding-right:1px;">Company Report for</span>
+					<br />
+					<span style="font-size: 180%; font-weight: bold;">{!nonLtdCompany.companyName}</span>
+					<br />
+					<span style="font-size: 125%; font-weight: bold; color:#818085; padding-right:1mm;">on {!printDate}</span>
+				</td>
+			</tr>
+		</table>
+	</c:creditSafePDFBox>
+	<c:creditSafePDFBox type="footer" position="right">
+		<apex:outputPanel layout="block" style="font-size: 125%; font-weight: bold; color:#818085">
+			<span class="pageNumber"/>
+		</apex:outputPanel>
+	</c:creditSafePDFBox>
+	<apex:pageMessages />
+	<h3>Company Information</h3>
+	<apex:panelGrid columns="4" width="100%" columnClasses="labelCol,dataCol" rowClasses="gridCol">
+		<apex:outputLabel value="Company Name"/>
+		<apex:outputText value="{!nonLtdCompany.companyName}" />
+		<apex:outputLabel value="Creditsafe Rating"/>
+		<apex:outputText value="{!nonLtdCompany.todaysRating}" escape="false"/>
+		<apex:outputLabel value="Company Reg. Number"/>
+		<apex:outputText value="{!nonLtdCompany.companyNumber}" />
+		<apex:outputLabel value="Credit Limit"/>
+		<apex:outputText value="{!nonLtdCompany.todaysLimit}" />
+		<apex:outputLabel value="Telephone"/>
+		<apex:outputText value="{!nonLtdCompany.companyInfo.telephone}" />
+		<apex:outputLabel value=""/>
+		<apex:outputText value="" />
+		<apex:outputLabel value="Fax"/>
+		<apex:outputText value="{!nonLtdCompany.companyInfo.fax}" />
+		<apex:outputLabel value="Principal Activity"/>
+		<apex:outputText value="{!nonLtdCompany.companyInfo.activity}" escape="false" />
+		<apex:outputLabel value="Website"/>
+		<apex:outputLink value="http://{!nonLtdCompany.companyInfo.website}" target="_blank">{!nonLtdCompany.companyInfo.website}</apex:outputLink>
+		<apex:outputLabel value="Employees"/>
+		<apex:outputText value="{!nonLtdCompany.companyInfo.employees}" />
+		<apex:outputLabel value="Company Email"/>
+		<apex:outputLink value="http://mailto:{!nonLtdCompany.companyInfo.email}" target="_blank">{!nonLtdCompany.companyInfo.email}</apex:outputLink>
+		<apex:outputLabel value="Senior Executives Name"/>
+		<apex:outputText style="padding-right:4px;" value="{!nonLtdCompany.seniorExecName} ({!nonLtdCompany.seniorExecPosition})" />
+		<apex:outputLabel value="Address"/>
+		<apex:outputText value="{!nonLtdCompany.companyInfo.address}" escape="false" />
+		<apex:outputLabel value="Senior Executives Email"/>
+		<apex:outputText value="{!nonLtdCompany.seniorExecEMail}" />
+		<apex:outputLabel value="TPS"/>
+		<apex:outputText value="{!nonLtdCompany.companyInfo.registeredWithTPS}" />
+		<apex:outputLabel value="Matched CCJs"/>
+		<apex:outputText value="{!nonLtdCompany.ccjMatched}" />
+		<apex:outputLabel value="FPS"/>
+		<apex:outputText value="{!nonLtdCompany.companyInfo.registeredWithFPS}" />
+		<apex:outputLabel value="Possible CCJs"/>
+		<apex:outputText value="{!nonLtdCompany.ccjPossible}" />
+		<apex:outputLabel value="MPS"/>
+		<apex:outputText value="{!nonLtdCompany.companyInfo.registeredWithMPS}" />
+	</apex:panelGrid>
+	<apex:outputPanel layout="block" styleClass="noPageBreak">
+	    <h3>Rating &amp; Limit History</h3>
+	    <apex:outputPanel layout="block" rendered="{!nonLtdCompany.ratingLimits.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+	    <apex:dataTable value="{!nonLtdCompany.ratingLimits}" var="rl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0" rendered="{!nonLtdCompany.ratingLimits.size>0}">
+			<apex:column value="{!rl.label}" headerValue="Date"/>
+			<apex:column headerValue="Creditsafe Rating">
+				<apex:outputText value="{!rl.creditRating}" escape="false"/>
+			</apex:column>
+			<apex:column value="{!rl.creditLimit}" headerValue="Credit Limit" headerClass="rightAlign" styleClass="rightAlign"/>
+		</apex:dataTable>
+	</apex:outputPanel>
+	<apex:outputPanel layout="block" styleClass="noPageBreak">
+	    <h3>Event History</h3>
+	    <apex:outputPanel layout="block" rendered="{!nonLtdCompany.events.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+		<apex:dataTable value="{!nonLtdCompany.events}" var="ev" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0" rendered="{!nonLtdCompany.events.size>0}">
+			<apex:column value="{!ev.eventDate}" headerValue="Date"/>
+			<apex:column value="{!ev.eventDetail}" headerValue="Event"/>
+		</apex:dataTable>
+	</apex:outputPanel>
+	<apex:outputPanel layout="block" styleClass="noPageBreak">
+		<h3>Record Of CCJ Payments (Last 3 Years)</h3>
+		<apex:outputPanel layout="block" rendered="{!nonLtdCompany.recordOfPayments.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+		<apex:dataTable value="{!nonLtdCompany.recordOfPayments}" var="rop" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0"  rendered="{!nonLtdCompany.recordOfPayments.size>0}">
+			<apex:column value="{!rop.ccjType}" headerValue="Matched"/>
+			<apex:column value="{!rop.ccjCaseNumber}" headerValue="Case Number"/>
+			<apex:column value="{!rop.ccjDate}" headerValue="Date"/>
+			<apex:column value="{!rop.ccjCourt}" headerValue="Court"/>
+			<apex:column value="{!rop.ccjDatePaid}" headerValue="Date Paid"/>
+			<apex:column value="{!rop.ccjStatus}" headerValue="Status"/>
+			<apex:column value="£ {!rop.ccjAmount}" headerValue="Amount" headerClass="rightAlign" styleClass="rightAlign"/>
+		</apex:dataTable>
+	</apex:outputPanel>
+</apex:page>

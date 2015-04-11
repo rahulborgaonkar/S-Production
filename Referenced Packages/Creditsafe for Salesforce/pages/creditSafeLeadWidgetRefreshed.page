@@ -1,0 +1,14 @@
+<apex:page standardcontroller="Lead" extensions="bottomline.creditSafeLeadWidgets" action="{!buildRefreshWidgetData}" showHeader="false">
+	<head>
+		<style>
+			a.csLink { font-size:91%; color:#015ba7; text-decoration:none; vertical-align:bottom; } 
+			a.csLink:hover { text-decoration:underline; }
+		</style>
+	</head>
+	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<apex:panelGrid columns="2" cellpadding="0" cellspacing="0">
+			<apex:outputText style="padding-right:8px;" value="{!lastRefreshed}" />
+			<apex:outputLink styleClass="csLink" value="/apex/{!refreshURL}&id={!lead.Id}&cn={!companyNumber}" target="_top" rendered="{!renderRefresh}">Refresh</apex:outputLink>
+		</apex:panelGrid>
+	</body>
+</apex:page>

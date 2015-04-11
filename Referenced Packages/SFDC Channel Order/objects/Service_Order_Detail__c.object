@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>true</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Application__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Represents the Application Name from the Product Catalog.</description>
+        <externalId>false</externalId>
+        <label>App</label>
+        <length>80</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Currency__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>text(Partner_Order__r.Partner_Contract_Rules__r.Default_Contract_Currency__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Currency</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Price_Per_Month__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Customer Price (Unit/Month)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Customer_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Required if you are ordering a PNR product.  Please provide the monthly customer price per seat of your application.</inlineHelpText>
+        <label>Customer Price (User/Month)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Estimated_SFDC_Price_Per_Month__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>IF ( ISPICKVAL(pc_Pricing_Type__c , &apos;PNR&apos;), 
+			MAX( Quantity__c * Customer_Price_Per_Month__c * (pc_PNR__c / 100), pc_Floor_Price__c  ) , 
+			pc_Fixed_Price__c )</formula>
+        <label>Estimated Total SFDC Price/Month</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Fixed_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>if( Pricing_Type__c = &quot;PNR&quot;, &quot; &quot;,
+
+if (round(Product_Name__r.Fixed_Price__c,0) = Product_Name__r.Fixed_Price__c, Currency__c &amp; &quot; &quot; &amp; text(Product_Name__r.Fixed_Price__c) &amp; &quot;.00&quot;, 
+
+Currency__c &amp; &quot; &quot; &amp; text(Product_Name__r.Fixed_Price__c)))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Fixed Price</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Floor_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>if( Pricing_Type__c = &quot;FIXED&quot;, &quot; &quot;,
+
+if (round(Product_Name__r.Floor_Price__c,0) = Product_Name__r.Floor_Price__c, Currency__c &amp; &quot; &quot; &amp; text(Product_Name__r.Floor_Price__c) &amp; &quot;.00&quot;,
+
+Currency__c &amp; &quot; &quot; &amp; text(Product_Name__r.Floor_Price__c)))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Floor Price</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Number_Of_Users_ISVforce__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label># of users (ISVforce)</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PNR__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>Product_Name__r.PNR__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>PNR %</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Partner_Contract_Term__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>Partner_Order__r.Partner_Contract_Rules__r.Name</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Partner Contract Term</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Partner_Order__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Service Order</label>
+        <referenceTo>Service_Order__c</referenceTo>
+        <relationshipLabel>Service Order Detail</relationshipLabel>
+        <relationshipName>Partner_Order_Detail</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>false</reparentableMasterDetail>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    </fields>
+    <fields>
+        <fullName>Pricing_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>TEXT(Product_Name__r.Pricing_Type__c)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Pricing Type</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>Product_Name__r.Product_ID__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Product ID</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Line_Desc_Overridden__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>True if there is an individual description for this detail rather than using one for the all the order details.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>True if this detail uses an individual description rather than using SFDC Invoice Description</inlineHelpText>
+        <label>Product Line Description Overridden</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Product_Line_Description__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <inlineHelpText>Product Line Description will be displayed on the Invoice</inlineHelpText>
+        <label>SFDC Invoice Description</label>
+        <length>100</length>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Name__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product</label>
+        <referenceTo>Partner_Product_Catalog__c</referenceTo>
+        <relationshipLabel>Service Order Detail</relationshipLabel>
+        <relationshipName>Product_Name</relationshipName>
+        <required>false</required>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Product_Special_Terms__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product Special Terms</label>
+        <length>32000</length>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Quantity__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Total Quantity</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Special_Instructions__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Special Instructions</label>
+        <length>32000</length>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>pc_Billing_Frequency__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Inherited from Product Catalog, controls the frequency in which this Product is Billed, unit is Months.</description>
+        <externalId>false</externalId>
+        <label>Billing Frequency</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pc_Cancellation_Terms__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Inherited from Product Catalog, controls the Cancellation time for this Product, unit is Days.</description>
+        <externalId>false</externalId>
+        <label>Cancellation Terms (Days)</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pc_Contract_Auto_Renew__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Inherited from Product Catalog, controls if a contract for this product is Auto Renewed or not.</description>
+        <externalId>false</externalId>
+        <label>Contract Auto Renew</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>pc_Contract_Length__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Inherited from Product Catalog, controls the length of a contract for this Product, unit is Months.</description>
+        <externalId>false</externalId>
+        <label>Contract Length</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pc_Custom_Unit__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Inherited from Product Catalog, represents the custom unit value when Pricing Unit is set to Custom.</description>
+        <externalId>false</externalId>
+        <label>Custom Unit</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pc_Fixed_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Inherited from Product Catalog, represents the Fixed Price for the Product, used during billing process.</description>
+        <externalId>false</externalId>
+        <label>Fixed Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pc_Floor_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Inherited from Product Catalog, represents the Floor Price for the Product, used during billing process.</description>
+        <externalId>false</externalId>
+        <label>Floor Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pc_PNR__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>PNR %</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pc_Partner_Contract_Term__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <description>Inherited from Product Catalog, direct relation to the Contract Term this product is tied to.</description>
+        <externalId>false</externalId>
+        <label>Partner Contract Term</label>
+        <referenceTo>Partner_Contract_Terms__c</referenceTo>
+        <relationshipLabel>Service Order Detail</relationshipLabel>
+        <relationshipName>Service_Order_Detail</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>pc_Pricing_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Pricing</label>
+        <picklist>
+            <picklistValues>
+                <fullName>PNR</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>FIXED</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>pc_Pricing_Unit__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Unit</label>
+        <picklist>
+            <picklistValues>
+                <fullName>User</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Org</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Custom</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>pc_Product_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product ID</label>
+        <length>30</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pc_Renewal_Terms__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Renewal Terms (Months)</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>pct_Currency__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Inherited from Contract Terms Default_Contract_Currency, controls the type of currency used in the billing process.</description>
+        <externalId>false</externalId>
+        <label>Currency</label>
+        <picklist>
+            <picklistValues>
+                <fullName>AUD</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>EUR</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>GBP</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>JPY</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>SEK</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>USD</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Service Order Detail</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Number_Of_Users_ISVforce__c</columns>
+        <columns>Quantity__c</columns>
+        <columns>OBJECT_ID</columns>
+        <columns>Partner_Order__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <displayFormat>SOD-{0000000000}</displayFormat>
+        <label>Service Order Detail Name</label>
+        <trackHistory>true</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <pluralLabel>Service Order Detail</pluralLabel>
+    <searchLayouts>
+        <customTabListAdditionalFields>Partner_Order__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Product_Name__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Quantity__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>Customer_Price__c</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CREATEDBY_USER</customTabListAdditionalFields>
+        <customTabListAdditionalFields>CREATED_DATE</customTabListAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ControlledByParent</sharingModel>
+    <validationRules>
+        <fullName>CancellationTerms_is_required</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( pc_Partner_Contract_Term__r.Allow_Cancellation_Terms_Override__c,    ISBLANK(pc_Cancellation_Terms__c)  )</errorConditionFormula>
+        <errorDisplayField>pc_Cancellation_Terms__c</errorDisplayField>
+        <errorMessage>Cancellation Terms is a required field.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>ContractLength_is_required</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(  pc_Partner_Contract_Term__r.Allow_Contract_Length_Override__c , ISBLANK( pc_Contract_Length__c ) )</errorConditionFormula>
+        <errorDisplayField>pc_Contract_Length__c</errorDisplayField>
+        <errorMessage>Contract Length is a required field.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Customer_Price_Per_Month_Must_Be_Blank</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(NOT( ISPICKVAL( Partner_Order__r.Partner_Contract_Rules__r.Type__c , &apos;ISVForce&apos; )), OR(NOT( ISBLANK( Customer_Price_Per_Month__c )),NOT( ISNULL( Customer_Price_Per_Month__c  ) )))</errorConditionFormula>
+        <errorDisplayField>Customer_Price_Per_Month__c</errorDisplayField>
+        <errorMessage>Field must be empty</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Customer_Price_is_required_if_PNR</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( TEXT(pc_Pricing_Type__c) = &quot;PNR&quot;, ISNULL( Customer_Price__c ), NOT(ISPICKVAL(  Partner_Order__r.Partner_Contract_Rules__r.Type__c  ,&quot;ISVForce&quot;)))</errorConditionFormula>
+        <errorDisplayField>Customer_Price__c</errorDisplayField>
+        <errorMessage>Customer Price is required if the product&apos;s Pricing Type is PNR</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>ISVForce_Cust_Price_User_Month_Blank</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( Pricing_Type__c = &quot;PNR&quot;, OR( NOT( ISNULL( Customer_Price__c  )),NOT( ISBLANK(Customer_Price__c  ))), ISPICKVAL( Partner_Order__r.Partner_Contract_Rules__r.Type__c ,&quot;ISVForce&quot;))</errorConditionFormula>
+        <errorDisplayField>Customer_Price__c</errorDisplayField>
+        <errorMessage>Field must be blank if ordering an ISVForce Product</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>ISVForce_Customer_Price_per_month_reqd</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( ISPICKVAL( Partner_Order__r.Partner_Contract_Rules__r.Type__c , &apos;ISVForce&apos; ), OR( ISBLANK(Customer_Price_Per_Month__c), ISNULL( Customer_Price_Per_Month__c ) ))</errorConditionFormula>
+        <errorDisplayField>Customer_Price_Per_Month__c</errorDisplayField>
+        <errorMessage>Field can not be empty. You must set a value.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>ISVForce_Quantity_Must_Be_Blank</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( ISPICKVAL(   Partner_Order__r.Partner_Contract_Rules__r.Type__c   , &apos;ISVForce&apos;) ,NOT( OR( ISBLANK( Quantity__c ), ISNULL( Quantity__c ))))</errorConditionFormula>
+        <errorDisplayField>Quantity__c</errorDisplayField>
+        <errorMessage>Field must be empty if ordering an ISVForce product.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>ISVForce_num_users_is_required</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(ISPICKVAL( Partner_Order__r.Partner_Contract_Rules__r.Type__c  , &apos;ISVForce&apos;), OR(ISBLANK(Number_Of_Users_ISVforce__c), ISNULL(Number_Of_Users_ISVforce__c) ))</errorConditionFormula>
+        <errorDisplayField>Number_Of_Users_ISVforce__c</errorDisplayField>
+        <errorMessage>Field can not be empty. You must set a value.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Num_Users_ISVForce_Must_Be_Blank</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(NOT(ISPICKVAL(  Partner_Order__r.Partner_Contract_Rules__r.Type__c  , &apos;ISVForce&apos;)), OR(NOT(ISBLANK(Number_Of_Users_ISVforce__c)), 
+NOT( ISNULL(Number_Of_Users_ISVforce__c) )))</errorConditionFormula>
+        <errorDisplayField>Number_Of_Users_ISVforce__c</errorDisplayField>
+        <errorMessage>Field must be blank</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Product_must_belong_to_contract_terms</fullName>
+        <active>true</active>
+        <errorConditionFormula>Partner_Contract_Term__c &lt;&gt;  Product_Name__r.Partner_Contract_Terms__r.Name</errorConditionFormula>
+        <errorDisplayField>Product_Name__c</errorDisplayField>
+        <errorMessage>The Product you selected is not part of the Contract Term you chose on the Service Order</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Quantity_is_required</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( NOT(ISPICKVAL( Partner_Order__r.Partner_Contract_Rules__r.Type__c  , &apos;ISVForce&apos;) ), OR( ISBLANK( Quantity__c ), ISNULL( Quantity__c )))</errorConditionFormula>
+        <errorDisplayField>Quantity__c</errorDisplayField>
+        <errorMessage>Field can not be empty. You must set a value.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>RenewalTerms_is_required</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(  pc_Partner_Contract_Term__r.Allow_Renewal_Length_Override__c , ISBLANK( pc_Renewal_Terms__c ) )</errorConditionFormula>
+        <errorDisplayField>pc_Renewal_Terms__c</errorDisplayField>
+        <errorMessage>Renewal Terms is a required field.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Special_Fields</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND(OR(ISCHANGED(Special_Instructions__c ), ISCHANGED( Product_Special_Terms__c )) ,Partner_Order__r.Service_Order_Status1__c  !=  &apos;Draft&apos;,Partner_Order__r.Service_Order_Status1__c  !=  &apos;Error&apos;)</errorConditionFormula>
+        <errorMessage>Field can not be updated. Service Order status should be: &apos;Error&apos; or &apos;Draft&apos;</errorMessage>
+    </validationRules>
+</CustomObject>

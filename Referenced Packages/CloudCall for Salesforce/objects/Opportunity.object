@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <webLinks>
+        <fullName>Click_to_Call</fullName>
+        <availability>online</availability>
+        <description>Synety</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Click to Call</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>var ids = {!GETRECORDIDS($ObjectType.Contact)}; 
+
+if(ids.length &lt; 1) { 
+alert(&apos;Please select one Opportunity record.&apos;); 
+} 
+
+if(ids.length &gt;1){ 
+alert(&apos;Please select only one Opportunity record.&apos;); 
+} 
+
+if(ids.length ==1){ 
+var wnd = window.open(&apos;/apex/synety__OpportunityContact?id=&apos;+ids[0]+&apos;&amp;returnURL=001&apos;,&apos;MakeCall&apos;,&apos;scrollbars=1,width=800, height=320,left=270,top=170&apos;); 
+wnd.focus(); 
+}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Synety</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Click to Call</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>var wnd = window.open(&apos;/apex/synety__OpportunityContact?id={!Opportunity.Id}&apos;,&apos;MakeCall&apos;,&apos;scrollbars=1,width=800, height=320,left=270,top=170&apos;);
+wnd.focus();</url>
+    </webLinks>
+</CustomObject>

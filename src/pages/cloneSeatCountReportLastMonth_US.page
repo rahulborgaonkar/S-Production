@@ -1,0 +1,315 @@
+<apex:page showHeader="false" showChat="false" sidebar="false" >
+    <script type="text/javascript">
+        var __sfdcSessionId = '{!GETSESSIONID()}';
+    </script>
+    <script src="../../soap/ajax/27.0/connection.js" type="text/javascript"></script>
+    <script type="text/javascript"> 
+    
+    function formatNumber (obj, decimal) 
+    {
+     //decimal  - the number of decimals after the digit from 0 to 3
+     //-- Returns the passed number as a string in the xxx,xxx.xx format.
+       anynum=obj;//eval(obj.value);
+       divider =10;
+       switch(decimal){
+            case 0:
+                divider =1;
+                break;
+            case 1:
+                divider =10;
+                break;
+            case 2:
+                divider =100;
+                break;
+            default:       //for 3 decimal places
+                divider =1000;
+        } 
+
+       workNum=Math.abs((Math.round(anynum*divider)/divider)); 
+
+       workStr=""+workNum 
+
+       if (workStr.indexOf(".")==-1){workStr+="."} 
+
+       dStr=workStr.substr(0,workStr.indexOf("."));dNum=dStr-0
+       pStr=workStr.substr(workStr.indexOf(".")) 
+
+       while (pStr.length-1< decimal){pStr+="0"} 
+
+       if(pStr =='.') pStr =''; 
+
+       //--- Adds a comma in the thousands place.
+       if (dNum>=1000) {
+          dLen=dStr.length
+          dStr=parseInt(""+(dNum/1000))+","+dStr.substring(dLen-3,dLen)
+       } 
+
+       //-- Adds a comma in the millions place.
+       if (dNum>=1000000) {
+          dLen=dStr.length
+          dStr=parseInt(""+(dNum/1000000))+","+dStr.substring(dLen-7,dLen)
+       }
+       retval = dStr + pStr
+       //-- Put numbers in parentheses if negative.
+       if (anynum<0) {retval="("+retval+")";} 
+
+    //You could include a dollar sign in the return value.
+      //retval =  "$"+retval
+      //obj.value = retval;
+        return retval;
+    }
+
+    var state;    
+    window.onload = setupPage;
+    function setupPage() 
+    {
+      //function contains all code to execute after page is rendered
+
+      state = { //state that you need when the callback is called
+          output : document.getElementById("output"),
+          startTime : new Date().getTime()};
+
+        var callbackOrdersDocusignedLastMonth = {
+          onSuccess: showOrdersDocusignedLastMonth,
+          onFailure: queryFailed,
+          source: state};
+          
+        sforce.connection.query(
+          "SELECT sum(Total_Seats__c) ordersdocusignedlastmonth FROM Opportunity where Platform__c = 'US' and Date_Order_Docusigned__c = LAST_MONTH and Date_Order_Docusigned__c != null and Order_Docusigned__c = true and accountid not in (select id from account where name like '%zzz%') and (NOT stagename like '%Trial%') and Next_Steps__c not in ('Customer - Order Cancelled','No action to be taken')",
+           callbackOrdersDocusignedLastMonth);
+
+        var callbackOrdersProvisionedLastMonth = {
+          onSuccess: showOrdersProvisionedLastMonth,
+          onFailure: queryFailed,
+          source: state};
+
+        sforce.connection.query(
+          "SELECT sum(Total_Seats__c) orderprovisionedlastmonth FROM Opportunity where Platform__c = 'US' and Order_Processed__c = True and Next_Steps__c = 'Customer - Provisioned' and CloseDate = LAST_MONTH and StageName not in ('Closed Lost','Closed Cancelled') and accountid not in (select id from account where name like '%zzz%')",
+           callbackOrdersProvisionedLastMonth);
+
+        var callbackValuesProvisionedLastMonth = {
+          onSuccess: GetValuesProvisionedLastMonth,
+
+          onFailure: queryFailed,
+          source: state};
+
+        sforce.connection.query(
+          "select id, name from account where name like '%zzz%'",
+           callbackValuesProvisionedLastMonth);
+    }
+
+    function queryFailed(error, source) 
+    {
+        //alert("An error has occurred: " + error);
+        console.log("An error has occurred: " + error);
+
+    }
+
+    function showOrdersDocusignedLastMonth(queryResult, source) 
+    {
+        //alert(queryResult);
+        var portalorderslastmonth = 0;
+        var qresult = sforce.connection.query("select sum(Total_Seats__c) portalorderslastmonth from opportunity where Platform__c = 'US' and name like 'Portal User%' and stagename = 'Closed Won' and closedate = LAST_MONTH and(not account.name like 'zzz%')");
+        if(qresult.size > 0)
+        {
+            var qrecord = qresult.getArray("records");
+            //alert(qrecord[0].portalorderslastmonth);
+
+            portalorderslastmonth = isNaN(parseFloat(qrecord[0].portalorderslastmonth)) ? 0 : parseFloat(qrecord[0].portalorderslastmonth);
+            //alert(portalorderslastmonth);
+
+        }
+
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            var ordersdocusignedlastmonth = isNaN(parseFloat(records[0].ordersdocusignedlastmonth)) ? 0 : parseFloat(records[0].ordersdocusignedlastmonth);
+            //alert(ordersdocusignedlastmonth);
+
+            //alert(ordersdocusignedlastmonth + portalorderslastmonth);
+            document.getElementById('ordersdocusignedlastmonth').innerHTML = formatNumber(ordersdocusignedlastmonth + portalorderslastmonth,2);
+        }
+    }
+
+    function showOrdersProvisionedLastMonth(queryResult, source) 
+    {
+        //alert(queryResult);
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            var orderprovisionedlastmonth = isNaN(parseFloat(records[0].orderprovisionedlastmonth)) ? 0 : parseFloat(records[0].orderprovisionedlastmonth);
+            document.getElementById('orderprovisionedlastmonth').innerHTML = formatNumber(orderprovisionedlastmonth,2)
+
+        }
+    }
+
+    function GetValuesProvisionedLastMonth(queryResult, source) 
+    {
+        //alert(queryResult);
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            var accIds = '';
+            
+            for(var a=0; a<records.length; a++)
+            {
+                if(accIds != '')
+                    accIds += ',';
+                    
+                accIds += '\''+records[a].Id+'\'';
+            }
+           
+            var callback3 = {
+              onSuccess: showValuesProvisionedLastMonth,
+
+              onFailure: queryFailed,
+              source: state};
+
+
+            sforce.connection.query(
+              "SELECT sum(Total_Initial_Fee__c) OneTimeCharges, sum(Set_Up_Disc__c) SetUpDiscount, sum(License_Fee_Mth__c) RecurringMonthlyFees, sum(Total_Annual_Value__c) AnnualLicneseFees FROM OpportunityLineItem where OpportunityId in (select id FROM Opportunity where Platform__c = 'US' and Next_Steps__c = 'Customer - Provisioned' and CloseDate = LAST_MONTH and StageName not in ('Closed Lost','Closed Cancelled') and accountid not in ("+accIds+"))",
+               callback3);
+        }
+    }
+
+    function showValuesProvisionedLastMonth(queryResult, source) 
+    {
+        //alert(queryResult);
+
+        var portalonetimecharges = 0;
+        var portalsetupdiscount = 0;
+        var portalrecurmonthlyfees = 0;
+        var portalannuallicnesefees = 0;
+        var portalordervalueprovisioned = 0;
+        var qresult = sforce.connection.query("SELECT sum(Total_Initial_Fee__c) portalOneTimeCharges, sum(Set_Up_Disc__c) portalSetUpDiscount, sum(License_Fee_Mth__c) portalRecurMonthlyFees, sum(Total_Annual_Value__c) portalAnnualLicneseFees FROM OpportunityLineItem where OpportunityId in (select id from opportunity where Platform__c = 'US' and name like 'Portal User%' and stagename = 'Closed Wo' and closedate = LAST_MONTH and(not account.name like 'zzz%'))");
+
+        if(qresult.size > 0)
+        {
+            var qrecord = qresult.getArray("records");
+
+            portalonetimecharges = isNaN(parseFloat(qrecord[0].portalOneTimeCharges)) ? 0 : parseFloat(qrecord[0].portalOneTimeCharges);
+            //alert('hello');
+            //alert(portalonetimecharges);
+
+            portalsetupdiscount = isNaN(parseFloat(qrecord[0].portalSetUpDiscount)) ? 0 : parseFloat(qrecord[0].portalSetUpDiscount);
+            //alert(portalsetupdiscount);
+
+            portalrecurmonthlyfees = isNaN(parseFloat(qrecord[0].portalRecurMonthlyFees)) ? 0 : parseFloat(qrecord[0].portalRecurMonthlyFees);
+            //alert(portalrecurmonthlyfees);
+
+            portalannuallicnesefees = isNaN(parseFloat(qrecord[0].portalAnnualLicneseFees)) ? 0 : parseFloat(qrecord[0].portalAnnualLicneseFees);
+            //alert(portalannuallicnesefees);
+
+            portalordervalueprovisioned = portalonetimecharges + (12 * portalrecurmonthlyfees);
+            //alert(portalordervalueprovisioned);
+
+        }
+
+        if (queryResult.size > 0) 
+        {
+            //get the records array
+            var records = queryResult.getArray('records');
+            
+            //var totalOneTimeCharges = parseFloat(records[0].OneTimeCharges);
+            var totalOneTimeCharges = isNaN(parseFloat(records[0].OneTimeCharges)) ? 0 : parseFloat(records[0].OneTimeCharges);
+
+            //var totalSetUpDiscount = parseFloat(records[0].SetUpDiscount);
+            var totalSetUpDiscount = isNaN(parseFloat(records[0].SetUpDiscount)) ? 0 : parseFloat(records[0].SetUpDiscount);
+
+            //var totalRecurringMonthlyFees = parseFloat(records[0].RecurringMonthlyFees);
+            var totalRecurringMonthlyFees = isNaN(parseFloat(records[0].RecurringMonthlyFees)) ? 0 : parseFloat(records[0].RecurringMonthlyFees);
+            
+            //var totalAnnualLicenseFees = parseFloat(records[0].AnnualLicneseFees);
+            var totalAnnualLicenseFees = isNaN(parseFloat(records[0].AnnualLicneseFees)) ? 0 : parseFloat(records[0].AnnualLicneseFees);
+            
+            var totalOrdervalueProvisioned = totalOneTimeCharges + (12 * totalRecurringMonthlyFees);
+            document.getElementById('totalOneTimeCharges').innerHTML = '$'+formatNumber(totalOneTimeCharges + portalonetimecharges,2);
+            document.getElementById('totalSetUpDiscount').innerHTML = '$'+formatNumber(totalSetUpDiscount + portalsetupdiscount,2);
+            document.getElementById('totalRecurringMonthlyFees').innerHTML = '$'+formatNumber(totalRecurringMonthlyFees + portalrecurmonthlyfees,2);
+            document.getElementById('totalAnnualLicenseFees').innerHTML = '$'+formatNumber(totalAnnualLicenseFees + portalannuallicnesefees,2);
+            document.getElementById('totalOrdervalueProvisioned').innerHTML = '$'+formatNumber(totalOrdervalueProvisioned + portalordervalueprovisioned,2);
+        }
+    }
+
+ 
+  </script>
+    <table cellpadding="3" width="100%" >
+
+    <tr>
+    <td style="font-size:12px;font-weight:bold;" width="70%">
+        Licenses Docusigned last month: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000006lcT8" title="click to see report" target="_blank"><span id="ordersdocusignedlastmonth" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;font-weight:bold;" width="70%">
+        Licenses Provisioned last month: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004fNJ3" title="click to see report" target="_blank"><span id="orderprovisionedlastmonth" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+
+    <tr>
+    <td style="font-size:12px;font-weight:bold;" width="80%">
+        Order values last month (Provisioned): 
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Set-up / one-time charges: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004fNJ3" title="click to see report" target="_blank"><span id="totalOneTimeCharges" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Discount Given: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004fNJ3" title="click to see report" target="_blank"><span id="totalSetUpDiscount" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Recurring monthly fees: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004fNJ3" title="click to see report" target="_blank"><span id="totalRecurringMonthlyFees" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Annual licenses fees: 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004fNJ3" title="click to see report" target="_blank"><span id="totalAnnualLicenseFees" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    <tr>
+    <td style="font-size:12px;" width="70%">
+        - Total order value (Provisioned): 
+    </td>
+    <td style="font-size:12px;font-weight:bold;text-align:right" width="30%">
+        <a href="/00OG0000004fNJ3" title="click to see report" target="_blank"><span id="totalOrdervalueProvisioned" style="font-size:12px;color:#F00"></span></a>
+    </td>
+    </tr>
+
+    </table>
+</apex:page>

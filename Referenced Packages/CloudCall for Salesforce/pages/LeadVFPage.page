@@ -1,0 +1,13 @@
+<apex:page standardController="Lead" >
+	<!-- 
+	<script>
+		function openPage(){
+			var wnd = window.open('/apex/ContactPhone?id={!Lead.Id}','Make_Call','scrollbars=0,width=550, height=400,left=370,top=170');
+			wnd.focus();
+		}
+	</script>
+	<apex:form >
+		<apex:commandButton image="{!$Resource.tinyPhoneIconrr}"  style="height:35px;" onclick="openPage(); return false;" value="Synety"/>
+	</apex:form>
+    -->
+</apex:page>

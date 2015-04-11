@@ -1,0 +1,47 @@
+<apex:page id="pageMain" standardStylesheets="false" showHeader="false" sidebar="false" controller="regulatoryNewsSubscribersController" title="SYNETY Unsubscribe Form" action="{!init}">
+<apex:form >
+<html>
+    <head>
+        <title>SYNETY Unsubscribe Form</title>
+    </head>
+    <body style="font-family: Arial, Helvetica, sans-serif;font-size: 12px; ">  
+        <div style="padding: 10px;">
+            <div id="conf_info_panel" class="panel_box white_bg top_space">
+                <div style="text-align:center">
+                    <img src="{!urlfor($Resource.CreditForm,'synety__synety_logo.png')}" width="212" height="77" alt="SYNETY Logo" />
+                </div>
+                <h1 style="width:100%; text-align:center">
+                    Regulatory News Unsubscribe Form 
+                </h1>
+            </div>
+        </div>
+        <apex:outputpanel rendered="{!not(doclose)}">
+            <div class="panel_box white_bg">
+            <h2 class="white_bg" style="text-align:center;">
+                You have decided to remove your Email from SYNETY Regulatory News Subscription Service. Please press Confirm.
+            </h2>
+            </div>
+        </apex:outputpanel>
+        <apex:outputpanel rendered="{!doclose}">
+            <div class="panel_box white_bg">
+            <h2 class="white_bg" style="text-align:center;">
+                Your Email is removed from SYNETY Regulatory News Subscription Service.
+            </h2>
+            </div>
+        </apex:outputpanel>
+        <br/>
+        <apex:outputpanel rendered="{!not(doclose)}">
+            <div>
+                <table class="data_tbl" border="0" style="width:100%;">
+                    <tr>
+                    <td style="text-align:center;padding:1%">
+                        <apex:commandButton value="Confirm" id="confirm" action="{!confirm}"/>
+                    </td>
+                    </tr>
+                </table>
+            </div>
+        </apex:outputpanel>
+    </body>
+</html>
+</apex:form>
+</apex:page>

@@ -1,0 +1,89 @@
+<apex:page controller="cloneWebDemoBookingPerfClass">
+    <apex:form >
+    <apex:outputPanel >
+    <center><span style="font-size:26px;font-weight:bold;">Web Demo Bookings Performance Dashboard</span></center>
+    <table width="75%" border="1" align="center">
+    <tr>
+    <td>
+    <apex:chart height="250" width="500" data="{!BarChart}" id="refresh1">
+        <apex:axis type="Category" position="left" fields="partner_sales_person" title="Tele Sales Resource"/>
+        <apex:axis type="Numeric" position="bottom" minimum="0" steps="1" fields="book_count" title="Bookings This Month" grid="true"/>
+        <apex:barSeries title="Monthly Sales" orientation="horizontal" axis="left" xField="book_count" yField="partner_sales_person"/>
+    </apex:chart>
+    </td>
+    <td>
+    <apex:chart height="250" width="500" data="{!LineChart}" id="refresh2">
+        <apex:legend position="right"/>
+        <apex:axis type="Numeric" position="left" minimum="0" steps="1" fields="data1,data2,data3" title="Bookings" grid="true"/>
+        <apex:axis type="Category" position="bottom" fields="month_year" title="Month & Year"/>
+        <apex:lineSeries title="Tele Sales Resource 1" axis="left" xField="month_year" yField="data1"/>
+        <apex:lineSeries title="Tele Sales Resource 2" axis="left" xField="month_year" yField="data2"/>
+        <apex:lineSeries title="Tele Sales Resource 3" axis="left" xField="month_year" yField="data3"/>
+    </apex:chart>
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    <apex:chart height="250" width="500" data="{!CRMBarChart}" id="refresh3">
+        <apex:axis type="Numeric" position="left" minimum="0" steps="1" fields="crm_count" title="No Of Demo Booked" grid="true" margin="10">
+        </apex:axis>
+        <apex:axis type="Category" position="bottom" fields="crm_count" title="CRM PRODUCT">
+            <apex:chartLabel field="crm_count" display="middle"/>
+        </apex:axis>
+        <apex:barSeries title="Monthly Sales" orientation="vertical" axis="bottom" xField="crm_product" yField="crm_count">
+            <apex:chartLabel field="crm_product" display="over" font="8px Helvetica, sans-serif" rotate="315"/>
+        </apex:barSeries>
+    </apex:chart>
+    </td>
+
+    <td>
+    <center><span style="font-weight:bold;">Summary of CRM Product Type</span></center>
+    <apex:chart height="250" width="500" data="{!CRMPieChart}" id="refresh4">
+        <apex:pieSeries labelField="crm_product_type" dataField="type_count">
+            <apex:chartLabel field="crm_product_type" display="middle" rotate="45"/>        
+        </apex:pieSeries>
+    </apex:chart>
+    </td>
+
+    </tr>
+
+    </table>
+
+    <table width="75%" align="center">
+    <tr>
+    <td>
+    <apex:pageBlock title="Web Demo Monthly Bookings"  id="refresh5">
+        <apex:pageBlockTable value="{!bookingdetails}" var="c" style="width:100%">
+            <apex:column >
+                <apex:facet name="header">Account Name</apex:facet>
+                    {!c.account.name}
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">CRM Product</apex:facet>
+                    {!c.account.CRM_Product__r.name}
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Account Owner</apex:facet>
+                    {!c.account.owner.name}
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Tele Sales Resource</apex:facet>
+                    {!c.account.Partner_Sales_Person__c}
+            </apex:column>
+            <apex:column headerValue="Web Demo Created Date">
+                <apex:outputtext value="{0,date,dd' 'MMM' 'yyyy}">
+                    <apex:param value="{!c.createddate}"  />
+                </apex:outputText>
+            </apex:column>
+            <apex:column headerValue="Web Demo Booking Date Time" value="{!c.reminderdatetime}"/>
+            <apex:column headerValue="Status" value="{!c.status}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    </td>
+    </tr>
+    </table>
+    </apex:outputPanel>
+    <apex:actionPoller rerender="refresh1,refresh2,refresh3,refresh4,refresh5" interval="900"/>
+    </apex:form>
+</apex:page>

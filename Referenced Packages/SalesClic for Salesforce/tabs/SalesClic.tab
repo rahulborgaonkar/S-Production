@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>The SalesClic tab is a user-friendly and powerful way to manage and analyse your sales pipeline, notably enabling you to:
+- gain time on date inputs (drag-and-drop opportunity updating);
+- gain understanding (immediate visual assessment of your pipeline);
+- gain reliability (detailed simulation of multiple sales scenarios).</description>
+    <frameHeight>2500</frameHeight>
+    <hasSidebar>true</hasSidebar>
+    <icon>SalesClic_folder/SalesClic_logo_for_web_tab.png</icon>
+    <label>SalesClic</label>
+    <mobileReady>true</mobileReady>
+    <motif>Custom331: TV Widescreen</motif>
+    <url>https://app.salesclic.com/sessions/create_with_sf_token?session_id={!API.Session_ID}&amp;server_url={!API.Partner_Server_URL_90}&amp;go_to_page=%2Fsf_pipelines%2Fshow</url>
+    <urlEncodingKey>UTF-8</urlEncodingKey>
+</CustomTab>

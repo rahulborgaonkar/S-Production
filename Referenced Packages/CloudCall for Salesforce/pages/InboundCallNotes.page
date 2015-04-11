@@ -1,0 +1,330 @@
+<apex:page id="pg" controller="synety.InboundCallNotesController" showHeader="false" sidebar="false" >
+<head>
+    <title>
+        SYNETY CloudCall: Inbound Call
+    </title>
+</head>
+
+<script type="text/javascript">
+	function openRecord(sType)
+	{
+		var idFieldName = 'pg:frm:pgb:'+sType+'_lkid';
+		var idField = document.getElementById(idFieldName);
+		if(idField)
+		{
+			var sId = idField.value;
+			if(sId != null && 
+				sId != '' &&
+				sId != '000000000000000')
+			{
+				window.open('/'+sId);
+			}				
+		}
+	}
+	
+	var forceClose = false;
+	function getCookie(c_name)
+	{
+		var c_value = document.cookie;
+		var c_start = c_value.indexOf(" " + c_name + "=");
+		if (c_start == -1)
+		{
+			c_start = c_value.indexOf(c_name + "=");
+		}
+		if (c_start == -1)
+		{
+			c_value = null;
+		}
+		else
+		{
+			c_start = c_value.indexOf("=", c_start) + 1;
+			var c_end = c_value.indexOf(";", c_start);
+			if (c_end == -1)
+			{
+				c_end = c_value.length;
+			}
+			c_value = unescape(c_value.substring(c_start,c_end));
+		}
+		return c_value;
+	}
+	
+	function setCookie(c_name,value,exdays)
+	{
+		var exdate=new Date();
+		exdate.setDate(exdate.getDate() + exdays);
+		var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString());
+		document.cookie=c_name + "=" + c_value;
+	}
+	
+	function checkCookie()
+	{
+		var sessionId = getURLParameter('sessionId');
+		var isExactMatch = getURLParameter('isExactMatch');
+		//alert(sessionId);
+		if(sessionId != null && sessionId != "" && isExactMatch == '1')
+		{
+			var callIds=getCookie("openedCallIds");
+			if (callIds!=null && callIds!="")
+			{
+			  //check if sessionId already exists and if yes then close window
+			  if(callIds.indexOf(sessionId+",") >= 0)
+			  {
+			  	forceClose = true;
+			  	window.close();
+			  }
+			  else
+			  {
+			  	callIds += sessionId + ",";
+			  	setCookie("openedCallIds",callIds,1);
+			  }
+			}
+			else 
+			{
+			  //set cookie with sessionId
+			  callIds = sessionId + ",";
+			  setCookie("openedCallIds",callIds,1);
+			}
+		}
+	}
+
+	function getURLParameter(name) 
+	{
+	  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+	}
+	
+	if("{!isPostBack}" != 'true')
+    {
+		checkCookie();
+	}
+	
+    function validateTask()
+    {
+    	var subject = document.getElementById('pg:frm:pgb:txtSubject').value;
+    	
+        if({!isNoteRequired})
+        {
+            //if(note == '' || subject == '')
+            if(subject == '')
+            {
+                alert('Please enter notes for this call');
+                return false;
+            }
+        }
+        
+        var cat = document.getElementById('pg:frm:pgb:lstCat').value;
+        if({!isCallCatRequired} && cat == '')
+        {
+            alert('Please select a call category');
+            return false;
+        }
+        
+        canClose = false;
+        
+    }
+    
+    var canClose = {!showNotes};
+    window.onbeforeunload = function(e) 
+    {
+    	if(({!isNoteRequired} || {!isCallCatRequired})  && canClose && {!isComplete} == false && forceClose == false)
+        {
+        	if({!isNoteRequired} && {!isCallCatRequired})
+            	return 'Call notes and Call category are required before you can close this window. Please go back, enter notes and select call category and save the task to close this window.';
+            else if({!isNoteRequired})
+            	return 'Call notes are required before you can close this window. Please go back and enter notes and save the task to close this window.';
+            else
+            	return 'Call category is required before you can close this window. Please go back, enter notes and select call category and save the task to close this window.';
+        }
+    };
+    
+</script>
+    <apex:outputPanel id="panelURL">
+        <script type="text/javascript">
+            canClose = {!showNotes};
+            
+            if("{!isComplete}" == 'true')
+            {
+                if("{!JSINHTMLENCODE(url)}" != '')
+                {
+                    self.resizeTo(screen.width,screen.height);
+                    self.moveTo(0,0);
+                    window.location.href="{!JSINHTMLENCODE(url)}";
+                }
+                else
+                {   
+                    window.close();
+                }
+            }
+        </script>
+    </apex:outputPanel>
+    <apex:pageMessages id="msg"/>
+    
+    <apex:outputpanel rendered="{!isAllSetupDone}">
+        <apex:form id="frm">
+            <apex:actionFunction name="js_pauseCallRecording" action="{!pauseCallRecording}" rerender="msg, panelURL, recordingControls" status="status1" />            
+            
+            <apex:pageBlock id="pgb">
+                <span style="font-weight:bold;font-size:25px;margin-left:15px;">SYNETY CloudCall: Inbound Call&nbsp;</span>
+                        
+	            <apex:actionStatus id="status1">
+	                <apex:facet name="start">
+	                    
+	                        <img src="/img/loading24.gif" />
+	                        <span style="margin-left: 10px; font-size: 12px; font-weight: bold; color: #000000;">Please wait...</span>
+	                    
+	                </apex:facet>
+	            </apex:actionStatus>
+	            
+                <br/><br/><br/>
+                
+                <apex:outputPanel id="callButtons">
+                    <apex:outputPanel rendered="{!showNotes}" id="notes">
+                        <h4>CALL NOTES</h4>
+                        <hr/>
+                        <!-- 
+                        <apex:outputPanel rendered="{!doShowCampaign}">
+	                    <table>
+	                    	<tr>
+	                            <td style="font-weight:bold;width:75px;">&nbsp;</td>
+	                            <td >
+	                            	<apex:selectList id="lstCampaignType" value="{!campaignMemberType}" size="1"
+	                            		onChange="CampMemTypeChange();">
+							            <apex:selectOption itemValue="" 
+							            	itemLabel="Select Campaign Member Type..."/>
+							            <apex:selectOption itemValue="New" 
+							            	itemLabel="Add to Campaign as Campaign Member"/>
+							            <apex:selectOption itemValue="Existing" 
+							            	itemLabel="Update Existing Campaign Member Status"/>
+							        </apex:selectList> 
+	                            	<apex:actionStatus id="status2">
+						                <apex:facet name="start">
+						                    
+						                        <img src="/img/loading24.gif" />
+						                        <span style="margin-left: 10px; font-size: 12px; font-weight: bold; color: #000000;">Please wait...</span>
+						                    
+						                </apex:facet>
+						            </apex:actionStatus>
+	                            </td>
+	                        </tr>
+	                        
+	                    	<tr>
+	                            <td style="font-weight:bold;">
+		                            <apex:outputPanel rendered="{!showCampaignNew}">
+		                            Campaign :
+		                            </apex:outputPanel>
+	                            </td>
+	                            <td >
+	                            	<apex:outputPanel rendered="{!showCampaignNew}">
+	                            	<apex:selectList value="{!newCampaignId}" id="lstNewCampaign" 
+	                            		size="1" onChange="CampChange();">
+	                                    <apex:selectOptions value="{!lstNewCampaigns}"/>
+	                                </apex:selectList>
+	                                
+	                                </apex:outputPanel>
+	                            </td>
+	                        </tr>
+	                        
+	                        
+	                        <tr>
+	                            <td style="font-weight:bold;">
+	                            	<apex:outputPanel rendered="{!showCampaignExisting}">
+	                            	Campaign :
+	                            	</apex:outputPanel>
+	                            </td>
+	                            <td >
+	                            	<apex:outputPanel rendered="{!showCampaignExisting}">
+	                                <apex:selectList value="{!existingCampaignId}" id="lstContactCampaign" 
+	                                	size="1" onChange="CampChange();">
+	                                    <apex:selectOptions value="{!lstContactCampaigns}"/>
+	                                </apex:selectList>
+	                                </apex:outputPanel>
+	                            </td>
+	                        </tr>
+	                        
+	                        
+	                        <tr>
+	                            <td style="font-weight:bold;">
+	                            	<apex:outputPanel rendered="{!lstCampaignMemberStatus.size>0}">
+	                            	Status :
+	                            	</apex:outputPanel>
+	                            </td>
+	                            <td >
+	                            	<apex:outputPanel rendered="{!lstCampaignMemberStatus.size>0}">
+	                                <apex:selectList value="{!selCampStatus}" id="lstCampaignMemberStatus" size="1">
+	                                    <apex:selectOptions value="{!lstCampaignMemberStatus}"/>
+	                                </apex:selectList>
+	                                </apex:outputPanel>
+	                            </td>
+	                        </tr>
+						</table>
+						</apex:outputPanel>
+						-->
+                        <table>
+                            <tr>
+	                            <td style="font-weight:bold;width:75px;">Category :</td>
+                                <td >
+                                    <apex:selectList id="lstCat" size="1" value="{!selCat}">
+                                        <apex:selectOptions value="{!lstCallCatOpt}"/>
+                                    </apex:selectList>
+                                </td>
+                                
+                                <td style="font-weight:bold;">
+									<a href="#" onClick="javascript:openRecord('contact');" title="Click here to open selected contact record">
+                                	Search Contact</a> :
+								</td>
+                                <td >
+                                    <apex:inputField id="contact" value="{!oCallUpdate.synety__Contact__c}" label="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Subject :</td>
+                                <td ><apex:inputText id="txtSubject" value="{!taskRec.subject}" style="width:437px;"/></td>
+                                
+                                <td style="font-weight:bold;">
+									<a href="#" onClick="javascript:openRecord('account');" title="Click here to open selected account record">
+                                	Search Account</a> :
+								</td>
+                                <td >
+                                    <apex:inputField id="account" value="{!oCallUpdate.synety__Account__c}" label="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold;">Notes :</td>
+                                <td><apex:inputTextArea id="txtNote" value="{!taskRec.Description}" rows="4" style="width:435px;" /></td>
+                                
+                                <td style="font-weight:bold;vertical-align:top;">
+                                	<a href="#" onClick="javascript:openRecord('lead');" title="Click here to open selected lead record">
+                                	Search Lead</a> :
+                               	</td>
+                                <td style="vertical-align:top;">
+                                    <apex:inputField id="lead" value="{!oCallUpdate.synety__Lead__c}" label="" />
+                                    <br />
+                                    <div align="right" style="width:100%">
+	                                    <apex:outputPanel rendered="{!recordingControlsAllowed}" id="recordingControls">
+			                                <apex:commandButton id="cmdPause" title="Pause Call Recording" image="{!URLFOR($Resource.synety__IconPause)}" onclick="js_pauseCallRecording();return false;" rendered="{! not(doPauseCallRecording)}"/>
+			                                <apex:commandButton id="cmdResume" title="Resume Call Recording" image="{!URLFOR($Resource.synety__IconRecord)}" onclick="js_pauseCallRecording();return false;" rendered="{! doPauseCallRecording}"/>
+		                                </apex:outputPanel>
+	                                </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                <center>
+                                    <apex:commandButton value="Save Note" action="{!Close_Task}" onclick="javascript:return validateTask();" />
+                                    &nbsp;
+                                    <apex:commandButton value="Save Note & Create followup Task" action="{!SaveCall_Task}" onclick="javascript:return validateTask();" />
+                                    &nbsp;
+                                    <apex:commandButton value="Save Note & Create followup Event" action="{!SaveCall_Event}" onclick="javascript:return validateTask();" />
+                                </center>
+                                </td>
+                            </tr>
+                        </table>
+                    </apex:outputPanel>
+                </apex:outputPanel>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputpanel>
+    
+    <script type="text/javascript">
+        self.resizeTo(900, 450);
+    </script>
+</apex:page>

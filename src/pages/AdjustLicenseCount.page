@@ -1,0 +1,57 @@
+<apex:page action="{!initAdjustment}" controller="CommissionReportController" Title="Adjust License Count">
+<apex:form >
+<apex:outputpanel rendered="{!isAllowed}">
+	<apex:sectionHeader title="Adjust License Count"/>
+	<apex:pageMessages />
+    <apex:pageBlock >
+        <apex:pageblockbuttons >
+            <apex:commandbutton value="Apply Adjustment" action="{!commitAdjustment}"  />
+            <apex:commandbutton value="Cancel" action="{!cancelAdjustment}"  />
+            &nbsp;&nbsp;
+            <apex:commandbutton value="Void Adjustment" action="{!voidAdjustment}"  />            
+        </apex:pageblockbuttons>
+    
+	    <apex:pageBlockSection columns="1" id="pgbs" >
+	    	<br />
+		    <span style="font-size:22px;font-weight:bold">{!reportTitle}</span>
+		    
+		    <br />
+		    <br />
+		    <span style="font-size:18px;font-weight:bold">
+		    	New Licenses: 
+		    	<apex:outputText value="{0, number,###,###,##0.00}" 
+	        		style="font-size:18px;font-weight:bold">
+	        		<apex:param value="{!NewSeatsSold}" />
+	        	</apex:outputText>
+		    </span>	
+		    
+		    <br />
+		    <span style="font-size:18px;font-weight:bold">
+		    	Enter New License Count: 
+		    	&nbsp;
+		    	<apex:inputText value="{!adjustmentSeats}">
+		    	</apex:inputText>
+		    </span>	
+		    
+		    <br />
+		    <span style="font-size:18px;font-weight:bold">
+		    	Notes: 
+		    	&nbsp;
+		    	<apex:inputTextArea value="{!adjustmentNotes}">
+		    	</apex:inputTextArea>
+		    </span>	  
+		    <br />
+    	</apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:outputpanel>
+
+<apex:outputpanel rendered="{! !isAllowed}">
+    <span style="font-size:15px;color:#F00;text-align:right;font-weight:bold">
+        Unauthorized access is denied.
+    </span>
+    <br /><br />
+    <apex:commandbutton value="Back to Report" action="{!cancelAdjustment}"  />
+</apex:outputpanel>
+
+</apex:form>
+</apex:page>

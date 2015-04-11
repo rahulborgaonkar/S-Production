@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <frameHeight>650</frameHeight>
+    <hasSidebar>true</hasSidebar>
+    <label>About Conga Composer</label>
+    <mobileReady>false</mobileReady>
+    <motif>Custom64: Compass</motif>
+    <url>https://www.appextremes.com/apps/Conga/StartHere/Welcome.htm</url>
+    <urlEncodingKey>UTF-8</urlEncodingKey>
+</CustomTab>

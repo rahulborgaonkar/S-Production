@@ -1,0 +1,65 @@
+<apex:page sidebar="false" showheader="false" standardstylesheets="false" controller="DashboardRefreshController">
+ 
+<apex:outputPanel rendered="{!canRefresh}">
+ <apex:form >
+     <apex:actionFunction name="doRefresh" action="{!refreshDashboard}" />
+     <apex:outputPanel id="detail">
+   <div id="countDown" style="font-family:Verdana"></div>
+     </apex:outputPanel>
+ </apex:form>
+ 
+ <apex:outputPanel id="scriptPanel">
+     <apex:outputPanel rendered="{!needsRefresh}">
+   <script>
+    window.onload = function() 
+    {
+     startCountDown(59, 1000, doRefresh);
+    } 
+ 
+    function startCountDown(i, p, f) 
+    {
+     var pause = p;
+     var fn = f;
+     
+     var countDownObj = document.getElementById("countDown");
+     if (countDownObj == null) 
+     {
+      alert("div not found, check your id");
+      return;
+     }
+     
+     countDownObj.count = function(i) 
+     {
+      countDownObj.innerHTML = 'Refreshing in {!minutes} minutes ' + i + ' seconds';
+      if (i == 0) 
+      {
+       fn();
+       return;
+      }
+      setTimeout(function() 
+       {
+        countDownObj.count(i - 1);
+       },
+       pause
+      );
+     } 
+   
+     countDownObj.count(i);
+    }
+   </script>
+     </apex:outputPanel>
+      
+  <apex:outputPanel rendered="{!NOT(needsRefresh)}">
+   <script>
+       window.top.location='/{!dbIdent}?isdtp=vw';
+   </script>
+     </apex:outputPanel>
+ </apex:outputPanel>
+ 
+</apex:outputPanel>
+<apex:outputPanel rendered="{!NOT(canRefresh)}">
+   Edit mode/home page - refresh disabled
+</apex:outputPanel>
+ 
+ 
+</apex:page>

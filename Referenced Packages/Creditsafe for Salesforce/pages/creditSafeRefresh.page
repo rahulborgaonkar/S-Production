@@ -1,0 +1,3 @@
+<apex:page controller="bottomline.creditSafeView" action="{!refreshRating}" tabStyle="creditsafeTab__tab">
+    <apex:pageMessages />
+</apex:page>

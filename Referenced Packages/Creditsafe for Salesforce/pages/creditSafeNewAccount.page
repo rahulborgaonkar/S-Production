@@ -1,0 +1,3 @@
+<apex:page controller="bottomline.creditSafeNewAccount" tabStyle="creditsafeTab__tab" action="{!insertAccount}">
+<apex:pageMessages />
+</apex:page>

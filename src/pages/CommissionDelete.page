@@ -1,0 +1,20 @@
+<apex:page standardController="Commission_Setup__c">
+
+deleting record...
+<script type="text/javascript">
+        var __sfdcSessionId = '{!GETSESSIONID()}';
+</script>
+<script src="../../soap/ajax/27.0/connection.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var delId = '{!$CurrentPage.parameters.delId}';
+    if(delId != '')
+    {
+        var delResult = sforce.connection.deleteIds([delId ]);
+        if (delResult[0].getBoolean("success") == false) 
+        {
+            alert('There was some error while deleting record. Please try again later.');
+        }
+    }
+    window.location='/a0d?isdtp=vw';
+</script>
+</apex:page>

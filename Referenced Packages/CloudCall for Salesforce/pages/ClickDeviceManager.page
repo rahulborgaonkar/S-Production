@@ -1,0 +1,35 @@
+<apex:page title="SYNETY: Manage Click Devices" controller="synety.ClickDeviceController" action="{!init}" >
+
+<apex:form >
+    <apex:outputPanel rendered="{!not(doShow)}">
+        <font color="red">
+        You do not have an active SYNETY configuration record setup. Please contact your system administrator.
+        </font>
+    </apex:outputPanel>
+    <apex:outputPanel rendered="{!doShow}">
+        <apex:sectionHeader title="" subtitle="Select Default Click Device"/>
+        <apex:pageMessages />
+        <apex:pageBlock title="" rendered="{!clickDeviceFound}">
+            <apex:pageblockbuttons >
+                <apex:commandbutton value="Set as Default" action="{!saveDefault}" />
+                
+            </apex:pageblockbuttons>
+            
+            <apex:pageBlockTable value="{!lstDevices}" var="item">
+                
+                <apex:column headerValue="Default Device?">
+                    <apex:outputpanel rendered="{!item.isDefault}">
+                        <input type="radio" name="defaultDevice" value="{!item.deviceNumber}" checked="checked" />
+                    </apex:outputpanel>
+                    <apex:outputpanel rendered="{!not(item.isDefault)}">
+                        <input type="radio" name="defaultDevice" value="{!item.deviceNumber}" />
+                    </apex:outputpanel>
+                </apex:column>
+                <apex:column headerValue="Device Description" value="{!item.deviceDesc}"/>
+                <apex:column headerValue="Device Number" value="{!item.deviceNumber}"/>             
+            </apex:pageBlockTable>
+            
+        </apex:pageBlock> 
+    </apex:outputPanel>
+</apex:form>
+</apex:page>

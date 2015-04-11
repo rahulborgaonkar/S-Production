@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HomePageComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <links>Dynamic_Buttons_AJAX_Import</links>
+    <links>PhoneClicker_AJAX_Import_2</links>
+    <pageComponentType>links</pageComponentType>
+</HomePageComponent>

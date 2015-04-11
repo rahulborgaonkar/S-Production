@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Call_Category__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Call Category</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Recording__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <formula>if( isblank(Recording__c), 
+HYPERLINK(&quot;javascript:alert(&apos;Call recording not found for this activity.&apos;);void(0);&quot; ,&quot;Call Recording Not Available&quot;,&quot;_self&quot;), 
+HYPERLINK(&quot;javascript:window.open(&apos;/apex/synety__gotoCallRecording?id=&quot; &amp; Id &amp; &quot;&amp;url=&quot; &amp; Recording__c &amp;&quot;?type=mp3&apos;,&apos;&apos;,&apos;width=800, height=500&apos;);void(0);&quot; ,&quot;Download Call Recording&quot;,&quot;_self&quot;))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Call Recording</label>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Call_Session_Id__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>true</externalId>
+        <inlineHelpText>Unique Session Id Value for SYNETY Call (Inbound and Outbound). Do not change this.</inlineHelpText>
+        <label>Call Session Id</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>From__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Call From</label>
+        <required>false</required>
+        <type>Phone</type>
+    </fields>
+    <fields>
+        <fullName>Recording__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Call Recording URL</label>
+        <required>false</required>
+        <type>Url</type>
+    </fields>
+    <fields>
+        <fullName>To__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Call To</label>
+        <required>false</required>
+        <type>Phone</type>
+    </fields>
+</CustomObject>

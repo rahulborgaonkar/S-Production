@@ -1,0 +1,32 @@
+<apex:page title="SYNETY: Active Configuration(s)" tabstyle="synety__Synety_Configuration__c" controller="synety.SynetyConfigListController" >
+
+<apex:form >
+    <apex:sectionHeader title="" subtitle="Synety Configurations"/>
+    <apex:pageMessages />
+    <apex:pageBlock title="Active Configuration List">
+        <apex:pageblockbuttons >
+            <apex:commandbutton value="New Configuration" action="{!newConfig}" />
+            <apex:commandbutton value="Refresh all Tokens" action="{!refreshTokens}" />
+        </apex:pageblockbuttons>
+        
+        <apex:pageBlockTable value="{!lstConfigs}" var="item">
+            
+            <apex:column headerValue="Action">
+                <apex:commandLink value="Edit" action="{!editConfig}">
+                    <apex:param name="configId"
+                        value="{!item.config.Name}"
+                        assignTo="{!configId}"/>
+                </apex:commandLink>&nbsp;&nbsp;|&nbsp;&nbsp; 
+                <apex:commandLink value="Del" action="{!delConfig}" onclick="return confirm('Are you sure you want to delete this config record?');">
+                    <apex:param name="configId"
+                        value="{!item.config.Name}"
+                        assignTo="{!configId}"/>
+                </apex:commandLink>
+            </apex:column>
+            <apex:column headerValue="Salesforce User" value="{!item.Username}"/>
+            <apex:column headerValue="OAuth Token Expires On" value="{!item.config.synety__OAuthExpiration__c}"/>             
+        </apex:pageBlockTable>
+        
+    </apex:pageBlock> 
+</apex:form>
+</apex:page>

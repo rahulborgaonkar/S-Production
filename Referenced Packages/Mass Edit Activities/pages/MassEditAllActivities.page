@@ -1,0 +1,104 @@
+<apex:page controller="mea.MassEditActivities" title="Mass Edit Activities by Sales Optimizer" action="{!doSearch}">
+<apex:form id="Form1">
+<apex:sectionHeader title="Activity Management" subtitle="Edit My Tasks and Events" help="/apex/MassEditActivitiesHelp" />
+<apex:pageBlock id="Block1" mode="edit" >
+<apex:pageBlockSection id="Section1" columns="1" showHeader="false" title="Search - My Open Activity" >
+<apex:pageBlockSectionItem id="Item1" >
+<apex:panelGroup id="Group1">
+<table id="Table1">
+<tr id="TR1">
+<td id="TD1" valign="top">
+	<div class="toolsContentLeft">
+    <div class="bSubBlock secondaryPalette">
+    <h3 class="lbHeader">Search - My Tasks and Events</h3>
+    </div>
+	</div>
+	<table id="Table2">
+		<tr id="TR2">
+			<td><apex:outputLabel for="User"><b>User:&nbsp;</b></apex:outputLabel></td>
+			<td nowrap="true">
+				<apex:outputText value="{!UserFullName}" />
+			</td>
+			<td><apex:outputLabel for="Begin"><b>From:&nbsp;</b></apex:outputLabel></td>
+			<td><apex:inputField value="{!BeginDate.ActivityDate}" required="true" id="Begin"/></td>
+			<td><apex:outputLabel for="End"><b>To:&nbsp;</b></apex:outputLabel></td>
+			<td><apex:inputField value="{!EndDate.ActivityDate}" required="true"/></td>
+		</tr>
+		<tr>
+			<td colspan="2"><apex:outputLabel for="searchAll"><b>Search All Tasks:&nbsp;</b></apex:outputLabel></td>
+			<td colspan="3"><apex:inputCheckbox value="{!searchAll}" id="searchAll" /></td>
+			<td align="right"><apex:commandButton id="Go" value="Go!" action="{!doSearch}" rerender="Results,Results2,Results3,xMessages,Message,PaidMessage" status="status"/></td>
+		</tr>
+	</table>
+
+</td>
+<td align="center" width="100%" valign="top">
+<table class="toolsContent" cellpadding="0" cellspacing="0">
+    <tr>
+    <td valign="top" align="left">
+    <div class="toolsContentLeft">
+    <div class="bSubBlock secondaryPalette">
+    <h3 class="lbHeader">Instructions</h3>
+    <div class="lbBody">
+    Mass Edit Activities allows you to edit up to 100 Tasks and 100 Events from a single screen.
+    <ol>
+    <li>Select the date range for the Tasks and Events you want to edit and Click the Go! button.</li>
+    <li>Edit the values within the Tasks and Events you wish to change.</li>
+    <li>Click the Save button.  This will save ALL Tasks and Events displayed.</li>
+   	</ol>
+    </div>
+    </div>
+    </div>
+	</td>
+	</tr>
+	</table>	
+</td>
+</tr>
+</table>
+
+</apex:panelGroup>
+</apex:pageBlockSectionItem>
+</apex:pageBlockSection>
+</apex:pageBlock>
+<apex:actionStatus id="status" startText="Searching ..." />
+<apex:actionStatus id="pStatus" startText="Processing ..." />
+<apex:pageMessages id="xMessages" />
+<apex:pageBlock id="Results" rendered="true">
+<apex:pageBlockButtons >
+<apex:commandButton value="Save" action="{!saveActivities}" rerender="Results,Tasks,Events,xMessages,Message,PaidMessage" status="pStatus"/>
+<apex:commandButton value="Cancel" action="{!cancel}" immediate="true"/>
+</apex:pageBlockButtons>
+<apex:pageBlockSection title="Open Tasks" id="Tasks" columns="1" collapsible="false" rendered="true">
+<apex:pageBlockTable value="{!Tasks}" var="t" rendered="{!HasActivities}" id="Results3" rowClasses="odd,even">
+<apex:column headerValue=""><apex:outputLink value="/{!t.Id}" target="_blank">View</apex:outputLink></apex:column>
+<apex:column headerValue=""><apex:outputLink value="/{!t.Id}/e?" target="_blank">Edit</apex:outputLink></apex:column>
+<apex:column headerValue="Subject" width="300px"><apex:inputText value="{!t.Subject}" style="width:250px"/></apex:column>
+<apex:column headerValue="Name"><apex:inputField value="{!t.WhoId}" /></apex:column>
+<apex:column headerValue="Status"><apex:inputField value="{!t.Status}" /></apex:column>
+<apex:column headerValue="Priority"><apex:inputField value="{!t.Priority}" /></apex:column>
+<apex:column headerValue="Due Date"><apex:inputField value="{!t.ActivityDate}" /></apex:column>
+<apex:column headerValue="Related To"><apex:inputField value="{!t.WhatId}" rendered="{!NOT(t.mea__IsAssociatedWithLead__c)}" /></apex:column>
+</apex:pageBlockTable>
+</apex:pageBlockSection>
+<apex:pageBlockSection title="Events" id="Events" columns="1" collapsible="false" rendered="true">
+<apex:pageBlockTable value="{!Events}" var="e" rendered="{!HasActivities}" id="Results3" rowClasses="odd,even">
+<apex:column headerValue=""><apex:outputLink value="/{!e.Id}">View</apex:outputLink></apex:column>
+<apex:column headerValue=""><apex:outputLink value="/{!e.Id}/e?" target="_blank">Edit</apex:outputLink></apex:column>
+<apex:column headerValue="Subject" width="300px"><apex:inputField value="{!e.Subject}" style="width:250px"/></apex:column>
+<apex:column headerValue="Location"><apex:inputField value="{!e.Location}" /></apex:column>
+<apex:column headerValue="Name"><apex:inputField value="{!e.WhoId}" /></apex:column>
+<apex:column headerValue="Related To"><apex:inputField value="{!e.WhatId}" rendered="{!NOT(e.mea__IsAssociatedWithLead__c)}" /></apex:column>
+<apex:column headerValue="Begin"><apex:inputField value="{!e.StartDateTime}" /></apex:column>
+<apex:column headerValue="End"><apex:inputField value="{!e.EndDateTime}" /></apex:column>
+</apex:pageBlockTable>
+</apex:pageBlockSection>
+<apex:outputLabel id="Message" value="{!Message}"></apex:outputLabel>
+</apex:pageBlock>
+
+</apex:form>
+<script type="text/javascript">
+  //alert(document.getElementById('{!$Component.Form1.Block1.Section1.Item1.BackLink}').id);
+  //alert(document.getElementById('{!$Component.Form1.Block1.Section1.Item1.Go}').id)
+  //document.getElementById('{!$Component.Form1.Block1.Section1.Item1.BackLink}').focus();
+</script>
+</apex:page>

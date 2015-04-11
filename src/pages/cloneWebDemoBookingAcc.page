@@ -1,0 +1,34 @@
+<apex:page controller="cloneWebDemoBookingPerfClass">
+    <apex:form >
+    <apex:outputPanel >
+    <br/>
+    <center><span style="font-size:26px;font-weight:bold;">Web Demo Bookings Account List</span></center>
+    <br/>
+    <br/>
+    <table width="75%" align="center">
+    <tr>
+    <td>
+    <apex:pageBlock title="Account List" id="id1">
+        <apex:pageBlockTable value="{!AccountList}" var="t" style="width:100%">
+            <apex:column >
+                <apex:facet name="header">Account Name</apex:facet>
+                    <apex:outputLink value="/{!t.account.id}">
+                        {!t.account.name}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Status</apex:facet>
+                    {!t.status}
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Account Owner</apex:facet>
+                    {!t.account.owner.name}
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    </td>
+    </tr>
+    </table>
+    </apex:outputPanel>
+    </apex:form>
+</apex:page>

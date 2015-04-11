@@ -1,0 +1,36 @@
+<!-- RelEng Perforce/RCS Header - Do not remove! -->
+<!-- ******************************************* -->
+<!-- $Author$ -->
+<!-- $Change$ -->
+<!-- $DateTime$ -->
+<!-- $File$ -->
+<!-- $Id$ -->
+<!-- $Revision$ -->
+<apex:page standardController="CHANNEL_ORDERS__Service_Order__c" extensions="CHANNEL_ORDERS.SendServiceOrderController">
+<apex:outputText value="{!CHANNEL_ORDERS__Service_Order__c.CHANNEL_ORDERS__Product_Lines__c}" rendered="false"/>
+<apex:outputText value="{!CHANNEL_ORDERS__Service_Order__c.CHANNEL_ORDERS__Partner_Contract_Rules__c}" rendered="false"/>
+
+<apex:form >
+	<apex:actionFunction name="send" action="{!send}" oncomplete="redirectToOrder()"/>
+</apex:form>
+
+<apex:pageMessages id="errorMsg"/>
+
+<script>
+	if ({!ISBLANK(errorMsg)}) {
+		if (confirmAction()) {
+			send();
+		} else {
+			redirectToOrder();
+		}
+	}
+	
+    function confirmAction() {
+    	return confirm('{!$Label.ServiceOrderTermsAndConditions}');
+    }
+    
+    function redirectToOrder() {
+		window.location.href = "/{!Service_Order__c.id}";    
+    }
+</script>
+</apex:page>

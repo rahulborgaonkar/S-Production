@@ -1,0 +1,970 @@
+<apex:page id="pg" controller="synety.AgentPanelController" showHeader="false" sidebar="false" 
+standardStylesheets="false">
+
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>Salesforce Sidebar</title>
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="/resource/synety__dialerStyles/css/normalize.min.css" />
+        <link rel="stylesheet" href="/resource/synety__dialerStyles/css/main.css?v1" />
+        <script src="/resource/synety__dialerStyles/js/vendor/modernizr-2.6.2.min.js"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/resource/synety__dialerStyles/js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+        <script src="/resource/synety__dialerStyles/js/main.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+        
+        <style>	
+			.clear {
+				clear: both;
+			}
+			#info_pop_box { 
+			   	display: none; 
+			   	position: fixed; 
+			   	bottom: 25px; 
+			   	right: 10px; 
+			   	padding: 15px; 
+			   	z-index: 99999; 
+			   	font-size: 10px; 
+			}
+			.info_pop_yellow { 
+				background: lightyellow; 
+			}
+			.info_pop_red { 
+				background: lightpink; 
+			}
+		</style>
+    </head>
+    <body>
+	    <!-- Imports Open CTI JavaScript library. It should point to a valid Salesforce domain. -->
+	    <script src="/support/api/29.0/interaction.js"></script>
+	    <script type="text/javascript">
+	        var namespacePrefix = "{!if($Organization.Id=='00DG0000000Ce3tMAC','','synety.')}";//"synety.";
+	        var agentDisplayName = '{!$User.FirstName + ' ' + $User.LastName}';
+	        var statusId = '{!status}';
+	        var onCall = '{!isOnCall}';
+	        var statuses = {};
+	        var CampaignActiveCalls = '{!CampaignActiveCalls}';
+	        var sInWrapUpTime = '{!InWrapUp}';
+	        var InWrapUpTime = null;
+	        var agentActiveCall = '';
+	        var SynetyConfigDetails = '{!SynetyConfigDetails}';
+	        var ServerTime = '{!ServerTime}';
+	        
+	        var sPresenceObj = '{!accountPresenceString}';
+	        var presenceObj = null;
+	        var accountId = '{!accountId}';
+	        
+	        var isInTransfer = false;
+	    </script>
+	    <script src="/resource/synety__agentSignalR2/jquery-1.9.0.js" type="text/javascript"></script>
+	  	<script src="/resource/synety__agentSignalR2/jquery.signalR-1.0.1.js" type="text/javascript"></script>
+	  	<script src="https://notifications.cloudcallcontact.com/signalr/hubs" type="text/javascript"></script>
+	  	<script src="/resource/synety__agentSignalR2/signalr_functions.js?v11" type="text/javascript"></script>
+	
+	    <!-- Import jQuery from google CDN, could also be static resource-->
+	    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+	    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	    <script src="/resource/synety__jqueryCookie?v11"></script>
+		<script src="https://malsup.github.io/jquery.blockUI.js"></script>
+		
+		<script type="text/javascript">
+	        /*
+	        var isAPIEnabled = true;
+	        var phoneFieldsName = new Array();
+	        var phoneFieldsLabel = new Array();
+	        var phoneFieldsId = new Array();
+	        var o_obj = new listViewPhoneController(); 
+	        o_obj.replacePhoneNumbers();
+	        */
+	        
+	        
+			
+			        
+	        var screenPopCallback = function (response) 
+	        {
+	           if (response.result) {
+	              debugLog('Screen pop was set successfully.');
+	           }
+	           else {
+	              debugLog('Screen pop failed.' + result.error);
+	           }
+	        };
+	        
+	        function screenPop(recordId)
+	        {
+	        	sforce.interaction.screenPop('/'+recordId, true, screenPopCallback);
+	        	
+	        }
+	        
+	        
+			$(function () {
+				if(sPresenceObj != '')
+					presenceObj = JSON.parse(sPresenceObj);
+					
+				getWrapupTime();
+	        	//onload methods
+	        	statuses["Available"] = "13";
+		        statuses["Offline"] = "17";
+		        statuses["In wrap up"] = "6";
+		        
+		        //Invokes CTI API method
+		        sforce.interaction.cti.enableClickToDial(enableClickToDialCallBack);
+		        sforce.interaction.cti.onClickToDial(click2Diallistener);
+		        getPageInfo();
+		        
+		        initAccordion();
+	        				
+	        	loadAgentCampaigns();
+	        	initSignalR(); 
+	        	showCurrentStatus();
+	        	
+	        	getSavedPageState();
+	        	
+	        	changeHeight();
+	        	
+	        });
+	        
+	
+		    function getAgentActiveCall()
+		    {
+		    	debugLog('in getAgentActiveCall()');
+		    	debugLog('CampaignActiveCalls: '+CampaignActiveCalls);
+		    	var objActiveCalls = JSON.parse(CampaignActiveCalls);
+				var callObj = null;
+				
+				for (var i = 0; i < objActiveCalls.length; i++) 
+				{
+					if (accountId.toString() === objActiveCalls[i].i_account.toString())
+					{
+						callObj = objActiveCalls[i];
+						debugLog('currentCallStatus:' + JSON.stringify(currentCallStatus));
+						if((currentCallStatus == null || callObj.SessionID != currentCallStatus.SessionID) && 
+							(callObj.CallStatus == 'AGENT_CONNECTED' || callObj.CallStatus == 'CONNECTED'))
+						{
+							currentCallStatus = callObj;
+							
+							if(currentCallStatus.CLD == null)
+							{
+								//document.getElementById('type').innerHTML = 'Inbound';
+								//document.getElementById('cliType').innerHTML = 'Incoming Caller';
+							}
+							else
+							{
+								//document.getElementById('type').innerHTML = 'Outbound';
+								//document.getElementById('cliType').innerHTML = 'Number Called';
+							}
+							callStarts();
+							ShowCallStatus();
+							SearchCampaign();
+							SearchCLI(); 
+						} 
+					}
+					
+				}
+				
+		    }
+		    
+		    function getSavedPageState()
+		    {
+		    	//if(statusId == '13' && onCall == 'true')
+		    	
+		    	if(onCall == 'true' || statusId == '6')
+		    	{
+		    		if($.cookie('agentCall_callStatus_Cli') != null)
+			    		document.getElementById('callStatus_Cli').className = $.cookie('agentCall_callStatus_Cli');
+			    	
+			    	//if($.cookie('agentCall_cliType') != null)
+			    	//	document.getElementById('cliType').innerHTML = $.cookie('agentCall_cliType');
+			    	
+			    	if($.cookie('agentCall_cli') != null)
+			    		document.getElementById('cli').innerHTML = $.cookie('agentCall_cli');
+			    	
+			    	//if($.cookie('agentCall_type') != null)
+			    	//	document.getElementById('type').innerHTML = $.cookie('agentCall_type');
+			    	
+			    	if($.cookie('agentCall_lstContactType') != null)
+			    	{
+			    		document.getElementById('pg:frm:lstContactType').value = $.cookie('agentCall_lstContactType');
+			    		typeChanged(document.getElementById('pg:frm:lstContactType'));
+			    	}
+			    	
+			    	if(document.getElementById('pg:frm:contact'))
+					{
+				    	if($.cookie('agentCall_contactName') != null)
+				    		document.getElementById('pg:frm:contact').value = $.cookie('agentCall_contactName');
+				    	
+				    	if($.cookie('agentCall_contactId') != null)
+				    		document.getElementById('pg:frm:contact_lkid').value = $.cookie('agentCall_contactId');
+				    }
+				    
+				    if(document.getElementById('pg:frm:account'))
+					{	
+				    	if($.cookie('agentCall_accountName') != null)
+				    		document.getElementById('pg:frm:account').value = $.cookie('agentCall_accountName');
+				    	
+				    	if($.cookie('agentCall_accountId') != null)
+				    		document.getElementById('pg:frm:account_lkid').value = $.cookie('agentCall_accountId');
+				    }
+				    
+				    if(document.getElementById('pg:frm:lead'))
+					{	
+				    	if($.cookie('agentCall_leadName') != null)
+				    		document.getElementById('pg:frm:lead').value = $.cookie('agentCall_leadName');
+				    	
+				    	if($.cookie('agentCall_leadId') != null)
+				    		document.getElementById('pg:frm:lead_lkid').value = $.cookie('agentCall_leadId');
+				    }
+				    
+		    		if($.cookie('agentCall_txtNote') != null)
+			    		document.getElementById('pg:frm:txtNote').value = $.cookie('agentCall_txtNote');
+			    	
+			    	if($.cookie('agentCall_lstCat') != null)
+			    		document.getElementById('pg:frm:lstCat').value = $.cookie('agentCall_lstCat');
+			    	
+			    	
+			    	if($.cookie('agentCall_contactInfo') != null)
+			    		contactInfo = JSON.parse($.cookie('agentCall_contactInfo'));
+			    	
+			    	if($.cookie('agentCall_currentCallStatus') != null)
+			    		currentCallStatus = JSON.parse($.cookie('agentCall_currentCallStatus'));
+			    	
+			    	if($.cookie('agentCall_isCliMatch') != null)
+			    		isCliMatch = JSON.parse($.cookie('agentCall_isCliMatch'));
+				
+		    		if(typeof contactInfo != 'undefined')
+		    		{
+		    			processCLISearchResponse(contactInfo);
+		    			//$(".accordion").accordion( "resize" );	    			
+		    		}	
+		    		
+		    		if($.cookie('agentCall_selContactVal') != null)
+		    		{
+			    		var selContactVal = $.cookie('agentCall_selContactVal');
+			    		var x=document.getElementsByTagName("input");
+						for(var a=0; a<x.length; a++)
+						{
+							if(x[a].type == 'radio' && x[a].value == selContactVal)
+							{
+								x[a].checked = true;
+							}
+						}
+			    	}
+			    	
+			    	if(onCall == 'true' && CampaignActiveCalls != '')
+		    		{
+		    			getAgentActiveCall();	
+		    		}
+		    		
+		    	}
+		    	
+		    	if($.cookie('agentCall_agentCampaigns') != null)
+		    		agentCampaigns = JSON.parse($.cookie('agentCall_agentCampaigns'));
+	    		
+	    		var divCallNotesDisplay = $.cookie('agentCall_divCallNotes');
+	    		var divCallInfoDisplay = $.cookie('agentCall_divCallInfo');
+	    		if(divCallNotesDisplay == 'block' || divCallInfoDisplay == 'block')
+	    		{
+			    	if(onCall == 'true')
+			    	{
+						callStarts(true);
+						ShowCallStatus();
+						SearchCampaign();
+						
+						document.getElementById('divCallNotes').style.display= divCallNotesDisplay; 
+						document.getElementById('divCallInfo').style.display= divCallInfoDisplay;
+					}
+					else if(statusId == '6')
+					{
+						callEnds(true);
+						ShowCallStatus();
+						SearchCampaign();
+						
+						document.getElementById('divCallInfo').style.display= divCallInfoDisplay;
+						document.getElementById('divCallNotes').style.display= divCallNotesDisplay;
+					}
+				}
+				else if(statusId == '6')
+				{
+					initWrapup();
+					ShowCallStatus();
+					SearchCampaign();
+				}
+		    	
+		    }
+		    
+	    	function savePageState()
+	    	{
+	    		$.cookie('agentCall_callStatus_Cli', document.getElementById('callStatus_Cli').className, { expires: 1, path: '/' });
+	    		//$.cookie('agentCall_cliType', document.getElementById('cliType').innerHTML, { expires: 1, path: '/' });
+	    		$.cookie('agentCall_cli', document.getElementById('cli').innerHTML, { expires: 1, path: '/' });
+	    		//$.cookie('agentCall_type', document.getElementById('type').innerHTML, { expires: 1, path: '/' });
+	    		
+	    		$.cookie('agentCall_lstContactType', document.getElementById('pg:frm:lstContactType').value, { expires: 1, path: '/' });
+	    		
+				if(document.getElementById('pg:frm:contact'))
+				{
+	    			$.cookie('agentCall_contactName', document.getElementById('pg:frm:contact').value, { expires: 1, path: '/' });
+	    			$.cookie('agentCall_contactId', document.getElementById('pg:frm:contact_lkid').value, { expires: 1, path: '/' });
+	    		}
+	    		
+	    		if(document.getElementById('pg:frm:account'))
+				{
+	    			$.cookie('agentCall_accountName', document.getElementById('pg:frm:account').value, { expires: 1, path: '/' });
+	    			$.cookie('agentCall_accountId', document.getElementById('pg:frm:account_lkid').value, { expires: 1, path: '/' });
+	    		}
+	    		
+	    		if(document.getElementById('pg:frm:lead'))
+				{
+	    			$.cookie('agentCall_leadName', document.getElementById('pg:frm:lead').value, { expires: 1, path: '/' });
+	    			$.cookie('agentCall_leadId', document.getElementById('pg:frm:lead_lkid').value, { expires: 1, path: '/' });
+	    		}
+    		
+	    		$.cookie('agentCall_txtNote', document.getElementById('pg:frm:txtNote').value, { expires: 1, path: '/' });
+	    		$.cookie('agentCall_lstCat', document.getElementById('pg:frm:lstCat').value, { expires: 1, path: '/' });
+	    		
+	    		if(typeof contactInfo != 'undefined')
+	    			$.cookie('agentCall_contactInfo', JSON.stringify(contactInfo), { expires: 1, path: '/' });
+	    		else
+	    			$.removeCookie('agentCall_contactInfo', { path: '/' });
+	    		
+	    		if(typeof currentCallStatus != 'undefined')
+	    			$.cookie('agentCall_currentCallStatus', JSON.stringify(currentCallStatus), { expires: 1, path: '/' });
+	    		else
+	    			$.removeCookie('agentCall_currentCallStatus', { path: '/' });
+	    		
+	    		if(typeof isCliMatch != 'undefined')
+	    			$.cookie('agentCall_isCliMatch', JSON.stringify(isCliMatch), { expires: 1, path: '/' });
+	    		else
+	    			$.removeCookie('agentCall_isCliMatch', { path: '/' });
+	    		
+	    		if(typeof agentCampaigns != 'undefined')
+	    			$.cookie('agentCall_agentCampaigns', JSON.stringify(agentCampaigns), { expires: 1, path: '/' });
+	    		else
+	    			$.removeCookie('agentCall_agentCampaigns', { path: '/' });
+	    		
+	    		var selContactVal = '';
+	    		var x=document.getElementsByTagName("input");
+				for(var a=0; a<x.length; a++)
+				{
+					if(x[a].type == 'radio' && x[a].checked)
+					{
+						selContactVal = x[a].value;
+					}
+				} 
+				
+				if(selContactVal != '')
+	    			$.cookie('agentCall_selContactVal', selContactVal, { expires: 1, path: '/' });
+	    		else
+	    			$.removeCookie('agentCall_selContactVal', { path: '/' });
+				
+				//debugLog('agentCall_selContactVal: ' + $.cookie('agentCall_selContactVal') );
+				
+				$.cookie('agentCall_divCallNotes', document.getElementById('divCallNotes').style.display, { expires: 1, path: '/' });
+				$.cookie('agentCall_divCallInfo', document.getElementById('divCallInfo').style.display, { expires: 1, path: '/' });
+				
+				
+	    		debugLog('Page current state saved' );
+	    	}
+	    	
+	    	
+	    	
+	    	function convertDateTime(myArr)
+	    	{
+			    var dateTime = myArr.split(" ");
+			    
+			    //alert(dateTime[0]);
+			    //alert(dateTime[1]);
+			    
+			    var date = dateTime[0].split("-");
+			    var yyyy = date[0];
+			    var mm = date[1]-1;
+			    var dd = date[2];
+			
+			    var time = dateTime[1].split(":");
+			    var h = time[0];
+			    var m = time[1];
+			    var s = parseInt(time[2]); //get rid of that 00.0;
+			
+			    return new Date(yyyy,mm,dd,h,m,s);
+			}
+			
+			var currentServerTime= convertDateTime(ServerTime);
+			
+			function startTime()
+			{
+				currentServerTime.setSeconds(currentServerTime.getSeconds() + 1);
+				
+				var h=currentServerTime.getHours();
+				var m=currentServerTime.getMinutes();
+				var s=currentServerTime.getSeconds();
+				// add a zero in front of numbers<10
+				m=checkTime(m);
+				s=checkTime(s);
+				//document.getElementById('txt').innerHTML=h+":"+m+":"+s;
+				//document.getElementById('txt').innerHTML=currentServerTime;
+				t=setTimeout(function(){startTime()},1000);
+			}
+			
+			function checkTime(i)
+			{
+				if (i<10)
+				{
+					i="0" + i;
+				}
+				return i;
+			}	
+			
+			function getWrapupTime()
+			{
+				if(sInWrapUpTime != '')
+				{
+					sInWrapUpTime = sInWrapUpTime.replace('T', ' ');
+					InWrapUpTime = convertDateTime(sInWrapUpTime);
+				}
+			}
+			
+			function changeHeight()
+			{
+				var presenceHeight = document.getElementById('divUserPresenceStatus').offsetHeight;
+				var callNotesHeight = document.getElementById('divCallNotes').offsetHeight;
+				//var accordionHeight = document.getElementById('divAccordion').offsetHeight;
+				var accordionHeight = document.getElementById('divCallInfo').offsetHeight;
+				
+				//alert(' ' + presenceHeight + ', ' + accordionHeight + ', ' + callNotesHeight);
+				sforce.interaction.cti.setSoftphoneHeight(callNotesHeight+presenceHeight+accordionHeight + 10, 
+															setHeight_callback);
+			}
+			
+			var setHeight_callback = function (response) {
+	           if (response.result) {
+	              debugLog('Height was set successfully.');
+	           }
+	           else {
+	              debugLog('Height was not set successfully.');
+	           }
+	        };
+	        
+	        //call hold
+			function holdUnholdCall()
+			{
+				if(currentCallStatus != null)
+				{
+					var numberToHold = '';
+					if(currentCallStatus.CLD != null)
+						numberToHold = currentCallStatus.CLD;
+					else if(currentCallStatus.CLI != null)
+						numberToHold = currentCallStatus.CLI;
+						
+					var jsonParam = '{"SessionId":"'+currentCallStatus.SessionID+'","NumberToHold":"'+numberToHold+'","DoHold":"'+!isCallHold+'"';
+					//jsonParam += ',"RecordId":"'+RecordId+'","sRecordType":"'+sRecordType+'","CatName":"'+CatName+'","PhoneNumber":"'+callNumber+'"';
+					jsonParam += '}';
+					debugLog('holdUnholdCall Params:'+jsonParam);
+				
+					sforce.interaction.runApex(namespacePrefix+'AgentPanelController','holdParticipant', 
+											'params='+jsonParam, holdUnholdCallBack);
+					
+					$.blockUI({
+	                    message: 'Please wait while processing request...',
+	                    centerY: true,
+	                    css: {
+	                        width: '150px',
+	                        height: '75px',
+	                        left: ($(window).width() - 150) / 2 + 'px',
+	                        top: ($(window).height() - 75) / 2 + 'px',
+	                    }
+	                });
+				}
+			}
+			
+			function holdUnholdCallBack(response)
+			{
+				$.unblockUI();
+				if (response.result) 
+				{
+					debugLog(response.result);
+					isCallHold = !isCallHold;
+					if(isCallHold)
+						document.getElementById('cmdHold').innerHTML = 'Unhold';
+					else
+						document.getElementById('cmdHold').innerHTML = 'Hold';
+				} 
+				else 
+				{
+					debugLog('error on holdUnholdCallBack:'+response.error);
+				}
+			}
+			var isCallHold = false;
+			
+			//call transfer
+			function transferCall()
+			{
+				
+				if(currentCallStatus != null)
+				{
+					var sessionId = currentCallStatus.SessionID;
+					var transferorId = '1';
+					var transferTarget = document.getElementById('callNum').value;
+					if(transferTarget == '')
+					{
+						alert('Please enter a valid phone number');
+						return;
+					}
+					
+					if(currentCallStatus.CLI != null)
+						transferorId = '2';
+						
+					var jsonParam = '{"SessionId":"'+currentCallStatus.SessionID+'","TransferorID":"'+transferorId+'"';
+					jsonParam += ',"TransferTarget":"'+transferTarget+'","doCancel":"false"}';
+					debugLog('transferCall Params:'+jsonParam);
+				
+					sforce.interaction.runApex(namespacePrefix+'AgentPanelController','transferCall', 
+											'params='+jsonParam, transferCallCallBack);
+											
+					//$.blockUI({ message: $('#divCallTransfer')}); 
+					isInTransfer = true;
+					
+					$.blockUI({
+	                    message: $('#divCallTransfer'),
+	                    centerY: true,
+	                    //overlayCSS: { backgroundColor: '#DFE2E8' },
+	                    css: {
+	                        width: '150px',
+	                        height: '100px',
+	                        left: ($(window).width() - 150) / 2 + 'px',
+	                        top: ($(window).height() - 100) / 2 + 'px',
+	                    }
+	                });
+				}
+			}
+			
+			function transferCallCallBack(response)
+			{
+				if (response.result) 
+				{
+					debugLog(response.result);
+					/*
+					isCallHold = !isCallHold;
+					if(isCallHold)
+						document.getElementById('cmdHold').innerHTML = 'Unhold';
+					else
+						document.getElementById('cmdHold').innerHTML = 'Hold';
+					*/
+				}
+				else 
+				{
+					debugLog('error on transferCallCallBack:'+response.error);
+				}
+			}
+			
+			function cancelTransfer()
+			{
+				if(currentCallStatus != null)
+				{
+					var sessionId = currentCallStatus.SessionID;
+						
+					var jsonParam = '{"SessionId":"'+currentCallStatus.SessionID+'","TransferorID":"0"';
+					jsonParam += ',"TransferTarget":"","doCancel":"true"}';
+					debugLog('transferCall Params:'+jsonParam);
+				
+					sforce.interaction.runApex(namespacePrefix+'AgentPanelController','transferCall', 
+											'params='+jsonParam, transferCallCallBack);
+					
+					isInTransfer = false;
+					$.unblockUI();					
+				}
+				
+			}
+			
+			var ConfCallWindow = null;
+			function startConferenceCall()
+			{
+				if(currentCallStatus != null)
+				{
+					var sessionId = currentCallStatus.SessionID;
+					
+					ConfCallWindow = window.open('/apex/synety__ConferenceCall?sessionid='+sessionId,
+								'ConfCallWindow','scrollbars=0,width=550,height=400,left=370,top=170');
+					
+					$.blockUI({
+	                    message: 'Conference call in progress...',
+	                    //centerY: true,
+	                    //centerX: true,
+	                    //overlayCSS: { backgroundColor: '#DFE2E8' },
+	                    css: {
+	                        width: '150px',
+	                        height: '50px',
+	                        left: ($(window).width() - 150) / 2 + 'px',
+	                        top: ($(window).height() - 75) / 2 + 'px'//,
+	                        //centerY: true,
+	                        //centerX: true
+	                    }
+	                });	
+					
+				}
+				
+			}
+			
+			function pauseRecording() 
+			{
+				var isPaused = document.getElementById('recordingPaused').value;
+				if(isPaused == 'true')
+					isPaused = 'false';
+				else
+					isPaused = 'true';
+				
+				sforce.interaction.runApex(namespacePrefix+'AgentPanelController','pauseRecording', 
+										'doPauseCallRecording='+isPaused, pauseRecordingCallback);
+				$.blockUI({
+                    message: 'Please wait while processing request...',
+                    centerY: true,
+                    css: {
+                        width: '150px',
+                        height: '75px',
+                        left: ($(window).width() - 150) / 2 + 'px',
+                        top: ($(window).height() - 75) / 2 + 'px',
+                    }
+                });
+	        }
+	        
+	        function pauseRecordingCallback(response)
+			{
+				$.unblockUI();
+				debugLog(response);
+				if (response.result) 
+				{
+					debugLog(response.result);
+					info_pop_success('Request processed successfully');
+	                
+	                var isPaused = document.getElementById('recordingPaused').value;
+	                if(isPaused == 'true')
+						isPaused = 'false';
+					else
+						isPaused = 'true';
+					
+					document.getElementById('recordingPaused').value = isPaused;
+					
+	                if(isPaused == 'true')
+	                {
+		            	document.getElementById('liCallRecording').className = 'paused';
+		            	document.getElementById('liCallRecording').innerHTML = 'O';
+		            	document.getElementById('liCallRecording').title = 'resume call recording';
+		            }
+		            else
+		            {
+		            	document.getElementById('liCallRecording').className = '';
+		            	document.getElementById('liCallRecording').innerHTML = '||';
+		            	document.getElementById('liCallRecording').title = 'pause call recording';
+	                }
+					/*
+					isCallHold = !isCallHold;
+					if(isCallHold)
+						document.getElementById('cmdHold').innerHTML = 'Unhold';
+					else
+						document.getElementById('cmdHold').innerHTML = 'Hold';
+					*/
+				}
+				else 
+				{
+					debugLog('error on pauseRecordingCallback:'+response.error);
+				}
+			}
+			/*
+	        function pauseRecordingCallback(result, event)
+	        {
+	        	$.unblockUI();
+	            if (event.status) {
+	                document.getElementById('result').innerHTML = result;
+	                info_pop_success('Request processed successfully');
+	                
+	                var isPaused = document.getElementById('recordingPaused').value;
+	                if(isPaused == 'true')
+						isPaused = 'false';
+					else
+						isPaused = 'true';
+					
+					document.getElementById('recordingPaused').value = isPaused;
+					
+	                if(isPaused == 'true')
+	                {
+		            	document.getElementById('liCallRecording').className = 'paused';
+		            	document.getElementById('liCallRecording').innerHTML = 'O';
+		            	document.getElementById('liCallRecording').title = 'resume call recording';
+		            }
+		            else
+		            {
+		            	document.getElementById('liCallRecording').className = '';
+		            	document.getElementById('liCallRecording').innerHTML = '||';
+		            	document.getElementById('liCallRecording').title = 'pause call recording';
+	                }
+	                
+	            } else if (event.type === 'exception') {
+	            	info_pop_fail(event.message);
+	                document.getElementById("result").innerHTML = 
+	                    'exception: '+ event.message + "<br/>\n<pre>" + event.where + "</pre>";
+	            } else {
+	            	info_pop_fail(event.message);
+	                document.getElementById("result").innerHTML = 'no exception: '+event.message;
+	            }
+	        }
+	        */
+			function deleteNumber()
+			{
+				var txtNumber = document.getElementById('callNum');
+				txtNumber.value = txtNumber.value.substring(0, txtNumber.value.length - 1);
+			}
+			
+			function clearNumber()
+			{
+				var txtNumber = document.getElementById('callNum');
+				txtNumber.value = '';
+			}
+			
+			function enterNumber(sNum)
+			{
+				var txtNumber = document.getElementById('callNum');
+				txtNumber.value += sNum;
+			}
+			
+			function unblockScreen()
+			{
+				$.unblockUI();
+			}
+			
+			function info_pop_fail(msg) 
+	        {
+	   
+				$("#info_pop_box").removeAttr("class");
+				$("#info_pop_box").html(msg).addClass("info_pop_red").fadeIn("slow");
+				
+				setTimeout(function(){
+					$("#info_pop_box").fadeOut("slow");
+				}, 5000);
+				
+			}
+			
+			function info_pop_success(msg) {
+				
+				$("#info_pop_box").removeAttr("class");
+				$("#info_pop_box").html(msg).addClass("info_pop_yellow").fadeIn("slow");
+				
+				setTimeout(function(){
+					$("#info_pop_box").fadeOut("slow");
+				}, 5000);
+				
+			}	
+	    </script>
+	<apex:pageMessages id="msg"/> 
+    <apex:form id="frm">
+        <div class="sidebar">
+        	<div class="box" id="divUserPresenceStatus">
+        		
+				<!-- <div style="font-color:red;font-size:10px;text-align:center">Welcome {!diSplayName}</div>
+				-->
+				<font color="red" size="1">Welcome {!displayName}</font>
+				<div class="head">
+					<input title="update availability" type="button" value="Update" class="rtbtn" id="cmdPresence" onClick="login_logout();return false;" />
+					<h1>Availability</h1>
+				</div>
+				<div>
+					<label for="lstPhNum">Available Number:</label>
+					<apex:selectList size="1" id="lstPhNum" value="{!phNumber}">
+				        <apex:selectOptions value="{!lstDeviceOpt}"/>
+				    </apex:selectList>
+				</div>
+				<div>	
+					<label for="lstStatus">Presence:
+					<span id="currentStatusText"
+        				style="font-size: 10px"></span>
+					</label>
+					
+					<apex:selectList id="lstStatus" value="{!status}" size="1">
+    
+				        <apex:selectOption itemLabel="Available for Calls" 
+				            itemValue="13"/>
+				        <apex:selectOption itemLabel="Unavailable for Calls" 
+				            itemValue="25"/>
+				        <apex:selectOption itemLabel="Offline/Logout" 
+				            itemValue="17"/>
+				        <!--
+				            <apex:selectOption itemLabel="In wrap up" 
+				            itemValue="6"/>
+				         --> 
+				    </apex:selectList>
+				</div>
+        	</div>
+        	
+        	<div id="divCallInfo" class="box" style="display:none">
+        		<div id="callTime" class="calltime" style="display:none">0:10:05</div>
+        		<!--<div class="callstatus">In Call</div>-->
+        		<div id="callStatus_Cli" class="outgoing">
+        			<span id="callStatus" style="font-size: 11px;" title="current call status">&nbsp;</span>
+        			<span id="cli" title="phone number">&nbsp;</span>
+       			</div>
+       			<!-- 
+                <div class="incoming" style="display: none;">In Call: <span id="cli">0446009893332</span></div>
+                <div class="calling" style="display: none;">In Call: <span id="cli">0446009893332</span></div>
+        		 -->
+        		<div id="campName" class="callcampaign" style="font-size: 11px;" title="SYNETY campaign name">&nbsp;</div>
+        		
+        		<div id="divDialpad" style="display:none">
+	        		<div class="number">
+		    			<input type="text" name="number" id="callNum" value="" />
+		    			<div title="clear number" id="clear" onClick="clearNumber();">X</div>
+		    		</div>
+	       			<ul class="keypad">
+	       				<li onClick="enterNumber('1');">1</li>
+	       				<li onClick="enterNumber('2');">2</li>
+	       				<li onClick="enterNumber('3');">3</li>
+	       				<li onClick="enterNumber('4');">4</li>
+	       				<li onClick="enterNumber('5');">5</li>
+	       				<li onClick="enterNumber('6');">6</li>
+	       				<li onClick="enterNumber('7');">7</li>
+	       				<li onClick="enterNumber('8');">8</li>
+	       				<li onClick="enterNumber('9');">9</li>
+	       				<li onClick="enterNumber('*');">*</li>
+	       				<li onClick="enterNumber('0');">0</li>
+	       				<li onClick="enterNumber('#');">#</li>
+	       			</ul>
+	       			<ul class="keypad2">
+	       				<li title="dial number" class="dial" style="display: none;">Dial</li>
+	       				<li title="hangup call" id="cmdHangup" class="hangup" onClick="hangupCall();">Hangup</li>
+	       				<li title="delete last digit" onClick="deleteNumber();">&larr;</li>
+	       				<li onClick="pauseRecording();" id="liCallRecording" title="pause call recording">||</li>
+	       				<li title="transfer call" id="cmdTransfer" onClick="transferCall();">Trnsf</li>
+	       				<li title="hold call" id="cmdHold" onClick="holdUnholdCall();">Hold</li>
+	       				<li title="start conference call" onClick="startConferenceCall();" class="conf">Conference</li>
+	       				<!-- <li>VM</li> -->
+	       			</ul>
+	       			<!-- 
+	       		 	<ul class="keypad2">
+	       		 		<li class="hangup" style="display:none" onClick="hangupCall();return false;">Hangup</li>
+	       		 	</ul>
+	       		 	-->
+       		 	</div>
+       		 	<div id="countdown" style="font-weight:bold; color:red; font-size:10px; text-align:center">&nbsp;<!-- Wrapup in 90 Seconds --></div>
+        	</div>
+        	
+        	<div id="divCallNotes" class="box" style="display:none">
+        			
+				<div class="head">
+					<input title="save call notes" type="button" id="cmdSaveNotes" onClick="saveNotes();return false;" value="Save" class="rtbtn" />
+					<h1>Notes</h1>
+				</div>
+				
+       			<ul id="accordion">
+       				
+       			</ul>
+       			
+       			<div id="divSelectContact" style="display:none">
+		        	<apex:selectList id="lstContactType" size="1" onChange="typeChanged(this);">
+		    	        <apex:selectOption itemLabel="Select Record Type..." 
+				            itemValue=""/>
+		    	        <apex:selectOption itemLabel="Contact" 
+				            itemValue="contact"/>
+				        <apex:selectOption itemLabel="Account" 
+				            itemValue="account"/>
+				        <apex:selectOption itemLabel="Lead" 
+				            itemValue="lead"/>
+				    </apex:selectList>
+				    
+			        <div id="divContact" style="display:none">
+			        	<input type="button" class="rtaddbtn" onClick="openNewRecordWindow('contact');return false;" value="Add New Contact" /> 
+			        	<span style="font-size:10px">or search Contact</span><br />
+			        	<apex:inputField id="contact" value="{!oCallUpdate.synety__Contact__c}" label="" style="width:160px" />
+			        </div>
+			        <div id="divAccount" style="display:none">
+			        	<input type="button" class="rtaddbtn" onClick="openNewRecordWindow('account');return false;" value="Add New Account" />
+						<span style="font-size:10px">or search Account</span><br />
+			        	<apex:inputField id="account" value="{!oCallUpdate.synety__Account__c}" label="" style="width:160px" />
+			        </div>
+			        <div id="divLead" style="display:none">
+			        	<input type="button" class="rtaddbtn" onClick="openNewRecordWindow('lead');return false;" value="Add New Lead" />
+			        	<span style="font-size:10px">or search Lead</span><br />
+			        	<apex:inputField id="lead" value="{!oCallUpdate.synety__Lead__c}" label="" style="width:160px" />
+			        </div>
+		        </div>
+		        
+       			<div>
+       				<label for="lstCat">Call Category:</label>
+       				<apex:selectList id="lstCat" size="1" value="{!selCat}">
+			           <apex:selectOptions value="{!lstCallCatOpt}"/>
+			        </apex:selectList>
+       			</div>
+       			<div>
+       				<label for="txtNote">Notes:</label>
+       				<apex:inputTextArea id="txtNote" rows="2"></apex:inputTextArea>
+       			</div>
+        	</div>
+        </div>
+     </apex:form>   
+        
+        <script>
+        /*
+			$(function() {
+    			$("#accordion h3 span, #accordion h3 a").bind("click", function() {
+    				$(this).parent().next().slideToggle(100);
+    				$(this).parent().toggleClass("expanded");
+    			});
+
+    			
+    			$("#accordion input").bind("click", function() {
+
+    			});
+			});
+			
+			function addAccordion()
+			{	
+				//alert('ok');
+				var header = '<li><h3><input type="radio" name="contact" value="127">&nbsp;<span class="type">Contact:</span>&nbsp;<a href="#3">Gordon W.</a></h3><div class="contact">Some conent here</div></li>';
+		
+				var newDiv = header;
+				$('#accordion').append(newDiv);
+				//$('.accordion').accordion("refresh");
+				//document.getElementById('accordion').innerHTML += header;
+				
+				$("#accordion h3 span, #accordion h3 a").unbind("click");
+				$("#accordion input").bind("click");
+				
+				$("#accordion h3 span, #accordion h3 a").bind("click", function() {
+    				$(this).parent().next().slideToggle(100);
+    				$(this).parent().toggleClass("expanded");
+    			});
+
+    			
+    			$("#accordion input").bind("click", function() {
+
+    			});
+				
+				//alert('ok');
+			}
+			*/
+		</script>
+		
+		<script>
+	    	window.onbeforeunload = function(e) 
+		    {
+		    	savePageState();
+		    };
+		    
+		    startTime();
+	    </script>
+	    
+	    <div id="divCallTransfer" style="display:none; cursor: default; width: 150px"> 
+	        Transferring call.<br />Please wait....<br /> 
+	        <input style="width:120px" type="button" id="cancelTransfer" value="Cancel Tranfer" onClick="cancelTransfer();return false;" />
+		</div>
+		<div id="info_box" class="clear"></div>
+		<div id="info_pop_box"></div>
+		<input type="hidden" id="recordingPaused" value="false" /> 
+		<!-- <a href="javascript:changeHeight();">height</a> -->
+    </body>
+</html>
+
+</apex:page>

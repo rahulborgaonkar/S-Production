@@ -1,0 +1,108 @@
+<apex:page standardController="Task" extensions="synety.gotoCallRecordingController" showHeader="false"
+standardStylesheets="false">
+
+<html>
+  <head>
+    <title>SYNETY: Call Recording</title>
+    <style>
+
+    audio {
+        display: block;
+        width: 265px;
+        height: 30px;
+        padding: 0.5em;
+        border: medium solid gray;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        /*position: absolute;*/
+        
+    }
+    
+    </style>
+  </head>
+  <body style="font-family: Arial,Helvetica,sans-serif;color: #222;font-size: 12px">
+<apex:outputPanel rendered="{!contains($CurrentPage.URL,'isdtp=p1')}">
+    <center>
+      <b>SYNETY CloudCall: Call Recording</b><br /><br />
+      <apex:outputLabel rendered="{!not(isAvailable)}">Call recording is NOT available for this activity<br/></apex:outputLabel>
+      <apex:outputpanel rendered="{!NOT(isEnabled)}">
+          Call Recording has NOT been enabled for you<br/>
+          To have Call Recording enabled please visit <a href="https://www.synety.com">www.synety.com</a><br/>
+      </apex:outputpanel>
+      
+      <apex:outputLabel rendered="{!isAvailable && isEnabled}">
+          <script type="text/javascript">
+            function getMP3File()
+            {
+                
+                var url = '{!url}&type=mp3&account={!account}';
+                var xmlhttp;
+                if (window.XMLHttpRequest)
+                {// code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp=new XMLHttpRequest();
+                }
+                else
+                {// code for IE6, IE5
+                    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                
+                xmlhttp.onreadystatechange=function()
+                {
+                    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                    {
+                        //document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+                        if("{!doPlay}" == "false")
+                            document.getElementById("mainFrame").src = url;
+                        else
+                        {
+                            //document.getElementById("audioSource").src = url;
+                            //document.getElementById("audioPlayer").load();
+                            //document.getElementById("audioPlayer").width="200px";
+                            var audioHTML = '';
+                            if(xmlhttp.getResponseHeader('content-type') == 'audio/wav')
+                            {
+                                //audioHTML = '<embed src="'+url+'" hidden="false" autostart="true">';
+                                //audioHTML = '<audio controls="controls" autoplay="autoplay"><source src="'+url+'" type="audio/wav" /></audio>';
+                                audioHTML = 'There is no MP3 file for this call yet. Please check back later or <a href="'+url+'">click here</a> to download the recording file in currently available format.';
+                            }
+                            else
+                            {           
+                                audioHTML = '<audio controls="controls" autoplay="autoplay"><source src="'+url+'" type="audio/mpeg" /></audio>';
+                            }
+                            
+                            document.getElementById("divAudioPlayer").innerHTML = audioHTML;
+                        }
+                        //window.close();
+                    }
+                    else if (xmlhttp.readyState==4)
+                    {
+                        //alert(xmlhttp.responseText);
+                        var responseJSON = JSON.parse(xmlhttp.responseText);
+                        alert(responseJSON.errorMessage);
+                        window.close();
+                    }
+                }
+                xmlhttp.open("GET",url,true);
+                xmlhttp.send();
+            }
+          </script>
+          <b>Please wait while call recording loads...</b><br />
+          <apex:outputpanel rendered="{!doPlay}">
+          
+            <div id="divAudioPlayer"></div>   
+
+          </apex:outputpanel>
+          <apex:outputpanel rendered="{!not(doPlay)}">
+            <iframe id="mainFrame" width="1" height="1" frameborder="0"></iframe>
+          </apex:outputpanel>
+          <script>getMP3File();</script>
+          <!-- 
+          <br /><br /><a href="{!url}&type=mp3&account={!account}" >Download</a>
+           -->
+      </apex:outputLabel>
+    </center>
+</apex:outputPanel>
+  </body>
+</html>
+
+</apex:page>

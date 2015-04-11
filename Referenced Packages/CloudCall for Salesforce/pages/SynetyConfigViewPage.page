@@ -1,0 +1,173 @@
+<apex:page title="SYNETY: Edit Configuration" standardController="synety__Synety_Configuration__c" extensions="synety.SynetyConfigViewPageController" id="pg" tabstyle="synety__Synety_Configuration__c">
+   
+    <apex:form id="frm">
+    <apex:sectionHeader title="Synety Configuration Edit" SubTitle="Edit Synety Configuration" rendered="{!NOT(isNew)}"/>
+    <apex:sectionHeader title="Synety Configuration Edit" SubTitle="New Synety Configuration" rendered="{!isNew}"/>
+        <apex:pageMessages />
+        <apex:pageBlock title="Synety Configuration Edit" id="pgbView" >
+            <apex:pageBlockButtons id="pbButtonsView">
+                <apex:commandButton value="Save" action="{!saveRecord}" id="saveButton" />
+                <apex:commandButton action="{!cancelRecord}" value="Cancel" id="cancelButton" immediate="true"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockSection columns="1" id="pgbs" >
+                <apex:outputText Label="Salesforce User" value="{!userName}" rendered="{!NOT(isNew)}"/>
+                <apex:selectList rendered="{!isNew}" required="true" value="{!configRecord.Name}" size="1" Label="User" style="width:300px">
+		            <apex:selectOptions value="{!UserList}"/>
+		        </apex:selectList>
+                
+                
+                <apex:inputField required="true" value="{!configRecord.synety__LicenseKey__c}" style="width:300px"/>
+                
+                <apex:inputField required="true" value="{!configRecord.synety__UserName__c}" style="width:300px"/>
+                
+                <apex:inputField required="true" value="{!configRecord.synety__Customer_Login_Email__c}" style="width:300px"/>
+                
+                <apex:inputField required="true" value="{!configRecord.synety__OAuthKey__c}" style="width:300px"/>
+                
+                <apex:inputField required="true" value="{!configRecord.synety__OAuthSecret__c}" style="width:300px"/>
+                
+                <apex:selectList value="{!authType}" label="Authentication Type" size="1">
+		            <apex:selectOption itemValue="Access Token" itemLabel="Access Token" />
+		            <apex:selectOption itemValue="API Password" itemLabel="API Password" />
+		        </apex:selectList>
+		        
+		        <apex:inputSecret value="{!configRecord.synety__API_Password__c}" redisplay="true"/>
+		        <!--<apex:inputField value="{!configRecord.synety__API_Password__c}"/>-->
+		        
+                <apex:inputField value="{!configRecord.synety__Call_Notes_Mandatory__c}"/>
+                
+                <apex:inputField value="{!configRecord.synety__Call_Category_Mandatory__c}"/>
+                
+                <apex:inputField value="{!configRecord.synety__Hide_Subject_and_Category_Option__c}"/>
+                
+                <apex:selectList value="{!enableRecordingControl}" label="Enable Recording Pause/Resume Controls" size="1">
+		            <apex:selectOption itemValue="" itemLabel="Select..." />
+		            <apex:selectOption itemValue="Yes" itemLabel="Yes" />
+		            <apex:selectOption itemValue="No" itemLabel="No" />
+		        </apex:selectList>
+                
+                <apex:outputField value="{!configRecord.CreatedById}" rendered="{!NOT(isNew)}"/>
+                <apex:outputField value="{!configRecord.LastModifiedDate}" rendered="{!NOT(isNew)}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Call Notifications" columns="2" id="pgbsNotifications" >
+            	
+            	<apex:selectList value="{!enableCallNotifications}" label="Call Notifications Enabled" size="1">
+		            <apex:selectOption itemLabel="Select..." itemValue="" />
+		            <apex:selectOption itemLabel="Yes" itemValue="Yes" />
+		            <apex:selectOption itemLabel="No" itemValue="No" />
+		        </apex:selectList>
+		        
+		        <apex:selectList value="{!disableScreenPopInCall}" label="Disable Screen Pop In Call" size="1">
+		            <apex:selectOption itemLabel="Select..." itemValue="" />
+		            <apex:selectOption itemLabel="Yes" itemValue="Yes" />
+		            <apex:selectOption itemLabel="No" itemValue="No" />
+		        </apex:selectList>
+		        
+		        <apex:pageBlockSectionItem id="pbsiCLISearch" helpText="If multiple CLI matches are found, a max of 5 will be shown and the preference order will be: Contact(s) then Account(s) and then Lead(s)" >
+			        <apex:outputLabel >CLI Search</apex:outputLabel>
+			        <apex:selectList value="{!configRecord.synety__CLI_Search__c}" size="1">
+			            <apex:selectOption itemLabel="Select..." itemValue="" />
+			            <apex:selectOption itemLabel="Lead & Account & Contact" itemValue="Lead & Account & Contact" />
+			            <apex:selectOption itemLabel="Account & Contact" itemValue="Account & Contact" />
+			            <apex:selectOption itemLabel="Contact Only" itemValue="Contact Only" />
+			            <apex:selectOption itemLabel="Account Only" itemValue="Account Only" />
+			            <apex:selectOption itemLabel="Lead Only" itemValue="Lead Only" />
+			        </apex:selectList>
+		        </apex:pageBlockSectionItem>
+		        
+		        <apex:pageBlockSectionItem id="pbsiAlertType" helpText="For salesforce.com professional edition, only 'Small' notification type applies" >
+			        <apex:outputLabel >Notification Alert Type</apex:outputLabel>
+			        <apex:selectList value="{!configRecord.synety__Notification_Alert_Type__c}" size="1">
+			            <apex:selectOption itemLabel="Select..." itemValue="" />
+			            <apex:selectOption itemLabel="Small" itemValue="Small" />
+			            <apex:selectOption itemLabel="Large" itemValue="Large" />
+			        </apex:selectList>
+		        </apex:pageBlockSectionItem>
+		        
+		        
+		        
+		        <apex:selectList value="{!openRecordOnPerfectMatch}" label="Open Record on Perfect Match" size="1">
+		            <apex:selectOption itemLabel="Select..." itemValue="" />
+		            <apex:selectOption itemLabel="Yes" itemValue="Yes" />
+		            <apex:selectOption itemLabel="No" itemValue="No" />
+		        </apex:selectList>
+		        
+            	<apex:selectList value="{!configRecord.synety__Notify_Popup_Timeout__c}" label="Notify Popup Timeout" size="1">
+		            <apex:selectOption itemLabel="Select..." itemValue="" />
+		            <apex:selectOption itemLabel="10" itemValue="10.0" />
+		            <apex:selectOption itemLabel="20" itemValue="20.0" />
+		            <apex:selectOption itemLabel="25" itemValue="25.0" />
+		            <apex:selectOption itemLabel="30" itemValue="30.0" />
+		        </apex:selectList>
+		        
+		        <apex:selectList value="{!enableScreenPopExceptionList}" label="Enable Screen-pop Exception List" size="1"
+		        	onchange="javascript:ExceptionListOptionChanged(this.value);">
+		            <apex:selectOption itemLabel="Select..." itemValue="" />
+		            <apex:selectOption itemLabel="Yes" itemValue="Yes" />
+		            <apex:selectOption itemLabel="No" itemValue="No" />
+		        </apex:selectList>
+		        
+		        <apex:pageBlockSectionItem id="pbsiDisplayNumberCalled" helpText="If this option is enabled, the number called will be shown on the inbound call popup notifier" >
+			        <apex:outputLabel >Display Number/Name Called</apex:outputLabel>
+			        <apex:selectList value="{!displayNumberCalled}" size="1">
+			            <apex:selectOption itemLabel="Select..." itemValue="" />
+			            <apex:selectOption itemLabel="Yes" itemValue="Yes" />
+			            <apex:selectOption itemLabel="No" itemValue="No" />
+			        </apex:selectList>
+		        </apex:pageBlockSectionItem>
+		        
+		        <apex:pageBlockSectionItem id="pbsiExceptionList" helpText="{!$ObjectType.synety__API_Config__c.Fields.synety__Inbound_Popup_Exception_List__c.inlineHelpText}" >  
+				 	
+				 	<apex:outputLabel > Inbound Popup Exception List</apex:outputLabel>  
+				 	<apex:inputTextArea id="ExceptionList" rows="5" cols="50" value="{!configRecord.synety__Inbound_Popup_Exception_List__c}">
+		        	</apex:inputTextArea>
+		        </apex:pageBlockSectionItem>  
+		        
+		        <apex:pageBlockSectionItem id="pbsiCampaignIntegration" >
+			        <apex:outputLabel >Enable Campaign Notes Logging</apex:outputLabel>
+			        <apex:selectList value="{!configRecord.synety__Campaign_Integration_Setting__c}" size="1">
+			            <apex:selectOption itemLabel="Select..." itemValue="" />
+			            <apex:selectOption itemLabel="Never" itemValue="0.0" />
+			            <apex:selectOption itemLabel="Optional" itemValue="1.0" />
+			            <apex:selectOption itemLabel="Always" itemValue="2.0" />
+			        </apex:selectList>
+		        </apex:pageBlockSectionItem>
+		        
+		        
+		        <apex:pageBlockSectionItem id="pbsiOverrideAutoLogout" >
+			        <apex:outputLabel >Override Auto-Logout</apex:outputLabel>
+			        <apex:selectList value="{!overrideAutoLogout}" size="1">
+			            <apex:selectOption itemLabel="Select..." itemValue="" />
+			            <apex:selectOption itemLabel="Yes" itemValue="Yes" />
+			            <apex:selectOption itemLabel="No" itemValue="No" />
+			        </apex:selectList>
+		        </apex:pageBlockSectionItem>
+		        
+		        <apex:pageBlockSectionItem id="pbsiOpenRecord" helpText="If yes, then the contact/account/lead record is opened in new browser when pop-up is clicked along with call notes window" >
+			        <apex:outputLabel >Open record in new browser window</apex:outputLabel>
+			        <apex:selectList value="{!openRecordInNewWindowOnPopupClick}" size="1">
+			            <apex:selectOption itemLabel="Select..." itemValue="" />
+			            <apex:selectOption itemLabel="Yes" itemValue="Yes" />
+			            <apex:selectOption itemLabel="No" itemValue="No" />
+			        </apex:selectList>
+		        </apex:pageBlockSectionItem>
+		        
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    <script type="text/javascript">
+    	function ExceptionListOptionChanged(optionValue)
+    	{
+    		if(optionValue == 'Yes')
+    		{
+    			document.getElementById('pg:frm:pgbView:pgbsNotifications:pbsiExceptionList:ExceptionList').disabled=false;
+    		}
+    		else
+    		{
+    			document.getElementById('pg:frm:pgbView:pgbsNotifications:pbsiExceptionList:ExceptionList').disabled=true;
+    		}
+    	}
+    	
+    	ExceptionListOptionChanged('{!enableScreenPopExceptionList}');
+    </script>
+</apex:page>

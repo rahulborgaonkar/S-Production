@@ -1,0 +1,103 @@
+<apex:component controller="CHANNEL_ORDERS.AutocompleteController">
+    
+    <!-- add resources -->
+    <apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/external/jquery.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/external/jquery-ui.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/coaui.js')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'css/external/jquery-ui.min.css')}" />
+    
+    <!-- component attributes -->
+    <apex:attribute name="input_id" description="The ID for the Autocomplete List Textbox." type="String" required="true" />
+    <apex:attribute name="lookup_id" description="The ID for the Autocomplete List Textbox." type="String" required="true" />
+    <apex:attribute name="queryField" description="The field we'll be querying against, default is Name." type="String" default="Name" />
+    <apex:attribute name="queryObj" description="Object Name to query against" type="String" required="true" />
+    
+    <!-- some css -->
+    <style type="text/css">
+        .autoCompleteBoxScrolling {display:none !important;}
+        .ui-autocomplete{font-size:11px;}
+    </style>
+
+    <!-- jquery magic -->
+    <script type="text/javascript">
+        var $js = jQuery.noConflict();
+        var qterm;
+        var qObj;
+        
+        $js(document).ready(function() {
+        
+            AutoCompleteInputElement = function(){};
+            $js(coa.escapecolon('{!input_id}')).attr('onchange','');
+            
+            $jk(document.body).delegate(coa.escapecolon('{!input_id}'), 'keydown', function(e) { 
+	        	if(e.keyCode != $js.ui.keyCode.ENTER && e.keyCode != $js.ui.keyCode.ESCAPE) {
+	                $js(coa.escapecolon('{!lookup_id}')).val( '' );
+	            } else { 
+	            	closeAutocompleteList();
+	            }
+            });
+	        $js(coa.escapecolon('{!input_id}')).focusout(function(){ closeAutocompleteList(); });
+            $js(coa.escapecolon('{!input_id}')).autocomplete({
+                minLength: 3,
+                source: function(request, response) {
+                    queryTerm = request.term;
+                    qterm = request.term;
+                    qObj = '{!queryObj}';
+                    var qField = "{!queryField}";
+                    
+                    if(coa.isCustomerOrgId(qObj, qterm)){
+                        qField = '{!$ObjectType.Customer__c.fields.Customer_Org_ID__c.Name}';
+                    }
+                    
+					Visualforce.remoting.Manager.invokeAction(
+						'{!$RemoteAction.AutocompleteController.searchSobject}',
+                    	request.term, qField, "{!queryObj}", function(result, event){
+	                        if(event.type == 'exception') {
+	                            alert(event.message);
+	                        } else {
+	                            sObjects = result;
+	                            response(sObjects);
+	                    	}
+                		});
+            	},
+                focus: function( event, ui ) {
+                    if(coa.isCustomerOrgId(qObj, qterm)){
+                        $js(coa.escapecolon('{!input_id}')).val( ui.item["{!$ObjectType.Customer__c.fields.Customer_Org_ID__c.Name}"] );
+                    }else{
+                        $js(coa.escapecolon('{!input_id}')).val($js("<abc/>").html(ui.item["{!queryField}"]).text());
+                    }
+                
+                    return false;
+                },
+                select: function( event, ui ) {
+                    if(coa.isCustomerOrgId(qObj, qterm)){
+                        $js(coa.escapecolon('{!input_id}')).val(ui.item["{!$ObjectType.Customer__c.fields.Customer_Org_ID__c.Name}"] );
+                    }else{
+                        $js(coa.escapecolon('{!input_id}')).val($js("<abc/>").html(ui.item["{!queryField}"]).text());
+                    }
+
+                    $js(coa.escapecolon('{!lookup_id}')).val( ui.item.Id );
+                    return false;
+                }
+            })
+            .data( "uiAutocomplete" )._renderItem = function( ul, item ) {
+                var entry;
+                if(coa.isCustomerOrgId(qObj, qterm)){
+                    entry = "<a>" + item["{!$ObjectType.Customer__c.fields.Customer_Org_ID__c.Name}"].replace( new RegExp( "(" + queryTerm + ")" , 'gi' ), '<b>$1</b>' );
+                }else{
+                    entry = "<a>" + $js("<abc/>").html(item["{!queryField}"]).text().replace( new RegExp( "(" + queryTerm + ")" , 'gi' ), '<b>$1</b>' );
+                }
+                
+                entry = entry + "</a>";
+                
+                return $js( "<li></li>" ).data( "item.autocomplete", item ).append( entry ).appendTo( ul );
+            };
+        });
+        
+        function closeAutocompleteList(){
+        	$js(coa.escapecolon('{!input_id}')).autocomplete('close');
+        }
+        
+    </script>
+    
+</apex:component>

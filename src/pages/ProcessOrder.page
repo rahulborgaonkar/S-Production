@@ -1,0 +1,6 @@
+<apex:page controller="OrderClassController" tabStyle="Opportunity" action="{!processOrder}" title="Order Processing">
+  <apex:form >
+      <apex:sectionHeader title="Processing Order for {!objOpp.Name}"/>
+      <apex:pageMessages ></apex:pageMessages>
+  </apex:form>
+</apex:page>

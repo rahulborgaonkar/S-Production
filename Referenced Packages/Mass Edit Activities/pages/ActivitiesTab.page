@@ -1,0 +1,18 @@
+<apex:page title="Activities Tab by Sales Optimizer" standardController="Task" tabstyle="Activities_tab__tab">
+<apex:sectionHeader title="Activity Management" subtitle="Activities" help="/apex/MassEditActivitiesHelp" />
+	<script>
+		function refeshEnhList()
+		{
+	    	try
+	    	{
+			    ListViewport.instances['{!$Component.ActTabEnhList}'].refreshList();
+			}
+			catch(err)
+			{
+				//Handle errors here
+			}
+		}
+		window.setTimeout(refeshEnhList, 500); 
+	</script>
+    <apex:enhancedList type="Activity" height="800" rowsPerPage="50" id="ActTabEnhList"/>
+</apex:page>

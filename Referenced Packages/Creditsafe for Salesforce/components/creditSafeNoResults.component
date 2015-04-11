@@ -1,0 +1,9 @@
+<apex:component >
+	<apex:outputPanel styleClass="bRelatedList" layout="block">
+		<table class="list" cellspacing="0" cellpadding="0" border="0">
+			<tr class="headerRow">
+				<th class="noRowsHeader">No records to display</th>
+			</tr>
+		</table>
+	</apex:outputPanel>
+</apex:component>

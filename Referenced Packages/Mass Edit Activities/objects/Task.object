@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <webLinks>
+        <fullName>Edit_Open_Tasks_Account</fullName>
+        <availability>online</availability>
+        <description>This button is installed with Mass Edit Activities and allows a user to edit the Open Activities associated with an Account.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Edit Open Tasks (Account)</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>window.location = &quot;https://mea.&quot; + window.location.host.substring(0,3) + &quot;.visual.force.com/apex/MassEditActivities?whatid=&quot; + &quot;{!Account.Id}&quot;;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Edit_Open_Tasks_Contact</fullName>
+        <availability>online</availability>
+        <description>This button is installed with Mass Edit Activities and allows a user to edit the Open Activities associated with a Contact.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Edit Open Tasks (Contact)</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>window.location = &quot;https://mea.&quot; + window.location.host.substring(0,3) + &quot;.visual.force.com/apex/MassEditActivities?whoid=&quot; + &quot;{!Contact.Id}&quot;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Edit_Open_Tasks_Lead</fullName>
+        <availability>online</availability>
+        <description>This button is installed with Mass Edit Activities and allows a user to edit the Open Activities associated with a Lead.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Edit Open Tasks (Lead)</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>window.location = &quot;https://mea.&quot; + window.location.host.substring(0,3) + &quot;.visual.force.com/apex/MassEditActivities?whoid=&quot; + &quot;{!Lead.Id}&quot;;</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Edit_Open_Tasks_Opportunity</fullName>
+        <availability>online</availability>
+        <description>This button is installed with Mass Edit Activities and allows a user to edit the Open Activities associated with an Opportunity.</description>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Edit Open Tasks (Opportunity)</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
+        <url>window.location = &quot;https://mea.&quot; + window.location.host.substring(0,3) + &quot;.visual.force.com/apex/MassEditActivities?whatid=&quot; + &quot;{!Opportunity.Id}&quot;;</url>
+    </webLinks>
+</CustomObject>

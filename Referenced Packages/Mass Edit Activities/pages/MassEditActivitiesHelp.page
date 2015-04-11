@@ -1,0 +1,171 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="true" title="Mass Edit Activities Help"> 
+<title>Mass Edit Activities - Online Help</title>
+<style type="text/css" media="all">
+body#splashBody {
+font-family: arial, helvetica, verdana, sans-serif;
+color: #484848;
+font-size: 70%;
+margin: 0;
+padding: 0;
+width: 97%;
+}
+img {
+border: 0;
+margin: 0;
+padding: 0;
+}
+p {
+margin: 0;
+padding: 0;
+}
+h1 {
+font-weight: bold;
+font-size: 120%;
+}
+h1.appName {
+font-weight: bold;
+font-size: 100%;
+color: #FFF;
+background-color: #998c7c;
+padding: 10px 0 10px 8px;
+margin: 0 0 15px 0;
+}
+h2 {
+color: #FFF;
+padding: 2px 0 2px 8px;
+margin-top: 0;
+background-color: #DD5928;
+font-size: 80%;
+}
+h2.exchangeTitle {
+background-color: #003D79;
+}
+#splash {
+margin: 0;
+padding: 0;
+width: 100%;
+}
+#splash td {
+margin: 0;
+padding: 0;
+}
+#splash #splashLeft {
+vertical-align: top;
+background-color: white;
+border-bottom: 2px solid #0064C6;
+}
+#splash #splashCenter {
+display:block;
+width: 15px;
+background-color: white;
+}
+#splash #splashRight {
+vertical-align: top;
+background-color: white;
+border-bottom: 2px solid #999;
+}
+#splash #splashLeft .about, #splash #splashLeft .exchange {
+width: 100%;
+}
+#splash #splashRight .exchange p {
+font-size: 90%;
+color: #484848;
+margin: 0 10px 12px 10px;
+line-height: 1.4em;
+}
+#splash #splashLeft .about p {
+font-size: 90%;
+color: #484848;
+margin: 0 10px 12px 15px;
+line-height: 1.4em;
+}
+#splash #splashLeft .about fieldset {
+color: #484848;
+margin: 0 15px 10px 15px;
+padding: 2px;
+}
+#splash #splashLeft .about fieldset ul {
+padding: 0;
+margin: .3em 0 .3em 2em;
+}
+#splash #splashLeft .about fieldset li {
+padding: 0;
+margin: 0;
+}
+#splash #splashLeft .about legend {
+font-size: 80%;
+color: #DD5928;
+font-weight: bold;
+}
+.imgDiv {
+text-align: left;
+padding: 0 0 10px 0;
+}
+
+</style>
+
+<script language=javascript>
+function ChangeDoc (doc) {
+var src;
+src = doc;
+document.getElementById('ifhelp').src = src;
+}
+</script>
+
+<table width="100%" height="560px">
+<tr>
+<td colspan=2>
+<table width=100%>
+<tr>
+<td width=170>
+<a href="http://www.salesoptimizer.com" target="_new">
+	<apex:image id="theImage" value="{!URLFOR($Resource.mea__MassEditActivities, 'SalesOptimizerlogo_323x94.jpg')}" 
+			alt="Mass Edit Activities by Sales Optimizer, LLC" width="323" height="94" />
+</a>
+</td>
+<td align="center" style="font-weight: bold; font-size: 250%; vertical-align: middle; font-family: Arial;">Mass Edit Activities</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td valign=top width=170px>
+<table>
+<tr>
+<td colspan=2 align=center style="font-weight: bold; font-size: 110%; vertical-align: bottom; font-family: Arial;">&nbsp;Online Help</td>
+</tr>
+<tr>
+<td colspan=2>
+	<a href="javascript:ChangeDoc('{!URLFOR($Resource.mea__MassEditActivities, 'About.htm')}')">About</a>
+</td>
+</tr>
+<tr>
+<td colspan=2><a href="javascript:ChangeDoc('{!URLFOR($Resource.mea__MassEditActivities, 'GettingStarted.htm')}')">Getting Started</a></td>
+</tr>
+<tr>
+<td colspan=2><b>Using the Application</b></td>
+</tr>
+<tr><td>&nbsp;</td>
+<td nowrap><a href="javascript:ChangeDoc('{!URLFOR($Resource.mea__MassEditActivities, 'MassEditTab.htm')}')">Mass Edit Activities Tab</a></td>
+</tr>
+<tr><td>&nbsp;</td>
+<td nowrap><a href="javascript:ChangeDoc('{!URLFOR($Resource.mea__MassEditActivities, 'ActivitiesTab.htm')}')">Activities Tab</a></td>
+</tr>
+<tr><td>&nbsp;</td>
+<td nowrap><a href="javascript:ChangeDoc('{!URLFOR($Resource.mea__MassEditActivities, 'Lists.htm')}')">List Buttons</a></td>
+</tr>
+<tr>
+<td>
+</table></td>
+<td>
+<iframe id="ifhelp" src="{!URLFOR($Resource.mea__MassEditActivities, 'About.htm')}" name="ifhelp" style="width: 500px; height: 430px;">
+
+</iframe></td>
+</tr>
+<tr>
+<td colspan=2 align="center">Copyright &copy; 2010 Sales Optimizer, LLC. All Rights Reserved.</td>
+</tr>
+
+</table>
+</html>
+</apex:page>

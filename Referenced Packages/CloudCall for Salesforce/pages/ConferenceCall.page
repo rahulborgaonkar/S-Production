@@ -1,0 +1,487 @@
+<apex:page id="pg" controller="synety.ConferenceCallController" showHeader="false" sidebar="false" 
+title="Conference Call - SYNETY CloudCall">
+<!-- standardStylesheets="false"> -->
+	
+	<head>
+		<title>Conference Call - SYNETY CloudCall</title>
+	</head>
+	<link rel="stylesheet" href="/resource/synety__dialerStyles/css/normalize.min.css" />
+	<link rel="stylesheet" href="/resource/synety__dialerStyles/css/main.css?v1" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/resource/synety__dialerStyles/js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+    <script src="https://malsup.github.io/jquery.blockUI.js"></script>
+        
+	<style>
+	
+         tr.dataRow {
+           background-color:white;
+         }
+         tr.dataRow:hover {
+           background-color: #e3f3ff;
+         };
+         
+         .clear 
+         {
+			clear: both;
+		 }
+         #info_pop_box { 
+         	display: none; 
+         	position: fixed; 
+         	bottom: 25px; 
+         	right: 10px; 
+         	padding: 15px; 
+         	z-index: 99999; 
+         	font-size: 10px; 
+          }
+		 .info_pop_yellow { 
+		 	background: lightyellow; 
+		  }
+		 .info_pop_red { 
+		 	background: lightpink; 
+		  }
+          
+	        ::-webkit-scrollbar {
+			    width: 12px;
+			}
+			::-webkit-scrollbar-track {
+			    background-color: #eaeaea;
+			    border-left: 1px solid #ccc;
+			}
+			::-webkit-scrollbar-thumb {
+			    background-color: #ccc;
+			}
+			::-webkit-scrollbar-thumb:hover {
+				background-color: #aaa;
+			}
+          
+          
+    </style>
+    <script>
+    	var confSessionId = '{!sessionId}';
+    	var ConferenceDetails = {!conferenceDetails};
+		
+    	function deleteNumber()
+		{
+			var txtNumber = document.getElementById('callNum');
+			txtNumber.value = txtNumber.value.substring(0, txtNumber.value.length - 1);
+		}
+		
+		function clearNumber()
+		{
+			var txtNumber = document.getElementById('callNum');
+			txtNumber.value = '';
+		}
+		
+		function enterNumber(sNum)
+		{
+			var txtNumber = document.getElementById('callNum');
+			txtNumber.value += sNum;
+		}
+		
+        function addToConf() 
+		{
+        	var cld = document.getElementById('callNum').value;
+			if(cld == '')
+			{
+				alert('Please enter a valid phone number');
+				return;
+			}
+            synety.ConferenceCallController.addToConference(confSessionId , cld,
+            	addToConfCallback, 
+	            {escape: false}
+            );
+            
+            $.blockUI({
+                message: 'Please wait while adding to conference call',
+                centerY: true
+                
+            });
+        }
+        
+        function addToConfCallback(result, event)
+        {
+        	$.unblockUI();
+            if (event.status) {
+            	info_pop_success('Participant added to the conference call successfully');
+                document.getElementById('result').innerHTML = result;
+                ConferenceDetails = JSON.parse(result);
+                loadParticipants();
+                
+            } else if (event.type === 'exception') {
+            	info_pop_fail(event.message);
+                document.getElementById("result").innerHTML = 
+                    'exception: '+ event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else {
+            	info_pop_fail(event.message);
+                document.getElementById("result").innerHTML = 'no exception: '+event.message;
+            }
+        }
+        
+        function removeFromConf(pId) 
+		{
+        	synety.ConferenceCallController.removeFromConference(confSessionId , pId,
+            	removeFromConfCallback, 
+	            {escape: false}
+            );
+            
+            $.blockUI({
+                message: 'Please wait while removing from conference call',
+                centerY: true
+                
+            });
+        }
+        
+        function removeFromConfCallback(result, event)
+        {
+        	$.unblockUI();
+            if (event.status) {
+                document.getElementById('result').innerHTML = result;
+                if(result.indexOf('removed from conference') > 0)
+                {
+                	info_pop_success('Participant removed from conference call successfully');
+                	var pId = result.replace('removed from conference', '');
+                	pId = pId.replace('Participant', '');
+                	pId = pId.replace(confSessionId, '');
+                	pId = pId.replace('.', '');
+                	pId = pId.trim();
+                	//alert(pId);
+                	
+                	$("#pRow_"+pId).remove();
+                }
+                else
+                	info_pop_fail('There was some error while processing request. '+ result);
+                //ConferenceDetails = JSON.parse(result);
+                //loadParticipants();
+                
+            } else if (event.type === 'exception') {
+            	info_pop_fail(event.message);
+                document.getElementById("result").innerHTML = 
+                    'exception: '+ event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else {
+            	info_pop_fail(event.message);
+                document.getElementById("result").innerHTML = 'no exception: '+event.message;
+            }
+        }
+        
+        function holdParticipant(pId) 
+		{
+			var cld = document.getElementById('pCLD_'+pId).value;
+			var doHold = document.getElementById('pIsHold_'+pId).value;
+			if(doHold == 'true')
+				doHold = 'false';
+			else
+				doHold = 'true';
+				
+        	synety.ConferenceCallController.holdParticipant(confSessionId, cld, doHold, pId, 
+            	holdParticipantCallback, 
+	            {escape: false}
+            );
+            
+            $.blockUI({
+                message: 'Please wait while processing request',
+                centerY: true
+                
+            });
+            /*
+            document.getElementById('pIsHold_'+pId).value = doHold;
+            
+            if(doHold == 'true')
+            	document.getElementById('liHold_'+pId).innerHTML = 'Unhold';
+            else
+            	document.getElementById('liHold_'+pId).innerHTML = 'Hold';
+            */
+        }
+        
+        function holdParticipantCallback(result, event)
+        {
+        	$.unblockUI();
+            if (event.status) {
+                document.getElementById('result').innerHTML = result;
+                
+                var arrResult = result.split('__');
+                var txtPID = arrResult[0];
+                
+                if(arrResult[1].indexOf('Unable to put') >= 0)
+                	info_pop_fail('There was some error while processing request. '+ arrResult[1]);
+                else
+                {
+                	info_pop_success('Request processed successfully');
+                
+	                txtPID = document.getElementById(txtPID);
+	                var doHold = document.getElementById('pIsHold_'+txtPID.value).value;
+	                if(doHold == 'true')
+						doHold = 'false';
+					else
+						doHold = 'true';
+					
+					document.getElementById('pIsHold_'+txtPID.value).value = doHold;
+					
+	                if(doHold == 'true')
+		            	document.getElementById('liHold_'+txtPID.value).innerHTML = 'Unhold';
+		            else
+		            	document.getElementById('liHold_'+txtPID.value).innerHTML = 'Hold';
+		    	}
+                
+                
+            } else if (event.type === 'exception') {
+                document.getElementById("result").innerHTML = 
+                    'exception: '+ event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else {
+                document.getElementById("result").innerHTML = 'no exception: '+event.message;
+            }
+        }
+        
+        function muteParticipant(pId) 
+		{
+			//var cld = document.getElementById('pCLD_'+pId).value;
+			var doMute = document.getElementById('pIsMute_'+pId).value;
+			if(doMute == 'true')
+				doMute = 'false';
+			else
+				doMute = 'true';
+				
+        	synety.ConferenceCallController.muteParticipant(confSessionId, pId, doMute, 
+            	MuteParticipantCallback, 
+	            {escape: false}
+            );
+            
+            $.blockUI({
+                message: 'Please wait while processing request',
+                centerY: true
+                
+            });
+            /*
+            document.getElementById('pIsHold_'+pId).value = doHold;
+            
+            if(doHold == 'true')
+            	document.getElementById('liHold_'+pId).innerHTML = 'Unhold';
+            else
+            	document.getElementById('liHold_'+pId).innerHTML = 'Hold';
+            */
+        }
+        
+        function MuteParticipantCallback(result, event)
+        {
+        	$.unblockUI();
+            if (event.status) {
+                document.getElementById('result').innerHTML = result;
+                info_pop_success('Request processed successfully');
+                
+                var arrResult = result.split('__');
+                var txtPID = arrResult[0];
+                txtPID = document.getElementById(txtPID);
+                var doMute = document.getElementById('pIsMute_'+txtPID.value).value;
+                if(doMute == 'true')
+					doMute = 'false';
+				else
+					doMute = 'true';
+				
+				document.getElementById('pIsMute_'+txtPID.value).value = doMute;
+				
+                if(doMute == 'true')
+	            	document.getElementById('liMute_'+txtPID.value).innerHTML = 'Unmute';
+	            else
+	            	document.getElementById('liMute_'+txtPID.value).innerHTML = 'Mute';
+                
+                
+            } else if (event.type === 'exception') {
+            	info_pop_fail(event.message);
+                document.getElementById("result").innerHTML = 
+                    'exception: '+ event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else {
+            	info_pop_fail(event.message);
+                document.getElementById("result").innerHTML = 'no exception: '+event.message;
+            }
+        }
+        
+        function pauseRecording() 
+		{
+			var isPaused = document.getElementById('recordingPaused').value;
+			if(isPaused == 'true')
+				isPaused = 'false';
+			else
+				isPaused = 'true';
+				
+        	synety.ConferenceCallController.pauseRecording(confSessionId, isPaused, 
+            	pauseRecordingCallback, 
+	            {escape: false}
+            );
+            
+            $.blockUI({
+                message: 'Please wait while processing request',
+                centerY: true
+                
+            });
+        }
+        
+        function pauseRecordingCallback(result, event)
+        {
+        	$.unblockUI();
+            if (event.status) {
+                document.getElementById('result').innerHTML = result;
+                info_pop_success('Request processed successfully');
+                
+                var isPaused = document.getElementById('recordingPaused').value;
+                if(isPaused == 'true')
+					isPaused = 'false';
+				else
+					isPaused = 'true';
+				
+				document.getElementById('recordingPaused').value = isPaused;
+				
+                if(isPaused == 'true')
+                {
+	            	document.getElementById('liCallRecording').className = 'paused';
+	            	document.getElementById('liCallRecording').innerHTML = 'O';
+	            	document.getElementById('liCallRecording').title = 'resume call recording';
+	            }
+	            else
+	            {
+	            	document.getElementById('liCallRecording').className = '';
+	            	document.getElementById('liCallRecording').innerHTML = '||';
+	            	document.getElementById('liCallRecording').title = 'pause call recording';
+                }
+                
+            } else if (event.type === 'exception') {
+            	info_pop_fail(event.message);
+                document.getElementById("result").innerHTML = 
+                    'exception: '+ event.message + "<br/>\n<pre>" + event.where + "</pre>";
+            } else {
+            	info_pop_fail(event.message);
+                document.getElementById("result").innerHTML = 'no exception: '+event.message;
+            }
+        }
+        
+        function loadParticipants()
+        {
+        	
+         	$("#tableCLDs tr").remove();
+         	
+            $("#tableCLDs").append('<tr class="headerRow"><th class="headerRow"> Phone Number</th><th class="headerRow"> &nbsp; </th></tr>');
+            
+            if(ConferenceDetails != null)
+            {
+	            if(ConferenceDetails.Participants.length > 0)
+	            {
+	            	for (var i = 0; i < ConferenceDetails.Participants.length; i++) 
+					{
+						var CLD = ConferenceDetails.Participants[i].CLD;
+						var pID = ConferenceDetails.Participants[i].ParticipantID;
+						
+			            var rowData = 
+			            	'<tr class="dataRow" id="pRow_'+pID+'">';
+			            rowData += '<td class="dataCell">'+CLD+'</td>';
+			            rowData += '<td class="dataCell">';
+			            rowData += '<ul class="keypad3">';
+			            rowData += '<li id="liHold_'+pID+'" onClick="holdParticipant(\''+pID+'\')" >Hold</li>';
+			            rowData += '<li id="liMute_'+pID+'" onClick="muteParticipant(\''+pID+'\')" >Mute</li>';
+			            rowData += '<li id="liRemove_'+pID+'" onClick="removeFromConf(\''+pID+'\')" >Remove</li>';
+						rowData += '</ul>';
+						rowData += '<input type="hidden" size="1" id="pIsMute_'+pID+'" value="false" />';
+						rowData += '<input type="hidden" size="1" id="pIsHold_'+pID+'" value="false" />';
+						rowData += '<input type="hidden" size="1" id="pId_'+pID+'" value="'+pID+'" />';
+						rowData += '<input type="hidden" size="1" id="pCLD_'+pID+'" value="'+CLD+'" />';
+			            rowData += '</td>';
+			            rowData += '</tr>';
+			           
+			            $("#tableCLDs").append(rowData);
+			        }
+		        }
+			}   
+        }
+        
+        function info_pop_fail(msg) 
+        {
+   
+			$("#info_pop_box").removeAttr("class");
+			$("#info_pop_box").html(msg).addClass("info_pop_red").fadeIn("slow");
+			
+			setTimeout(function(){
+				$("#info_pop_box").fadeOut("slow");
+			}, 5000);
+			
+		}
+		
+		function info_pop_success(msg) {
+			
+			$("#info_pop_box").removeAttr("class");
+			$("#info_pop_box").html(msg).addClass("info_pop_yellow").fadeIn("slow");
+			
+			setTimeout(function(){
+				$("#info_pop_box").fadeOut("slow");
+			}, 5000);
+			
+		}
+		
+		window.onbeforeunload = function(e) 
+	    {
+	    	if(window.opener)
+	    	{
+	    		window.opener.unblockScreen();
+	    	}
+	    };
+    </script>
+    
+    <h2>&nbsp;&nbsp;SYNETY CloudCall - Conference Call</h2> 
+    <table border="0" cellpadding="10" cellspacing="0">
+    <tr>
+    
+	<td style="vertical-align: top;">
+		<div style="height: 200px; overflow-y: scroll; border: 1px solid #ccc;">
+	    	<table width="300px" border="0" cellpadding="4" cellspacing="0" style="font-size: 12px;" id="tableCLDs">
+	           
+	        </table>
+        </div>
+    </td>
+    
+    <td style="vertical-align: top;">
+    	<div style="width:200px">
+    		<div class="number">
+    			<input type="text" name="number" id="callNum" value="" />
+    			<div title="clear number" id="clear" onClick="clearNumber();">X</div>
+    		</div>
+    		<!-- 
+	        <div>
+				<input type="text" name="number" id="callNum" value="" style="font-size:15px" />
+			</div>
+			-->
+			<ul class="keypad">
+				<li onClick="enterNumber('1');">1</li>
+				<li onClick="enterNumber('2');">2</li>
+				<li onClick="enterNumber('3');">3</li>
+				<li onClick="enterNumber('4');">4</li>
+				<li onClick="enterNumber('5');">5</li>
+				<li onClick="enterNumber('6');">6</li>
+				<li onClick="enterNumber('7');">7</li>
+				<li onClick="enterNumber('8');">8</li>
+				<li onClick="enterNumber('9');">9</li>
+				<li onClick="enterNumber('*');">*</li>
+				<li onClick="enterNumber('0');">0</li>
+				<li onClick="enterNumber('#');">#</li>
+			</ul>
+			<br /><br /><br />
+			<ul class="keypad2">
+				<li onClick="deleteNumber();" title="delete last digit">&larr;</li>
+     			<li onClick="pauseRecording();" id="liCallRecording" title="pause call recording">||</li>
+				<li class="conf" onClick="addToConf();" title="add number to conference call">Add to Conference</li>
+			</ul> 
+		</div>
+	</td>
+	
+    </tr>
+    </table>   
+	<script type="text/javascript">
+        loadParticipants();
+    </script>
+	<br /><br />
+    <!-- <button onclick="sayHello('Jude');">Say Hello</button><br/> -->
+    <div id="result" style="display:none">[Results]</div>
+	<div id="divBlockMessage" style="display:none; cursor: default; width: 150px"> 
+        Please wait...
+	</div>
+	
+	<div id="info_box" class="clear"></div>
+	<div id="info_pop_box"></div>
+	<input type="hidden" id="recordingPaused" value="false" />
+</apex:page>

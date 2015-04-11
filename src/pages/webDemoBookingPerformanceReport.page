@@ -1,0 +1,74 @@
+<apex:page controller="webDemoBookingPerformanceClass" >
+    <apex:form >
+    <apex:outputPanel >
+    <br/>
+    <center><span style="font-size:26px;font-weight:bold;">Web Demo Bookings Performance Report</span></center>
+    <br/>
+        <center><span style="font-size:20px;font-weight:bold;">
+        <apex:outputLabel value="Select Month - "/>        
+        <apex:selectList value="{!current_month}" size="1" required="true">
+            <apex:actionSupport event="onchange" action="{!getChangedMonth}"/>
+            <apex:selectOptions value="{!months}"/>
+        </apex:selectList>
+        </span></center>
+    <br/>
+    <table width="75%" align="center">
+    <tr>
+    <td>
+    <apex:pageBlock title="Web Demo Monthly Bookings Summary"  id="id1">
+        <apex:pageBlockTable value="{!BookingSummary}" var="t" style="width:100%">
+            <apex:column >
+                <apex:facet name="header">Tele Sales Resource</apex:facet>
+                    {!t.Partner_Sales_Person}
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">In Progress</apex:facet>
+                    <apex:outputLink value="#" onclick="window.open('/apex/webDemoBookingAccounts?status=In Progress&desksalesperson={!t.Partner_Sales_Person}&tdt1={!t.StartDt}&tdt2={!t.EndDt}', 'Account List', 'menubar=0, scrollbars=1,resizable=yes')">
+                        {!t.InProgress}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Completed</apex:facet>
+                    <apex:outputLink value="#" onclick="window.open('/apex/webDemoBookingAccounts?status=Completed&desksalesperson={!t.Partner_Sales_Person}&tdt1={!t.StartDt}&tdt2={!t.EndDt}', 'Account List', 'menubar=0, scrollbars=1,resizable=yes')">
+                        {!t.Completed}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Cancelled</apex:facet>
+                    <apex:outputLink value="#" onclick="window.open('/apex/webDemoBookingAccounts?status=Cancelled&desksalesperson={!t.Partner_Sales_Person}&tdt1={!t.StartDt}&tdt2={!t.EndDt}', 'Account List', 'menubar=0, scrollbars=1,resizable=yes')">
+                        {!t.Cancelled}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Deferred</apex:facet>
+                    <apex:outputLink value="#" onclick="window.open('/apex/webDemoBookingAccounts?status=Deferred&desksalesperson={!t.Partner_Sales_Person}&tdt1={!t.StartDt}&tdt2={!t.EndDt}', 'Account List', 'menubar=0, scrollbars=1,resizable=yes')">
+                        {!t.Deferred}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Opportunities</apex:facet>
+                    <apex:outputLink value="#" onclick="window.open('/apex/webDemoBookingOpportunity?status=Opportunities&desksalesperson={!t.Partner_Sales_Person}&tdt1={!t.StartDt}&tdt2={!t.EndDt}', 'Opportunity List', 'menubar=0, scrollbars=1,resizable=yes')">
+                        {!t.Opportunities}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Opportunity Licenses</apex:facet>
+                    <apex:outputLink value="#" onclick="window.open('/apex/webDemoBookingOpportunity?status=Crmseats&desksalesperson={!t.Partner_Sales_Person}&tdt1={!t.StartDt}&tdt2={!t.EndDt}', 'Opportunity List', 'menubar=0, scrollbars=1,resizable=yes')">
+                        {!t.crmseats}
+                    </apex:outputLink>
+            </apex:column>
+            <apex:column >
+                <apex:facet name="header">Sold Licenses</apex:facet>
+                    <apex:outputLink value="#" onclick="window.open('/apex/webDemoBookingOpportunity?status=Soldseats&desksalesperson={!t.Partner_Sales_Person}&tdt1={!t.StartDt}&tdt2={!t.EndDt}', 'Opportunity List', 'menubar=0, scrollbars=1,resizable=yes')">
+                        {!t.soldseats}
+                    </apex:outputLink>
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    </td>
+    </tr>
+    </table>
+    </apex:outputPanel>
+    <apex:actionPoller rerender="id1" interval="900"/>
+    </apex:form>
+</apex:page>

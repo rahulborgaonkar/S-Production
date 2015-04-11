@@ -1,0 +1,2 @@
+<apex:page showHeader="false" sidebar="false" controller="synety.ajaxCall" 
+	action="{!init}" standardStylesheets="false" contentType="text/plain">{!sResult}</apex:page>

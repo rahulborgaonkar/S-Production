@@ -1,0 +1,324 @@
+<apex:page action="{!initAccountOwner}" controller="TicketCustomerFeedbackController" id="pageMain" title="SYNETY - Provisioning Feedback">
+<html>
+    <head>
+        <title>SYNETY - Support Feedback</title>
+        <link rel="stylesheet" href="{!urlfor($Resource.CreditForm,'css/jquery-ui.css')}" type="text/css" />
+        <!-- 
+        <link rel="stylesheet" href="{!urlfor($Resource.CreditForm,'css/ui-style.css')}" type="text/css" />
+         -->
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery-ui-1.8.18.custom.min.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery.tooltip.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/slider.js')}"></script>        
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery-ui-timepicker.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/add_script.js')}"></script>
+    </head>
+    <body>  
+    <apex:form id="frmMain" >
+    	<div class="content">
+            <script type="text/javascript">
+			  	window.dhx_globalImgPath="{!urlfor($Resource.RatingSystemStyles,'codebase/imgs/')}";
+		   	</script>
+			<script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxcommon.js')}"></script>
+            <script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxslider.js')}"></script>
+            <script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/ext/dhtmlxslider_start.js')}"></script>
+            <link rel="STYLESHEET" type="text/css" href="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxslider.css')}" />	
+
+            
+			
+         </div>
+         
+         <div>
+          
+            <div id="conf_info_panel" >
+                <div style="text-align:center">
+                    <img src="{!urlfor($Resource.CreditForm,'synety__synety_logo.png')}" width="212" height="77" alt="SYNETY Logo" />
+                </div>
+                
+                <div style="font-size:22px;font-weight:bold;text-align:center">
+                    How well did I deal with the provisioning request? Please rate me now! 
+                </div>
+				
+				
+				<br />
+				<table style="width:70%;" align="center">
+				    <tr>
+				        <td width="25%" >Ticket Owner:
+				        </td>
+				        <td width="25%"><b>
+				        	{!objCase.Owner.Name}
+				        	</b>
+				        </td>
+				        <td width="25%">
+				            Overall Rating Score:
+				        </td>
+				        <td width="25%">
+				            <b>
+				            	<div id="ratingScore">{!objFeedback.Overall_Rating_Score_Percent__c}%</div>
+				           	</b>
+				        </td>
+				    </tr>
+				    <tr>
+				        <td>Company Name: </td>
+				        <td><b>
+				        	 {!objCase.Account.Name}
+				        	</b>
+				       	</td>
+				       	<td>
+				            Order Number:
+				        </td>
+				        <td>
+				            <b>
+				            	{!objCase.Opportunity__r.Order_Number__c}
+				           	</b>
+				        </td>
+				    </tr>
+				    <tr>
+				        <td>Ticket Number:</td>
+				        <td><b>
+				        	{!objCase.CaseNumber}
+				       		</b>
+			      		</td>
+			      		<td colspan="2">
+				            <b>
+				            	&nbsp;
+				           	</b>
+				        </td>
+				    </tr>   
+				
+				</table>   
+				
+           	</div>
+ 
+<apex:outputpanel rendered="{!not(isAllowed)}" >			
+			<div style="font-size:22px;font-weight:bold;text-align:center; color:#F00">
+                You are not allowed to submit this feedback. Only the account owner can do that.  
+            </div>
+</apex:outputpanel>
+
+<apex:outputpanel rendered="{!(isCompleted && isAllowed)}" >			
+			<br />		
+			<div style="font-size:22px;font-weight:bold;text-align:center; color:#F00">
+                Thank you for your valued feedback which will help us to further improve our service.  
+            </div>
+</apex:outputpanel>
+         
+<apex:outputpanel rendered="{!(Not(isCompleted) && isAllowed)}" >            
+
+            <br />
+            <div class="panel_box white_bg">
+                <div style="margin-left:10px">
+                <apex:pagemessages ></apex:pagemessages>
+                </div>
+            </div>
+
+
+            
+            <div id="conf_info_panel" class="panel_box white_bg top_space">
+                <div style="font-size:22px;font-weight:bold;text-align:center; color:#F00">
+	                Please rate me on the following
+	            </div>
+	            <div class="left" style="width:70%;padding-left:15%">
+	                <br /><br />
+	                <table class="data_tbl">
+	                    <tr>
+	                        <td class="form_label" width="40%">
+	                            Speed <br />
+	                            <span style="font-size:11px">
+                                	How quickly did I respond to your initial request?
+                                </span>
+	                        </td>
+	                        <td width="40%">
+	                            <div id="sliderSpeed" style="cursor: pointer"></div>
+	                        </td>
+	                        <td width="20%">
+	                            <div id="lblSliderSpeed" style="color:red; font-style:italic;"></div>
+            					<apex:inputHidden id="hSpeed" value="{!objFeedback.Speed__c}" />
+	                        </td>
+	                    </tr>	                    
+	                    <tr>
+	                        <td class="form_label">
+	                            Knowledge <br />
+	                            <span style="font-size:11px">
+                                	How well did I manage your ticket, did I get it right
+									first time and overall how knowledgeable was I?
+                                </span>
+	                        </td>
+	                        <td>
+	                        	<div id="sliderKnowledge" style="cursor: pointer"></div>
+	                        </td>
+	                        <td>
+	                            <div id="lblSliderKnowledge" style="color:red; font-style:italic;"></div>
+            					<apex:inputHidden id="hKnowledge" value="{!objFeedback.Knowledge__c}" />
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td class="form_label">
+	                            Manner <br />
+	                            <span style="font-size:11px">
+                                	How polite was I and did I honor my promises,
+									like calling you back when I said I would?
+                                </span>
+	                        </td>
+	                        <td>
+	                        	<div id="sliderManner" style="cursor: pointer"></div>
+	                        </td>
+	                        <td>
+	                            <div id="lblSliderManner" style="color:red; font-style:italic;"></div>
+            					<apex:inputHidden id="hManner" value="{!objFeedback.Manner__c}" />
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td class="form_label" colspan="3">
+	                        	<span style="font-weight:bold;font-size:20px;">
+	                            	Recommendations
+	                            </span>
+	                        </td>
+	                    </tr>   
+						<tr>
+	                        <td class="form_label">
+	                            Would you like me to handle any of your future requests?
+	                        </td>
+	                        <td colspan="2">
+	                        	<apex:selectList onchange="javascript:calcScore();" size="1" id="selFuture"
+                        			styleclass="form_select" style="width:60%" value="{!objFeedback.Handle_future_requests__c}">
+                                    <apex:selectOptions value="{!Handle_future_requests}"/>
+                                </apex:selectList>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td class="form_label">
+	                            Would you recommend SYNETY to other businesses?
+	                        </td>
+	                        <td colspan="2">
+	                        	<apex:selectList onchange="javascript:calcScore();" size="1"  id="selRecommend"
+                        			styleclass="form_select" style="width:60%" value="{!objFeedback.Recommend_SYNETY_to_others__c}">
+                                    <apex:selectOptions value="{!Recommend_SYNETY_to_others}"/>
+                                </apex:selectList>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td class="form_label" style="vertical-align:top;">
+	                            Comments or Suggestions
+	                        </td>
+	                        <td colspan="2">
+	                      		<apex:inputTextarea cols="40" rows="5" style="width:60%" 
+	                      			value="{!objFeedback.Comments_or_Suggestions__c}" styleclass="form_textarea" />
+	                        </td>
+	                    </tr>
+	                </table>   
+	            </div>
+	            
+            </div>
+            <div style="text-align:center">
+            	<br />
+                <apex:commandButton value="Submit Rating" action="{!SubmitForm}" />
+            </div>
+            
+            <script type="text/javascript">
+            	var arrRating = new Array();
+				arrRating[0] = 'Please rate';
+				arrRating[1] = 'Very Poor';
+				arrRating[2] = 'Below Average';
+				arrRating[3] = 'Acceptable';
+				arrRating[4] = 'Good';
+				arrRating[5] = 'Excellent';
+				
+				//speed
+				function Speed_handler(pos, slider) {
+					
+					document.getElementById("lblSliderSpeed").innerHTML = arrRating[pos];
+					document.getElementById("pageMain:frmMain:hSpeed").value = pos;
+					calcScore();
+				}
+                var sliderSpeed = new dhtmlxSlider("sliderSpeed", {
+                    skin: "dhx_skyblue",
+					min:0,
+                    max:5,
+                    step:1,
+                    size:200,
+					value:{!objFeedback.Speed__c},
+                    vertical:false                    
+                });
+				sliderSpeed.attachEvent("onChange", Speed_handler);
+                sliderSpeed.init();
+				document.getElementById("lblSliderSpeed").innerHTML = arrRating[{!objFeedback.Speed__c}];
+			    
+			    //knowledge
+			    function Knowledge_handler(pos, slider) {
+					
+					document.getElementById("lblSliderKnowledge").innerHTML = arrRating[pos];
+					document.getElementById("pageMain:frmMain:hKnowledge").value = pos;
+					calcScore();
+				}
+                var sliderKnowledge = new dhtmlxSlider("sliderKnowledge", {
+                    skin: "dhx_skyblue",
+					min:0,
+                    max:5,
+                    step:1,
+                    size:200,
+					value:{!objFeedback.Knowledge__c},
+                    vertical:false
+                });
+				sliderKnowledge.attachEvent("onChange", Knowledge_handler);
+                sliderKnowledge.init();
+				document.getElementById("lblSliderKnowledge").innerHTML = arrRating[{!objFeedback.Knowledge__c}];
+			    
+			    //manner
+			    function Manner_handler(pos, slider) {
+					
+					document.getElementById("lblSliderManner").innerHTML = arrRating[pos];
+					document.getElementById("pageMain:frmMain:hManner").value = pos;
+					calcScore();
+				}
+                var sliderManner = new dhtmlxSlider("sliderManner", {
+                    skin: "dhx_skyblue",
+					min:0,
+                    max:5,
+                    step:1,
+                    size:200,
+					value:{!objFeedback.Manner__c},
+                    vertical:false
+                });
+				sliderManner.attachEvent("onChange", Manner_handler);
+                sliderManner.init();
+				document.getElementById("lblSliderManner").innerHTML = arrRating[{!objFeedback.Manner__c}];
+				
+				function calcScore()
+				{
+					var manner=parseFloat(document.getElementById("pageMain:frmMain:hManner").value);
+					var knowledge=parseFloat(document.getElementById("pageMain:frmMain:hKnowledge").value);
+					var speed=parseFloat(document.getElementById("pageMain:frmMain:hSpeed").value);
+					
+					var recommend=document.getElementById("pageMain:frmMain:selRecommend").value;
+					var future=document.getElementById("pageMain:frmMain:selFuture").value;
+					
+					if(future=="" || future=="No")
+						future=0;
+					else if(future=="Maybe")
+						future=3;
+					else if(future=="Yes")
+						future=5;
+					
+					if(recommend=="" || recommend=="No")
+						recommend=0;
+					else if(recommend=="Maybe")
+						recommend=3;
+					else if(recommend=="Yes")
+						recommend=5;
+					
+					var totalScore = manner+knowledge+speed+future+recommend;
+					var totalPer = totalScore/25*100;
+					totalPer = totalPer.toFixed(2);
+					document.getElementById("ratingScore").innerHTML = totalPer+"%";
+				}
+				calcScore();    
+	    	</script>
+</apex:outputpanel>
+        
+    </div>
+    </apex:form>
+    	
+    </body>
+</html>
+</apex:page>

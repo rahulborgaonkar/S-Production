@@ -1,0 +1,6 @@
+<apex:page showHeader="false" sidebar="false" controller="OrderCheckFormController" action="{!GetPDFAndAttachToOpp}" title="SYNETY Order Check Form">
+<script type="text/javascript">
+	var ts = new Date().getTime();
+	window.location='/orders/OrderCheckForm?i={!oppId}&ts='+ts;
+</script>
+</apex:page>

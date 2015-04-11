@@ -1,0 +1,111 @@
+<apex:page controller="bottomline.creditSafeSearch" tabStyle="creditsafeTab__tab" action="{!logSearch}">
+	<style>
+		.colPad { padding-bottom: 4px; padding-right: 6px; }
+		.bPageBlock .detailList td { vertical-align : text-top;  }
+		a.btnLink       { margin-left:10px; font-size:91%; color:#015ba7; text-decoration:none; }
+        a.btnLink:hover { text-decoration:underline; }
+	</style>
+	<apex:outputPanel layout="block" styleClass="bPageTitle">
+		<apex:outputPanel layout="block" styleClass="ptBody secondaryPalette brandSecondaryBrd">
+			<apex:outputPanel layout="block" styleClass="content">
+				<apex:image style="background-position:0px 0px; background-image:url({!URLFOR($Resource.bottomline__CreditsafeResource,'cs.png')});" styleClass="pageTitleIcon" value="/s.gif"/>
+				<h1 class="pageType">Creditsafe</h1>
+				<apex:outputPanel styleClass="titleSeparatingColon"/>
+				<h2 class="pageDescription">{!if(options.name=='','Company Search','Search for ' + options.name)}</h2>
+			</apex:outputPanel>
+			<apex:outputPanel layout="block" styleClass="links">
+				<apex:outputLink value="http://www.creditsafeuk.com" target="_blank">
+					<apex:image value="{!URLFOR($Resource.bottomline__CreditsafeResource,'creditSafeSmall.png')}"/>
+				</apex:outputLink>
+			</apex:outputPanel>
+		</apex:outputPanel>
+	</apex:outputPanel>
+	<apex:pageMessages />
+	<apex:form >
+	<apex:pageBlock id="mainBlock" mode="maindetail" rendered="{!renderPage}">
+        <apex:pageBlockSection columns="2">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Name" />
+                <apex:inputText value="{!options.name}" style="width:300px;"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+            	<apex:outputLabel value="Search Mode" />
+            	<apex:selectRadio value="{!options.searchMode}">
+            		<apex:selectOption itemValue="Contain" itemLabel="Contains"/>
+            		<apex:selectOption itemValue="Begin" itemLabel="Begins With"/>
+            	</apex:selectRadio>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Address" />
+                <apex:panelGrid columns="2"  cellpadding="0" cellspacing="0" columnClasses="colPad">
+                	<apex:outputText value="{!formatStreet}" escape="false" rendered="{!LEN(formatStreet)>0}"/>
+                	<apex:outputLabel value="" rendered="{!LEN(formatStreet)>0}"/>
+                	<apex:inputText value="{!options.city}" style="width:200px;"/>
+                	<apex:outputLabel value="( City )" />
+                	<apex:outputText value="{!account.BillingState}" rendered="{!LEN(account.BillingState)>0}"/>
+                	<apex:outputLabel value="" rendered="{!LEN(account.BillingState)>0}"/>
+                	<apex:inputText value="{!options.postcode}" style="width:200px;"/>
+                	<apex:outputLabel value="( Postcode )" />
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>
+           	<apex:pageBlockSectionItem >
+                <apex:outputLabel value="Search Scope" />
+                <apex:panelGrid columns="2" >
+                	<apex:inputCheckbox value="{!options.searchName}" />
+                	<apex:outputLabel value="Company Name" />
+                	<apex:inputCheckbox value="{!options.searchCity}" />
+                	<apex:outputLabel value="City" />
+                	<apex:inputCheckbox value="{!options.searchPostcode}" />
+                	<apex:outputLabel value="Postcode" />
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>
+    	</apex:pageBlockSection>
+    	<apex:pageBlockButtons location="bottom">
+          	<apex:commandButton action="{!urlSearch}" value="Search" />
+          	<!-- <apex:commandButton action="{!searchCancel}" value="Cancel" /> -->
+          	<apex:commandLink action="{!searchCancel}" styleClass="btnLink">Cancel</apex:commandLink>
+        </apex:pageBlockButtons>
+    </apex:pageBlock>
+    <apex:pageBlock Title="Limited Company Results" rendered="{!showLtdResults}">
+    	<c:creditSafeNoResults rendered="{!results.size<=0}" />
+        <apex:outputPanel layout="block" styleClass="bNext" rendered="{!results.size>0}">
+			<apex:outputPanel layout="block" styleClass="next" style="margin-top:-37px;">
+				<apex:outputLink value="{!prevLtdPage}" disabled="{!LEN(prevLtdPage)==0}">&lt; Previous Page </apex:outputLink>
+				<apex:outputText value="&nbsp;&nbsp;|&nbsp;&nbsp;{!pageResult.startPosition} to {!pageResult.endPosition} of {!pageResult.totalCount}&nbsp;&nbsp;|&nbsp;&nbsp;" escape="false" style="color:#222"/>
+	    		<apex:outputLink value="{!nextLtdPage}" disabled="{!LEN(nextLtdPage)==0}"> Next Page &gt;</apex:outputLink>
+			</apex:outputPanel>
+		</apex:outputPanel>
+	    <apex:pageBlockTable value="{!results}" var="r" rendered="{!results.size>0}" >
+			<apex:column headerValue="Name">
+	       		<apex:outputLink value="/apex/creditSafeView{!serviceView}?type=ltd&id={!account.Id}&cn={!r.companyNumber}" target="_top">
+	       			<apex:outputText value="{!r.companyName}" />
+	       		</apex:outputLink>
+	       	</apex:column>
+	       	<apex:column value="{!r.companyName}" headerValue="Name" />
+	       	<apex:column value="{!r.companyNumber}" headerValue="Number" />
+	       	<apex:column value="{!r.address}" headerValue="Address" />
+	       	<apex:column value="{!r.dateOfLastAcc}" headerValue="Last Acc Date" />
+	       	<apex:column value="{!r.status}" headerValue="Status" />
+		</apex:pageBlockTable>
+	</apex:pageBlock>
+	<apex:pageBlock Title="Non-Limited Company Results" rendered="{!showNonLtdResults}">
+		<c:creditSafeNoResults rendered="{!nonLtdResults.size<=0}" />
+        <apex:outputPanel layout="block" styleClass="bNext" rendered="{!nonLtdResults.size>0}">
+			<apex:outputPanel layout="block" styleClass="next" style="margin-top:-37px;">
+				<apex:outputLink value="{!prevNonLtdPage}" disabled="{!LEN(prevNonLtdPage)==0}">&lt; Previous Page </apex:outputLink>
+				<apex:outputText value="&nbsp;&nbsp;|&nbsp;&nbsp;{!nonLtdPageResult.startPosition} to {!nonLtdPageResult.endPosition} of {!nonLtdPageResult.totalCount}&nbsp;&nbsp;|&nbsp;&nbsp;" escape="false" style="color:#222"/>
+	    		<apex:outputLink value="{!nextNonLtdPage}" disabled="{!LEN(nextNonLtdPage)==0}"> Next Page &gt;</apex:outputLink>
+			</apex:outputPanel>
+		</apex:outputPanel>
+		<apex:pageBlockTable value="{!nonLtdResults}" var="r" rendered="{!nonLtdResults.size>0}">
+			<apex:column headerValue="Name">
+	       		<apex:outputLink value="/apex/creditSafeViewNonLtd?type=nonltd&id={!account.Id}&cn={!r.companyNumber}" target="_top">
+	       			<apex:outputText value="{!r.companyName}" />
+	       		</apex:outputLink>
+	       	</apex:column>
+	       	<apex:column value="{!r.companyNumber}" headerValue="Number" />
+	       	<apex:column value="{!r.address}" headerValue="Address" />
+		</apex:pageBlockTable>
+	</apex:pageBlock>
+    </apex:form>
+</apex:page>

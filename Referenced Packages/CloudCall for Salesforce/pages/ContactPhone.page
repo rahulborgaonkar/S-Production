@@ -1,0 +1,333 @@
+<apex:page id="pg" controller="synety.ContactPhoneController" showHeader="false" sidebar="false" >
+<head>
+    <title>
+        SYNETY CloudCall: Make a Call
+    </title>
+</head>
+
+<script type="text/javascript">
+    function validateTask()
+    {
+    	//var note = document.getElementById('pg:frm:pgb:txtNote').value;
+        var subject = document.getElementById('pg:frm:pgb:txtSubject').value;
+        
+        if(callStatus == '2')
+    	{
+    		alert('Cannot save the call while the call is still in progress. Please hangup the call and then you can save it.');
+    		return false; 
+    	}
+    	
+    	    
+        if({!isNoteRequired} && {!not(hideCategory_Subject)})
+        {
+            //if(note == '' || subject == '')
+            if(subject == '')
+            {
+                alert('Please enter notes for this call');
+                return false;
+            }
+        }
+        
+        var cat = document.getElementById('pg:frm:pgb:lstCat').value;
+        if({!isCallCatRequired} && cat == '' && {!not(hideCategory_Subject)})
+        {
+            alert('Please select a call category');
+            return false;
+        }
+        
+        canClose = false;
+        
+        /*
+        if({!isNoteRequired} == false && {!isCallCatRequired})
+        {
+        	if(cat == '')
+            {
+                alert('Please select a call category');
+                return false;
+            }
+        }
+        */
+    }
+    
+    var canClose = {!showNotes};
+    var callStatus = '{!JSINHTMLENCODE(callStatus)}';
+    window.onbeforeunload = function(e) 
+    {
+    	if(callStatus == '2')
+    	{
+    		return 'Cannot close this window while the call is still in progress. Please hangup the call and then you can close this window.';
+    	}
+    	
+        //alert('closing');
+        if(({!isNoteRequired} || {!isCallCatRequired}) && canClose && {!isComplete} == false && {!not(hideCategory_Subject)})
+        {
+        	if({!isNoteRequired} && {!isCallCatRequired})
+            	return 'Call notes and Call category are required before you can close this window. Please go back, enter notes and select call category and save the task to close this window.';
+            else if({!isNoteRequired})
+            	return 'Call notes are required before you can close this window. Please go back and enter notes and save the task to close this window.';
+            else
+            	return 'Call category is required before you can close this window. Please go back, enter notes and select call category and save the task to close this window.';
+        }
+    };
+    
+</script>
+    <apex:outputPanel id="panelURL">
+        <script type="text/javascript">
+            canClose = {!showNotes};
+            callStatus = '{!JSINHTMLENCODE(callStatus)}';
+            
+            if("{!isComplete}" == 'true')
+            {
+                if("{!JSINHTMLENCODE(url)}" != '')
+                {
+                    self.resizeTo(screen.width,screen.height);
+                    self.moveTo(0,0);
+                    window.location.href="{!JSINHTMLENCODE(url)}";
+                }
+                else
+                {   
+                    window.close();
+                }
+            }
+        </script>
+    </apex:outputPanel>
+    <apex:pageMessages id="msg"/>
+    
+    <apex:outputpanel rendered="{!isAllSetupDone}">
+        <apex:form id="frm">
+            <apex:actionFunction name="call_Start" action="{!Make_Call_Method}" reRender="notes, callButtons, msg, panelURL" status="status1" />
+            <apex:actionFunction name="call_end" action="{!closecall}" reRender="callButtons, msg, maintable, panelURL" status="status1" />
+
+            
+            <!--<apex:actionFunction name="js_pauseCallRecording" action="{!pauseCallRecording}" reRender="callButtons, notes, msg, maintable, panelURL" status="status1" />
+            -->
+            <apex:actionFunction name="js_pauseCallRecording" action="{!pauseCallRecording}" reRender="callButtons, msg, maintable, panelURL" status="status1" />
+            
+            
+            <apex:pageBlock id="pgb">
+                <span style="font-weight:bold;font-size:25px;margin-left:15px;">SYNETY CloudCall: Make a Call&nbsp;</span>
+                        
+	            <apex:actionStatus id="status1">
+	                <apex:facet name="start">
+	                    
+	                        <img src="/img/loading24.gif" />
+	                        <span style="margin-left: 10px; font-size: 12px; font-weight: bold; color: #000000;">Please wait...</span>
+	                    
+	                </apex:facet>
+	            </apex:actionStatus>
+	            
+                <br/><br/><br/>
+                
+                <apex:outputLabel value="Click Device" style="font-weight:bold;font-size:115%;margin-left:15px;"/>
+                <apex:selectList size="1" value="{!deviceNum}" style="margin-left:65px;">
+                    <apex:selectOptions value="{!lstDeviceOpt}"/>
+                </apex:selectList>
+                
+                <br/><br/>
+                
+                <apex:outputLabel value="Call Number" style="font-weight:bold;font-size:115%;margin-left:15px;"/>
+                <apex:selectList size="1" value="{!phNumber}" style="margin-left:67px;">
+                    <apex:selectOptions value="{!lstSelectOpt}"/>
+                </apex:selectList>
+                
+                <br/><br/>
+                
+                <apex:outputLabel value="{!ObjectLabel}: {!RecordName}" style="font-weight:bold;font-size:115%;margin-left:15px;"/>
+                
+                <br/><br/>
+                
+                <apex:outputPanel id="callButtons">
+                    <table width="100%" id="maintable" >
+                        <tr>
+                            <td width="15%" height="60px" style="vertical-align:bottom;">
+                                <apex:commandButton value="Cancel" style="margin-left:15px" onclick="window.close();return false;"/>
+                            </td>
+                            
+                            <td width="20%" style="vertical-align:bottom;">
+                            	<apex:outputPanel rendered="{!recordingControlsAllowed}">
+	                                <apex:commandButton id="cmdPause" title="Pause Call Recording" image="{!URLFOR($Resource.synety__IconPause)}" onclick="js_pauseCallRecording();return false;" rendered="{!  (!isCallEnd && showNotes && !doPauseCallRecording)}"/>
+	                                <apex:commandButton id="cmdResume" title="Resume Call Recording" image="{!URLFOR($Resource.synety__IconRecord)}" onclick="js_pauseCallRecording();return false;" rendered="{!  (!isCallEnd && showNotes && doPauseCallRecording)}"/>
+                                </apex:outputPanel>
+                            </td>
+                            
+                            
+                            <td width="15%" style="vertical-align:bottom;">
+                                <apex:commandButton id="cmdCall" value="Make Call" onclick="call_Start();return false;" rendered="{! !showNotes}"/>
+                                <apex:commandButton id="cmdHangup" value="Hangup Call" onclick="call_end();return false;" rendered="{!  (!isCallEnd && showNotes)}"/>
+                            </td>
+                            
+                            <td width="50%" style="vertical-align:bottom;">
+                                <apex:outputPanel id="callConnected" rendered="{! (showNotes && !isCallEnd)}">
+                                    <apex:outputLabel value="Call Connected" style="font-size:100%;font-weight:bold;"/>
+                                </apex:outputPanel>
+                                <apex:outputPanel id="callDisconnected" rendered="{!isCallEnd}">
+                                    <apex:outputLabel value="Call Disconnected" style="font-size:100%;font-weight:bold;"/>
+                                </apex:outputPanel>
+                            </td>
+                            
+                        </tr>
+                    </table>
+                </apex:outputPanel>
+                
+                <apex:actionFunction name="CampMemTypeChange" action="{!CampaignMemberTypeChanged}" 
+                	reRender="notes" status="status2" />
+                
+                <apex:actionFunction name="CampChange" action="{!CampaignChanged}" 
+                	reRender="notes" status="status2" />
+	                    
+                <br/>
+                <br/>
+                <apex:outputPanel id="notes">
+	                <apex:outputPanel rendered="{!showNotes}">
+	                	<h4>NOTES</h4>
+	                    <hr/>
+	                    <apex:outputPanel rendered="{!doShowCampaign}">
+	                    <table>
+	                    	<tr>
+	                            <td style="font-weight:bold;width:75px;">&nbsp;</td>
+	                            <td >
+	                            	<apex:selectList id="lstCampaignType" value="{!campaignMemberType}" size="1"
+	                            		onChange="CampMemTypeChange();">
+							            <apex:selectOption itemValue="" 
+							            	itemLabel="Select Campaign Member Type..."/>
+							            <apex:selectOption itemValue="New" 
+							            	itemLabel="Add to Campaign as Campaign Member"/>
+							            <apex:selectOption itemValue="Existing" 
+							            	itemLabel="Update Existing Campaign Member Status"/>
+							        </apex:selectList> 
+	                            	<apex:actionStatus id="status2">
+						                <apex:facet name="start">
+						                    
+						                        <img src="/img/loading24.gif" />
+						                        <span style="margin-left: 10px; font-size: 12px; font-weight: bold; color: #000000;">Please wait...</span>
+						                    
+						                </apex:facet>
+						            </apex:actionStatus>
+	                            </td>
+	                        </tr>
+	                        
+	                    	<tr>
+	                            <td style="font-weight:bold;">
+		                            <apex:outputPanel rendered="{!showCampaignNew}">
+		                            Campaign :
+		                            </apex:outputPanel>
+	                            </td>
+	                            <td >
+	                            	<apex:outputPanel rendered="{!showCampaignNew}">
+	                            	<apex:selectList value="{!newCampaignId}" id="lstNewCampaign" 
+	                            		size="1" onChange="CampChange();">
+	                                    <apex:selectOptions value="{!lstNewCampaigns}"/>
+	                                </apex:selectList>
+	                                <!-- 
+	                                <apex:inputField value="{!oCallUpdate.Campaign__c}" />
+	                                -->
+	                                </apex:outputPanel>
+	                            </td>
+	                        </tr>
+	                        
+	                        
+	                        <tr>
+	                            <td style="font-weight:bold;">
+	                            	<apex:outputPanel rendered="{!showCampaignExisting}">
+	                            	Campaign :
+	                            	</apex:outputPanel>
+	                            </td>
+	                            <td >
+	                            	<apex:outputPanel rendered="{!showCampaignExisting}">
+	                                <apex:selectList value="{!existingCampaignId}" id="lstContactCampaign" 
+	                                	size="1" onChange="CampChange();">
+	                                    <apex:selectOptions value="{!lstContactCampaigns}"/>
+	                                </apex:selectList>
+	                                </apex:outputPanel>
+	                            </td>
+	                        </tr>
+	                        
+	                        
+	                        <tr>
+	                            <td style="font-weight:bold;">
+	                            	<apex:outputPanel rendered="{!lstCampaignMemberStatus.size>0}">
+	                            	Status :
+	                            	</apex:outputPanel>
+	                            </td>
+	                            <td >
+	                            	<apex:outputPanel rendered="{!lstCampaignMemberStatus.size>0}">
+	                                <apex:selectList value="{!selCampStatus}" id="lstCampaignMemberStatus" size="1">
+	                                    <apex:selectOptions value="{!lstCampaignMemberStatus}"/>
+	                                </apex:selectList>
+	                                </apex:outputPanel>
+	                            </td>
+	                        </tr>
+						</table>
+						</apex:outputPanel>
+						
+						<apex:outputPanel rendered="{!not(hideCategory_Subject)}">
+						
+						<table>
+						    <tr>
+	                            <td style="font-weight:bold;width:75px;">Category :</td>
+	                            <td >
+	                                <apex:selectList id="lstCat" size="1" value="{!selCat}">
+	                                    <apex:selectOptions value="{!lstCallCatOpt}"/>
+	                                </apex:selectList>
+	                            </td>
+	                        </tr>
+	                        
+	                        <tr>
+	                            <td style="font-weight:bold;">Subject :</td>
+	                            <td ><apex:inputText id="txtSubject" value="{!taskRec.subject}" style="width:437px;"/></td>
+	                        </tr>
+	                    </table>
+	                    </apex:outputPanel>
+	                    
+	                    <table>
+	                        <tr>
+	                            <td style="font-weight:bold;width:75px;">Notes :</td>
+	                            <td>
+	                            	<apex:inputTextArea id="txtNote" value="{!taskRec.Description}" rows="4" style="width:435px;" ></apex:inputTextArea>
+	                            	
+	                            </td>
+	                        </tr>
+	                        <tr>
+	                            <td colspan="2">
+	                            <center>
+	                                <apex:commandButton value="Save Note" action="{!Close_Task}" onclick="javascript:return validateTask();" />
+	                                &nbsp;
+	                                <apex:commandButton value="Save Note & Create followup Task" action="{!SaveCall_Task}" onclick="javascript:return validateTask();" />
+	                                &nbsp;
+	                                <apex:commandButton value="Save Note & Create followup Event" action="{!SaveCall_Event}" onclick="javascript:return validateTask();" />
+	                            </center>
+	                            </td>
+	                        </tr>
+	                    </table>
+	                </apex:outputPanel>
+                </apex:outputPanel>
+                
+            </apex:pageBlock>
+        </apex:form>
+    </apex:outputpanel>
+    
+    <apex:outputPanel rendered="{!not(showNotes)}" id="panelJS">
+	    <script type="text/javascript">
+	    	try
+	    	{
+		    	if("{!doShowCampaign}" == "true")
+		    		self.resizeTo(700, 700);
+		    	else
+		    		self.resizeTo(700, 600);
+		    	
+		    	self.moveTo(50,10);
+				self.focus();
+			}
+			catch(ex)
+			{
+			}
+	
+	        var pn="{!JSINHTMLENCODE($CurrentPage.parameters.pn)}";
+	    	var deviceNum="{!JSINHTMLENCODE(deviceNum)}";
+	    	if(pn != "" && deviceNum != "")
+	    	{
+	    		call_Start();
+	    	} 
+	    </script>
+	</apex:outputPanel>
+</apex:page>

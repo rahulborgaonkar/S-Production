@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <webLinks>
+        <fullName>Synety</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Click to Call</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <url>var wnd = window.open(&apos;/apex/synety__ContactPhone?id={!Case.ContactId}&amp;caseid={!Case.Id}&apos;,&apos;Make_Call&apos;,&apos;scrollbars=0,width=550, height=400,left=370,top=170&apos;);
+wnd.focus();</url>
+    </webLinks>
+    <webLinks>
+        <fullName>SynetyListButton</fullName>
+        <availability>online</availability>
+        <displayType>massActionButton</displayType>
+        <linkType>javascript</linkType>
+        <masterLabel>Click to Call</masterLabel>
+        <openType>onClickJavaScript</openType>
+        <protected>false</protected>
+        <requireRowSelection>true</requireRowSelection>
+        <url>{!REQUIRESCRIPT(&quot;/soap/ajax/15.0/connection.js&quot;)} 
+
+var ids = {!GETRECORDIDS($ObjectType.Case)};
+
+if(ids.length &lt; 1) {
+alert(&apos;Please select one Case record.&apos;);
+}
+
+if(ids.length &gt;1){
+alert(&apos;Please select only one Case record.&apos;);
+}
+
+if(ids.length ==1){
+
+var result = sforce.connection.query(&quot;Select id, ContactId from Case where id=&apos;&quot;+ids[0]+&quot;&apos;&quot;);
+var records = result.getArray(&quot;records&quot;); 
+
+if (records.length &lt; 1){
+alert(&apos;No Record Found.&apos;);
+}
+else{
+var wnd = window.open(&apos;/apex/synety__ContactPhone?id=&apos;+records[0].ContactId+&apos;&amp;returnURL=003&apos;,&apos;Make_Call&apos;,&apos;scrollbars=0,width=550,height=400,left=370,top=170&apos;);
+wnd.focus();
+}
+}</url>
+    </webLinks>
+</CustomObject>

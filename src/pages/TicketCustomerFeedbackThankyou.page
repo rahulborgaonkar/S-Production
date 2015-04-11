@@ -1,0 +1,108 @@
+<apex:page action="{!init}" controller="TicketCustomerFeedbackController" id="pageMain" standardStylesheets="false" showHeader="false" sidebar="false" title="SYNETY - Support Feedback">
+<html>
+    <head>
+        <title>SYNETY - Support Feedback</title>
+        <link rel="stylesheet" href="{!urlfor($Resource.CreditForm,'css/jquery-ui.css')}" type="text/css" />
+        <link rel="stylesheet" href="{!urlfor($Resource.CreditForm,'css/ui-style.css')}" type="text/css" />
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery-ui-1.8.18.custom.min.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery.tooltip.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/slider.js')}"></script>        
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery-ui-timepicker.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/add_script.js')}"></script>
+    </head>
+    <body>  
+    <apex:form id="frmMain" >
+    	<div class="content">
+            <script type="text/javascript">
+			  	window.dhx_globalImgPath="{!urlfor($Resource.RatingSystemStyles,'codebase/imgs/')}";
+		   	</script>
+			<script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxcommon.js')}"></script>
+            <script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxslider.js')}"></script>
+            <script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/ext/dhtmlxslider_start.js')}"></script>
+            <link rel="STYLESHEET" type="text/css" href="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxslider.css')}" />	
+
+            
+			
+         </div>
+         
+         <div style="padding: 10px;">
+          
+            <div id="conf_info_panel" class="panel_box white_bg top_space">
+                <div style="text-align:center">
+                    <img src="{!urlfor($Resource.CreditForm,'synety__synety_logo.png')}" width="212" height="77" alt="SYNETY Logo" />
+                </div>
+                
+                <h1 style="padding: 10px;margin-bottom:5px; width:100%; text-align:center">
+                    How well did I deal with your request? Please rate me now! 
+                </h1>
+                
+                    <div class="left" style="width:40%;padding-left:10%">
+	                    <br />
+	                    <table class="data_tbl">
+	                        <tr>
+	                            <td class="form_label">Ticket Owner:
+	                            </td>
+	                            <td><b>
+	                            	{!objCase.Owner.Name}
+	                            	</b>
+	                            </td>
+	                        </tr>
+	                        <tr>
+	                            <td class="form_label">Company Name: </td>
+	                            <td><b>
+	                            	 {!objCase.Account.Name}
+	                            	</b>
+                            	</td>
+	                        </tr>
+	                        <tr>
+	                            <td class="form_label">Ticket Number:</td>
+	                            <td><b>
+	                            	{!objCase.CaseNumber}
+                            		</b>
+                           		</td>
+	                        </tr>   
+	                    
+	                    </table>   
+	                </div>
+	                <div class="right" style="width:50%;margtin-right:10%">
+	                    <br />
+	                    <table class="data_tbl">
+	                        <tr>
+	                            <td class="form_label">
+	                                Overall Rating Score:
+	                            </td>
+	                            <td width="60%">
+	                                <b>
+	                                	<div id="ratingScore">{!objFeedback.Overall_Rating_Score_Percent__c}%</div>
+                                	</b>
+	                            </td>
+	                        </tr>
+	                        <tr>
+	                            <td class="form_label">&nbsp;</td>
+	                            <td colspan="2">
+	                                <b>
+	                                	&nbsp;
+                                	</b>
+	                            </td>
+	                        </tr>
+	                        
+	                    </table>   
+	                </div>
+                
+            </div>
+ 
+<apex:outputpanel rendered="{!isCompleted}" >			
+			<div class="panel_box white_bg">
+            <h2 class="white_bg" style="text-align:center; color:#F00">
+                Thank you for your valued feedback which will help us to further improve our service to you.  
+            </h2>
+            </div>
+</apex:outputpanel>
+        
+    </div>
+    </apex:form>
+    	
+    </body>
+</html>
+</apex:page>

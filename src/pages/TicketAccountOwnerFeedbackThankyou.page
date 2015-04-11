@@ -1,0 +1,104 @@
+<apex:page action="{!initAccountOwner}" controller="TicketCustomerFeedbackController" id="pageMain" title="SYNETY - Provisioning Feedback">
+<html>
+    <head>
+        <!-- 
+        <link rel="stylesheet" href="{!urlfor($Resource.CreditForm,'css/jquery-ui.css')}" type="text/css" />
+        <link rel="stylesheet" href="{!urlfor($Resource.CreditForm,'css/ui-style.css')}" type="text/css" />
+         -->
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery-ui-1.8.18.custom.min.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery.tooltip.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/slider.js')}"></script>        
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/jquery-ui-timepicker.js')}"></script>
+        <script type="text/javascript" src="{!urlfor($Resource.CreditForm,'scripts/add_script.js')}"></script>
+    </head>
+    <body>  
+    <apex:form id="frmMain" >
+    	<div class="content">
+            <script type="text/javascript">
+			  	window.dhx_globalImgPath="{!urlfor($Resource.RatingSystemStyles,'codebase/imgs/')}";
+		   	</script>
+			<script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxcommon.js')}"></script>
+            <script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxslider.js')}"></script>
+            <script  src="{!urlfor($Resource.RatingSystemStyles,'codebase/ext/dhtmlxslider_start.js')}"></script>
+            <link rel="STYLESHEET" type="text/css" href="{!urlfor($Resource.RatingSystemStyles,'codebase/dhtmlxslider.css')}" />	
+
+            
+			
+         </div>
+         
+         <div >
+          
+            <div id="conf_info_panel" >
+                <div style="text-align:center">
+                    <img src="{!urlfor($Resource.CreditForm,'synety__synety_logo.png')}" width="212" height="77" alt="SYNETY Logo" />
+                </div>
+                
+                <div style="font-size:22px;font-weight:bold;text-align:center">
+                    How well did I deal with the provisioning request? Please rate me now! 
+                </div>
+				
+				
+				<br />
+				<table style="width:70%;" align="center">
+				    <tr>
+				        <td width="25%" >Ticket Owner:
+				        </td>
+				        <td width="25%"><b>
+				        	{!objCase.Owner.Name}
+				        	</b>
+				        </td>
+				        <td width="25%">
+				            Overall Rating Score:
+				        </td>
+				        <td width="25%">
+				            <b>
+				            	<div id="ratingScore">{!objFeedback.Overall_Rating_Score_Percent__c}%</div>
+				           	</b>
+				        </td>
+				    </tr>
+				    <tr>
+				        <td>Company Name: </td>
+				        <td><b>
+				        	 {!objCase.Account.Name}
+				        	</b>
+				       	</td>
+				       	<td>
+				            Order Number:
+				        </td>
+				        <td>
+				            <b>
+				            	{!objCase.Opportunity__r.Order_Number__c}
+				           	</b>
+				        </td>
+				    </tr>
+				    <tr>
+				        <td>Ticket Number:</td>
+				        <td><b>
+				        	{!objCase.CaseNumber}
+				       		</b>
+			      		</td>
+			      		<td colspan="2">
+				            <b>
+				            	&nbsp;
+				           	</b>
+				        </td>
+				    </tr>   
+				
+				</table>   
+				
+           	</div>
+ 
+<apex:outputpanel rendered="{!isCompleted}" >	
+			<br />		
+			<div style="font-size:22px;font-weight:bold;text-align:center; color:#F00">
+                Thank you for your valued feedback which will help us to further improve our service.  
+            </div>
+</apex:outputpanel>
+        
+    </div>
+    </apex:form>
+    	
+    </body>
+</html>
+</apex:page>

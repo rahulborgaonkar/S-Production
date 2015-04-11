@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>Accept</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>CancelEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Clone</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Delete</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Edit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>List</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>New</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>SaveEdit</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <type>Default</type>
+    </actionOverrides>
+    <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <deprecated>false</deprecated>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableReports>true</enableReports>
+    <fields>
+        <fullName>Allow_Auto_Renew_Override__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enables/Disables the Partner to Override the Contract Auto Renew field value.</description>
+        <externalId>false</externalId>
+        <label>Allow Auto Renew Override</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Allow_Cancellation_Terms_Override__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enables/Disables the Partner to Override the Cancellation Terms field value.</description>
+        <externalId>false</externalId>
+        <label>Allow Cancellation Terms Override</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Allow_Contract_Length_Override__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enables/Disables the Partner to Override the Contract Length field value.</description>
+        <externalId>false</externalId>
+        <label>Allow Contract Length Override</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Allow_Renewal_Length_Override__c</fullName>
+        <defaultValue>false</defaultValue>
+        <deprecated>false</deprecated>
+        <description>Enables/Disables the Partner to Override the Renewal Terms field value.</description>
+        <externalId>false</externalId>
+        <label>Allow Renewal Length Override</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Application__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Name of the Application record for this Product Catalog.</description>
+        <externalId>false</externalId>
+        <label>Application</label>
+        <length>80</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Billing_Frequency__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Controls the frequency in which this Product is Billed, unit is Months.</description>
+        <externalId>false</externalId>
+        <label>Billing Frequency</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Cancellation_Terms__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Controls the Cancellation time for this Product, unit is Days.</description>
+        <externalId>false</externalId>
+        <label>Cancellation Terms (Days)</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contract_Auto_Renew__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Controls if a contract for this product is Auto Renewed or not.</description>
+        <externalId>false</externalId>
+        <label>Contract Auto Renew</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Yes</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>No</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Contract_Length__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Controls the length of a contract for this Product, unit is Months.</description>
+        <externalId>false</externalId>
+        <label>Contract Length</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Custom_Unit__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Represents the custom unit value when Pricing Unit is set to &apos;Custom&apos;.</description>
+        <externalId>false</externalId>
+        <label>Custom Unit</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Fixed_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Fixed Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Floor_Price__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Floor Price</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PNR__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>PNR %</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
+    </fields>
+    <fields>
+        <fullName>Partner_Application_Name__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Partner Application Name</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Partner_Contract_Terms__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Partner Contract Terms</label>
+        <referenceTo>Partner_Contract_Terms__c</referenceTo>
+        <relationshipLabel>Partner Product Catalog</relationshipLabel>
+        <relationshipName>Partner_Product_Catalog</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Pricing_Type__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Pricing Type</label>
+        <picklist>
+            <picklistValues>
+                <fullName>PNR</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>FIXED</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>LIST</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Pricing_Unit__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Represents the unit used by the Partner to sell this product.</description>
+        <externalId>false</externalId>
+        <label>Pricing Unit</label>
+        <picklist>
+            <picklistValues>
+                <fullName>User</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Org</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Custom</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <fields>
+        <fullName>Product_Description__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product Description</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Product_ID__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product ID</label>
+        <length>30</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Product_Special_Terms__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Product Special Terms</label>
+        <length>32000</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Renewal_Terms__c</fullName>
+        <deprecated>false</deprecated>
+        <description>Represents the length of a renewed contract for this product, unit is Months.</description>
+        <externalId>false</externalId>
+        <label>Renewal Terms (Months)</label>
+        <precision>5</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Special_Instructions__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Special Instructions</label>
+        <length>32000</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>10</visibleLines>
+    </fields>
+    <fields>
+        <fullName>Status__c</fullName>
+        <deprecated>false</deprecated>
+        <externalId>false</externalId>
+        <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Active</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Inactive</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Retired (Add-ons Only)</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <trackHistory>true</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
+    <label>Partner Product Catalog</label>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>Partner_Contract_Terms__c</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
+    <nameField>
+        <label>Product Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+    <namedFilters>
+        <fullName>nf_01IA0000001bwMlMAI_00NA0000007KedsMAC</fullName>
+        <active>true</active>
+        <field>Service_Order_Detail__c.Product_Name__c</field>
+        <filterItems>
+            <field>Partner_Product_Catalog__c.CreatedDate</field>
+            <operation>greaterThan</operation>
+            <value>1/1/1900 12:00 AM</value>
+        </filterItems>
+        <infoMessage>test</infoMessage>
+        <isOptional>true</isOptional>
+        <name>Service Order Detail_Product Name</name>
+    </namedFilters>
+    <pluralLabel>Partner Product Catalog</pluralLabel>
+    <searchLayouts>
+        <lookupDialogsAdditionalFields>Partner_Contract_Terms__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Pricing_Type__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>PNR__c</lookupDialogsAdditionalFields>
+        <lookupDialogsAdditionalFields>Fixed_Price__c</lookupDialogsAdditionalFields>
+    </searchLayouts>
+    <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>Fixed_Price_is_required</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( ISPICKVAL(Pricing_Type__c ,&quot;FIXED&quot;),ISNULL(  Fixed_Price__c ))</errorConditionFormula>
+        <errorDisplayField>Fixed_Price__c</errorDisplayField>
+        <errorMessage>Fixed Price is required if Pricing Type = FIXED</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Fixed_Price_should_be_blank</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( ISPICKVAL(Pricing_Type__c ,&quot;PNR&quot;),not(ISNULL( Fixed_Price__c) ))</errorConditionFormula>
+        <errorDisplayField>Fixed_Price__c</errorDisplayField>
+        <errorMessage>Fixed Price must be blank if Pricing Type = PNR</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Floor_price_is_required</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( ISPICKVAL(Pricing_Type__c ,&quot;PNR&quot;),ISNULL( Floor_Price__c ))</errorConditionFormula>
+        <errorDisplayField>Floor_Price__c</errorDisplayField>
+        <errorMessage>Floor Price is required if Pricing Type = PNR</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>PNR_percent_is_required</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( ISPICKVAL(Pricing_Type__c ,&quot;PNR&quot;),ISNULL( PNR__c ))</errorConditionFormula>
+        <errorDisplayField>PNR__c</errorDisplayField>
+        <errorMessage>PNR % is required if Pricing Type = PNR</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>PNR_percent_should_be_blank</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( ISPICKVAL(Pricing_Type__c ,&quot;FIXED&quot;),not(ISNULL( PNR__c) ))</errorConditionFormula>
+        <errorDisplayField>PNR__c</errorDisplayField>
+        <errorMessage>PNR % must be blank if Pricing Type = FIXED</errorMessage>
+    </validationRules>
+</CustomObject>

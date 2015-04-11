@@ -1,0 +1,35 @@
+<apex:page id="pg" controller="synety.SynetyConfigurationController" cache="false">
+    <!-- 
+    <apex:form id="frm">
+        <apex:pageBlock id="pgb">
+            <apex:pageblockButtons >
+                <apex:commandButton value="Save" action="{!save}" reRender="frm" status="status"/>
+                <apex:commandButton value="Update DeviceKey" action="{!save}" reRender="frm" status="status"/>
+            </apex:pageblockButtons>
+            <apex:actionStatus id="status">
+                <apex:facet name="start">
+                    <div style="width: 500px;">
+                        <img src="/img/loading24.gif" style="vertical-align:middle;"/>
+                        <span style="margin-left: 10px; font-size: 12px; font-weight: bold; color: #000000;">Please wait...</span>
+                    </div>
+                </apex:facet>
+            </apex:actionStatus>
+            <apex:outputPanel rendered="{!isError}">
+                <apex:pageMessages escape="false"/>
+            </apex:outputPanel>
+            <apex:pageBlockSection id="pgbs">
+                <apex:inputField value="{!synetyConfig.UserName__c}"/>
+                <apex:inputField value="{!synetyConfig.Password__c}"/>
+                <apex:inputField value="{!synetyConfig.LicenseKey__c}"/>
+                <apex:inputField value="{!synetyConfig.Salesforce_User__c}"/>
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Available Device Key"/>
+                    <apex:selectList value="{!selectedDevice}" size="1">
+                        <apex:selectOptions value="{!deviceKey}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+    -->
+</apex:page>

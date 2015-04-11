@@ -1,0 +1,358 @@
+<apex:page controller="bottomline.creditSafeView" tabStyle="creditsafeTab__tab" showHeader="false" renderas="pdf">
+	<head>
+		<style type="text/css" media="all">
+	        .tree0 { width: 13px; background-image: url({!URLFOR($Resource.CreditsafeResource,'printtree0.png')}); background-repeat: no-repeat; }
+	        .tree1 { width: 13px; background-image: url({!URLFOR($Resource.CreditsafeResource,'printtree1.png')}); background-repeat: no-repeat; }
+	        .tree2 { width: 13px; background-image: url({!URLFOR($Resource.CreditsafeResource,'printtree2.png')}); background-repeat: no-repeat; }
+	        .tree3 { width: 13px; background-image: url({!URLFOR($Resource.CreditsafeResource,'printtree3.png')}); background-repeat: no-repeat; }
+	    </style>
+    </head>
+	<apex:stylesheet value="{!URLFOR($Resource.bottomline__CreditsafeResource,'PDF.css')}" />
+	<c:creditSafePDFBox type="header" position="center">
+		<table width="100%" cellpadding="0" cellspacing="0">
+			<tr colspan="2">
+				<td>&nbsp;</td>
+			</tr>
+			<tr colspan="2">
+				<td>&nbsp;</td>
+			</tr>
+			<tr colspan="2">
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td align="left" valign="top">
+					<apex:image value="{!URLFOR($Resource.bottomline__CreditsafeResource,'creditSafePrint.png')}" style="height:15mm;" />
+				</td>
+				<td align="right" valign="top">
+					<span style="font-size: 125%; font-weight: bold; color:#818085; padding-right:1px;">Company Report for</span>
+					<br />
+					<span style="font-size: 180%; font-weight: bold;">{!company.companyName}</span>
+					<br />
+					<span style="font-size: 125%; font-weight: bold; color:#818085; padding-right:1mm;">on {!printDate}</span>
+				</td>
+			</tr>
+		</table>
+	</c:creditSafePDFBox>
+	<c:creditSafePDFBox type="footer" position="right">
+		<apex:outputPanel layout="block" style="font-size: 125%; font-weight: bold; color:#818085">
+			<span class="pageNumber"/>
+		</apex:outputPanel>
+	</c:creditSafePDFBox>
+	<apex:pageMessages />
+	<h3>Company Information</h3>
+	<apex:panelGrid columns="4" width="100%" columnClasses="labelCol,dataCol">
+		<apex:outputLabel value="Company Name" />
+    	<apex:outputText value="{!company.companyName}" />
+		<apex:outputLabel value="Creditsafe Rating" />
+		<apex:outputText value="{!company.todaysRating}" escape="false" />
+		<apex:outputLabel value="Company Reg. Number" />
+		<apex:outputText value="{!company.companyNumber}" />
+		<apex:outputLabel value="Credit Limit" />
+		<apex:outputText value="{!company.todaysLimit}" />
+		<apex:outputLabel value="Telephone" />
+		<apex:outputText value="{!company.companyInfo.telephone}" />
+		<apex:outputLabel value="Company Status" />
+		<apex:outputText value="{!company.companyInfo.companyStatus}" />
+		<apex:outputLabel value="Website" />
+		<apex:outputLink value="http://{!company.companyInfo.website}" target="_blank">{!company.companyInfo.website}</apex:outputLink>
+		<apex:outputLabel value="Company Type" />
+		<apex:outputText value="{!company.companyInfo.companyType}" />
+		<apex:outputLabel value="Address" />
+		<apex:outputText value="{!company.companyInfo.address}" escape="false" />
+		<apex:outputLabel value="Incorporation Date" />
+		<apex:outputText value="{!company.companyInfo.companyRegistrationDate}" />
+		<apex:outputLabel value="SIC" />
+		<apex:outputText value="{!company.companyInfo.sicCode}" />
+		<apex:outputLabel value="Outstanding CCJs" />
+		<apex:outputText value="{!company.ccjMatched}" />
+		<apex:outputLabel value="SIC Group" />
+		<apex:outputText value="{!company.companyInfo.sicGroup}" />
+		<apex:outputLabel value="Number Of Writs" />
+		<apex:outputText value="{!company.ccjWrits}" />
+		<apex:outputLabel value="SIC Description" />
+		<apex:outputText value="{!company.companyInfo.sicDescription}" />
+		<apex:outputLabel value="Mortgages Outstanding" />
+		<apex:outputText value="{!company.mortgageOutstanding}" />
+		<apex:outputLabel value="Principal Activity" />
+		<apex:outputText value="{!company.principalActivity}" />
+		<apex:outputLabel value="Mortgages Satisfied" />
+		<apex:outputText value="{!company.mortgageSatisfied}" />
+	</apex:panelGrid>
+	<apex:outputPanel layout="block" styleClass="noPageBreak">
+		<h3>Rating &amp; Limit History</h3>
+		<apex:outputPanel layout="block" rendered="{!company.ratingLimits.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+		<apex:dataTable value="{!company.ratingLimits}" var="rl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0" rendered="{!company.ratingLimits.size>0}">
+			<apex:column value="{!rl.label}" headerValue="Date"/>
+			<apex:column headerValue="Creditsafe Rating">
+				<apex:outputText value="{!rl.creditRating}" escape="false"/>
+			</apex:column>
+			<apex:column value="{!rl.creditLimit}" headerValue="Credit Limit" headerClass="rightAlign" styleClass="rightAlign"/>
+		</apex:dataTable>
+	</apex:outputPanel>
+	<apex:outputPanel layout="block" styleClass="noPageBreak">
+		<h3>Trading Addresses</h3>
+		<apex:outputPanel layout="block" rendered="{!company.tradingAddresses.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+		<apex:dataTable value="{!company.tradingAddresses}" var="ta" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0" rendered="{!company.tradingAddresses.size>0}">
+			<apex:column value="{!ta.address}" headerValue="Address"/>
+			<apex:column value="{!ta.telephone}" headerValue="Telephone" headerClass="rightAlign" styleClass="rightAlign"/>
+			<apex:column value="{!ta.registeredWithTPS}" headerValue="TPS" headerClass="rightAlign" styleClass="rightAlign"/>
+		</apex:dataTable>
+	</apex:outputPanel>
+	<apex:outputPanel layout="block" styleClass="noPageBreak">
+		<h3>Previous Names</h3>
+		<apex:outputPanel layout="block" rendered="{!company.previousNames.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+		<apex:dataTable value="{!company.previousNames}" var="p" rendered="{!company.previousNames.size>0}" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+			<apex:column value="{!p.previousNameDate}" headerValue="Date"/>
+			<apex:column value="{!p.previousName}" headerValue="Previous Name"/>
+		</apex:dataTable>
+	</apex:outputPanel>
+	<apex:outputPanel layout="block" styleClass="noPageBreak">
+		<h3>Key Financials</h3>
+		<apex:outputPanel layout="block" rendered="{!company.financialDetails.summary.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+		<apex:dataTable value="{!company.financialDetails.summary}" var="kf" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0" rendered="{!company.financialDetails.summary.size>0}">
+			<apex:column value="{!kf.summaryYear}" headerValue="Year to Date" />
+			<apex:column value="{!kf.turnover}" headerValue="Turnover" headerClass="rightAlign" styleClass="rightAlign" />
+			<apex:column value="{!kf.pretaxProfit}" headerValue="Pre Tax Profit" headerClass="rightAlign" styleClass="rightAlign" />
+			<apex:column value="{!kf.shareholderFunds}" headerValue="Shareholder Funds" headerClass="rightAlign" styleClass="rightAlign" />
+			<apex:column value="{!kf.numberOfEmployees}" headerValue="Employees" headerClass="rightAlign" styleClass="rightAlign" />
+		</apex:dataTable>
+	</apex:outputPanel>
+	<apex:outputPanel layout="block" styleClass="noPageBreak">
+		<h3>Record Of CCJ Payments (Last 3 Years)</h3>
+		<apex:outputPanel layout="block" rendered="{!company.recordOfPayments.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+		<apex:dataTable value="{!company.recordOfPayments}" var="rop" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0" rendered="{!company.recordOfPayments.size>0}">
+			<apex:column value="{!rop.ccjCaseNumber}" headerValue="Case Number"/>
+			<apex:column value="{!rop.ccjDate}" headerValue="Date"/>
+			<apex:column value="{!rop.ccjCourt}" headerValue="Court"/>
+			<apex:column value="{!rop.ccjDatePaid}" headerValue="Date Paid"/>
+			<apex:column value="{!rop.ccjStatus}" headerValue="Status"/>
+			<apex:column value="£ {!rop.ccjAmount}" headerValue="Amount" headerClass="rightAlign" styleClass="rightAlign" />
+		</apex:dataTable>
+	</apex:outputPanel>
+	
+	<apex:outputPanel layout="block" styleClass="pageBreakBefore" rendered="{!renderDirectorsShareholders}">
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Top 20 Shareholders</h3>
+			<apex:outputPanel layout="block" rendered="{!company.shareholders.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+			<apex:dataTable value="{!company.shareholders}" var="sh" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0" rendered="{!company.shareholders.size>0}">
+				<apex:column value="{!sh.name}" headerValue="Shareholder Name"/>
+				<apex:column value="{!sh.amount}" headerValue="Number of Shares"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+		<apex:repeat value="{!company.directors}" var="d">
+			<apex:outputPanel layout="block" styleClass="noPageBreak">
+				<h3>{!d.function} - {!d.title} {!d.name}</h3>
+				<apex:panelGrid columns="4" width="100%" columnClasses="labelCol,dataCol">
+					<apex:outputLabel value="Present Appointments" />
+					<apex:outputText value="{!d.totalDirectorships}" />
+					<apex:outputLabel value="Date Of Birth" />
+					<apex:outputText value="{!d.birthdate}" />
+					<apex:outputLabel value="Function" />
+					<apex:outputText value="{!d.function}" />
+					<apex:outputLabel value="Nationality" />
+					<apex:outputText value="{!d.nationality}" />
+				</apex:panelGrid>
+				<br/>
+				<apex:dataTable value="{!d.directorships}" var="ds" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0" rendered="{!d.directorships.size>=0}">
+					<apex:column value="{!ds.companyNumber}" headerValue="Company No."/>
+					<apex:column value="{!ds.companyName}" headerValue="Company Name"/>
+					<apex:column value="{!ds.companyStatus}" headerValue="Status"/>
+					<apex:column value="{!ds.function}" headerValue="Function"/>
+					<apex:column value="{!ds.appointedDate}" headerValue="Appointed Date"/>
+				</apex:dataTable>
+			</apex:outputPanel>
+		</apex:repeat>
+	</apex:outputPanel>
+	
+	<apex:outputPanel layout="block" styleClass="pageBreakBefore" rendered="{!renderFinancials}">
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Profit &amp; Loss</h3>
+			<apex:dataTable value="{!company.financialDetails.profitAndLossTable.tableLines}" var="fl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column headerValue="Annual Account">
+					<apex:outputText value="{!fl.label}" escape="false"/> 
+				</apex:column>
+				<apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.profitAndLossTable.headerYear1}" rendered="{!company.financialDetails.profitAndLossTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.profitAndLossTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear1}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.profitAndLossTable.headerYear2}" rendered="{!company.financialDetails.profitAndLossTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.profitAndLossTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear2}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.profitAndLossTable.headerYear3}" rendered="{!company.financialDetails.profitAndLossTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Balance Sheet</h3>
+			<apex:dataTable value="{!company.financialDetails.balanceSheetsTable.tableLines}" var="fl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column headerValue="Annual Account">
+					<apex:outputText value="{!fl.label}" escape="false"/> 
+				</apex:column>
+				<apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.balanceSheetsTable.headerYear1}" rendered="{!company.financialDetails.balanceSheetsTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.balanceSheetsTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear1}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.balanceSheetsTable.headerYear2}" rendered="{!company.financialDetails.balanceSheetsTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.balanceSheetsTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear2}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.balanceSheetsTable.headerYear3}" rendered="{!company.financialDetails.balanceSheetsTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Capital &amp; Reserves</h3>
+			<apex:dataTable value="{!company.financialDetails.capitalReservesTable.tableLines}" var="fl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column headerValue="Annual Account">
+					<apex:outputText value="{!fl.label}" escape="false"/> 
+				</apex:column>
+				<apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.capitalReservesTable.headerYear1}" rendered="{!company.financialDetails.capitalReservesTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.capitalReservesTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear1}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.capitalReservesTable.headerYear2}" rendered="{!company.financialDetails.capitalReservesTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.capitalReservesTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear2}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.capitalReservesTable.headerYear3}" rendered="{!company.financialDetails.capitalReservesTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Other Financial Items</h3>
+			<apex:dataTable value="{!company.financialDetails.otherTable.tableLines}" var="fl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column value="{!fl.label}" headerValue="Annual Account"/>
+				<apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.otherTable.headerYear1}" rendered="{!company.financialDetails.otherTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.otherTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear1}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.otherTable.headerYear2}" rendered="{!company.financialDetails.otherTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.otherTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear2}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.otherTable.headerYear3}" rendered="{!company.financialDetails.otherTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Cash Flow</h3>
+			<apex:dataTable value="{!company.financialDetails.cashFlowTable.tableLines}" var="fl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column value="{!fl.label}" headerValue="Annual Account"/>
+				<apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.cashFlowTable.headerYear1}" rendered="{!company.financialDetails.cashFlowTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.cashFlowTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear1}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.cashFlowTable.headerYear2}" rendered="{!company.financialDetails.cashFlowTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.cashFlowTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear2}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.cashFlowTable.headerYear3}" rendered="{!company.financialDetails.cashFlowTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Ratios</h3>
+			<apex:dataTable value="{!company.financialDetails.ratiosTable.tableLines}" var="fl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column value="{!fl.label}" headerValue="Annual Account"/>
+				<apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.ratiosTable.headerYear1}" rendered="{!company.financialDetails.ratiosTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.ratiosTable.headerYear2}" rendered="{!company.financialDetails.ratiosTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.ratiosTable.headerYear3}" rendered="{!company.financialDetails.ratiosTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Miscellaneous</h3>
+			<apex:panelGrid columns="4" width="100%" columnClasses="labelCol,dataCol">
+				<apex:outputLabel value="Auditors"/>
+				<apex:outputText value="{!company.financialDetails.auditors}"/>
+				<apex:outputLabel value="Bankers"/>
+				<apex:outputText value="{!company.financialDetails.bank}"/>
+				<apex:outputLabel value="Audit Qualification"/>
+				<apex:outputText value="{!company.financialDetails.auditComments}"/>
+				<apex:outputLabel value="Bank Branch Code"/>
+				<apex:outputText value="{!company.financialDetails.bankBranchCode}"/>
+			</apex:panelGrid>
+			<br />
+			<apex:dataTable value="{!company.financialDetails.miscTable.tableLines}" var="fl" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column value="{!fl.label}" headerValue="Annual Account"/>
+				<apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.miscTable.headerYear1}" rendered="{!company.financialDetails.miscTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.miscTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear1}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.miscTable.headerYear2}" rendered="{!company.financialDetails.miscTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+				<apex:column headerValue="(%)" rendered="{!company.financialDetails.miscTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+					<apex:outputText value="{!fl.changeYear2}" escape="false"/>
+				</apex:column>
+				<apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.miscTable.headerYear3}" rendered="{!company.financialDetails.miscTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+	</apex:outputPanel>
+	
+	<apex:outputPanel layout="block" styleClass="pageBreakBefore" rendered="{!renderEventHistory}">
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Status History</h3>
+			<apex:outputPanel layout="block" rendered="{!company.statusHist.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+			<apex:dataTable value="{!company.statusHist}" var="sh" rendered="{!company.statusHist.size>0}" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column value="{!sh.statusDate}" headerValue="Date"/>
+				<apex:column value="{!sh.statusDetail}" headerValue="Status"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Event History</h3>
+			<apex:outputPanel layout="block" rendered="{!company.events.size<=0}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+			<apex:dataTable value="{!company.events}" var="ev" rendered="{!company.events.size>0}" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column value="{!ev.eventDate}" headerValue="Date"/>
+				<apex:column value="{!ev.eventDetail}" headerValue="Event"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+	</apex:outputPanel>
+	
+	<apex:outputPanel layout="block" styleClass="pageBreakBefore" rendered="{!renderGroupStructure}">
+		<apex:outputPanel layout="block" styleClass="noPageBreak">
+			<h3>Group Structure</h3>
+			<apex:outputPanel layout="block" rendered="{!company.companyStructure.companyName==null}">&nbsp;&nbsp;No results to display</apex:outputPanel>
+			<apex:panelGrid columns="4" width="100%" rendered="{!company.companyStructure.companyName!=null}" columnClasses="labelCol,dataCol">
+				<apex:outputLabel value="Ultimate Parent" />
+				<apex:outputText value="{!company.companyStructure.companyName}" />
+				<apex:outputLabel value="" />
+				<apex:outputText value="" />
+				<apex:outputLabel value="Companies in Group" />
+				<apex:outputText value="{!company.companyStructure.numCompaniesInGroup}" />
+			</apex:panelGrid>
+			<br />
+			<apex:dataTable value="{!company.companyStructure.groups}" var="grp" rendered="{!company.companyStructure.companyName!=null}" rowClasses="odd,even" styleClass="relList" align="center" cellspacing="0">
+				<apex:column headerValue="Company Name" style="padding:2px;">
+					<apex:outputText value="{!grp.companyNamePrint}" escape="false"/> 
+				</apex:column>
+				<apex:column value="{!grp.companyNumber}" headerValue="Company No."/>
+				<apex:column value="{!grp.latestAnnualAccount}" headerValue="Latest Accounts"/>
+			</apex:dataTable>
+		</apex:outputPanel>
+	</apex:outputPanel>
+	
+	<apex:outputPanel layout="block" styleClass="pageBreakBefore" rendered="{!renderMortgages}">
+		<apex:outputPanel layout="block" styleClass="noPageBreak" rendered="{!company.mortgages.size<=0}">
+			<h3>Mortgages</h3>
+			<apex:outputPanel layout="block">&nbsp;&nbsp;No results to display</apex:outputPanel>
+		</apex:outputPanel>	
+		<apex:repeat value="{!company.mortgages}" var="m">
+			<apex:outputPanel layout="block" styleClass="noPageBreak">
+				<h3>{!m.status} Mortgage - Registered {!m.registeredDate}</h3>
+				<apex:panelGrid columns="4" width="100%" columnClasses="labelCol,dataCol">
+					<apex:outputLabel value="Mortgage Type" />
+					<apex:outputText value="{!m.mortgageType}" />
+					<apex:outputLabel value="Date Charge Created" />
+					<apex:outputText value="{!m.createdDate}" />
+					<apex:outputLabel value="Status" />
+					<apex:outputText value="{!m.status}" />
+					<apex:outputLabel value="Date Charge Satisfied" />
+					<apex:outputText value="{!m.satisfiedDate}" />
+				</apex:panelGrid>
+				<apex:panelGrid columns="2" width="100%" columnClasses="labelCol,dataColWide">
+					<apex:outputLabel value="Person(s) Entitled" />
+					<apex:outputText value="{!m.personsEntitled}" />
+					<apex:outputLabel value="Amount Secured" />
+					<apex:outputText value="{!m.amount}" />
+					<apex:outputLabel value="Details" />
+					<apex:outputText value="{!m.detail}" />
+				</apex:panelGrid>
+			</apex:outputPanel>
+		</apex:repeat>
+	</apex:outputPanel>
+	
+</apex:page>

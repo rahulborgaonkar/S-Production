@@ -1,0 +1,36 @@
+<apex:page standardController="opportunity" extensions="trialOrderStartController" action="{!trialOrderInit}">
+    <apex:form >
+        <apex:outputpanel >
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <center><span style="font-size:22px;font-weight:bold">
+                Trial Order is processed now, Please close this window.
+                </span></center>
+                <br/>
+                <center>
+                <apex:commandbutton value="Close" action="{!close}" rerender="winclose"/>
+                </center>
+        </apex:outputpanel>
+    </apex:form>
+
+    <script type="text/javascript">
+        self.resizeTo(400, 400);
+    </script>
+
+    <script type="text/javascript">
+        function closewindow()
+        {
+            return this.parent.parent.window.close();
+        }
+    </script>
+    <apex:outputpanel id="winclose">
+        <apex:outputpanel rendered="{!close}">
+            <script type="text/javascript">
+                closewindow();
+            </script>
+        </apex:outputpanel>
+    </apex:outputpanel>
+</apex:page>

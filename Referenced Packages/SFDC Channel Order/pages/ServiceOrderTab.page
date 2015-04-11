@@ -1,0 +1,194 @@
+<apex:page controller="CHANNEL_ORDERS.ServiceOrderTabController" tabStyle="Orders__tab" sidebar="false">
+	
+	<apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/external/jquery.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/external/bootstrap.min.js')}" />
+	<apex:includeScript value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'js/coaui.js')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'css/coaui.css')}" />
+	<apex:stylesheet value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'css/external/bootstrap.css')}" />
+
+	<apex:form id="svcOrderTabForm" styleClass="OrderTab">
+		<apex:actionFunction action="{!refreshTableData}" name="refreshTableDataJS" rerender="pbsDataTable" />
+		
+		<apex:actionFunction action="{!refreshTableData}" name="pageBtnNav" rerender="pbsDataTable">
+			<apex:param name="lookupvalue" assignTo="{!pageNum}" value="" />
+		</apex:actionFunction>
+		
+		<div id="formHeader">
+			<h1>
+				{!$Label.OrderUITitle_SFCOA}
+				<a id="infoToggle" class="infoToggle" data-content="{!$Label.OrderUI_HeaderSubtitle}" title="" data-toggle="popover" href="#" >
+					<apex:image styleClass="infoImg" value="{!URLFOR($Resource.CHANNEL_ORDERS__uilib, 'images/info.png')}" width="20px" height="18px"/>
+				</a>	
+			</h1>
+			<div class="formHeaderCntRight">
+				<a href="/apex/serviceordercreate" class="coa-btn-primary mediumBtn">{!$Label.OrderUIBtn_SubmitNewOrder}</a>
+			</div>
+		</div>
+	    	
+		<div id="wrap">
+			<apex:pageBlock id="pb0Tab">
+				<div id="orderSectionHeader">
+					<apex:pageBlockSection columns="2" id="pbs0">
+						<apex:pageBlockSectionItem id="pbsi0">
+							<apex:outputText value="{!$Label.channel_orders__OrderUITitle_MyOrders}" styleClass="orderSectionTitle" />
+						</apex:pageBlockSectionItem>
+						
+						<apex:pageBlockSectionItem id="pbsi1" dataStyleClass="customerSearch">
+							<apex:outputPanel >
+								<div class="searchboxWrap">
+									<div class="searchbox">
+										<apex:inputText value="{!searchStr}" id="custname" styleClass="searchboxInput" >
+								    		<c:Autocomplete input_id="{!$Component.custname}" lookup_id="{!$Component.pb0Tab.pbs0.pbsi1.customerlookup}" queryField="{!$ObjectType.CHANNEL_ORDERS__Customer__c.fields.CHANNEL_ORDERS__Customer_Company_Name__c.Name}" queryObj="{!$ObjectType.CHANNEL_ORDERS__Customer__c.Name}" />
+										</apex:inputText>
+										<apex:inputText value="{!customerId}" id="customerlookup" styleClass="hideInput" />
+										<a onclick="refreshTableDataJS();" class="autoPopDataBtn" ></a>
+									</div>
+								</div>
+								
+							</apex:outputPanel>
+						</apex:pageBlockSectionItem>
+					</apex:pageBlockSection>
+				</div>
+				
+				<div id="orderDataSection">
+					<apex:pageBlockSection id="pbsDataTable" columns="1" >
+						<apex:pageBlockSectionItem >
+							<apex:pageBlockTable value="{!orders}" var="so">
+							
+						    	<apex:column >
+						    		<apex:facet name="header">
+						    			<apex:commandLink value="{!$Label.channel_orders__OrderUI_OrderNum}" action="{!dataTableSort}">
+						    				<apex:param name="sortField" assignTo="{!sortField}" value="Name"/>
+						    			</apex:commandLink>
+						    		</apex:facet>
+						    		<apex:outputText value="{!so.Name}" />
+						    	</apex:column>
+						    	
+						    	<apex:column >
+						    		<apex:facet name="header">
+						    			<apex:commandLink value="{!$Label.channel_orders__OrderUI_CustomerName}" action="{!dataTableSort}">
+						    				<apex:param name="sortField" assignTo="{!sortField}" value="Full_Customer_Company_Name__c"/>
+						    			</apex:commandLink>
+						    		</apex:facet>
+						    		<apex:outputText value="{!so.CHANNEL_ORDERS__Full_Customer_Company_Name__c}"/>
+						    	</apex:column>
+						    	
+						    	<apex:column >
+						    		<apex:facet name="header">
+						    			<apex:commandLink value="{!$Label.channel_orders__OrderUI_OrgID}" action="{!dataTableSort}">
+						    				<apex:param name="sortField" assignTo="{!sortField}" value="Customer_Org_ID__c"/>
+						    			</apex:commandLink>
+						    		</apex:facet>
+						    		<apex:outputText value="{!so.CHANNEL_ORDERS__Customer_Org_ID__c}" />
+						    	</apex:column>
+						    	
+						    	<apex:column >
+						    		<apex:facet name="header">
+						    			<apex:commandLink value="{!$Label.channel_orders__OrderUI_ContractTitle}" action="{!dataTableSort}">
+						    				<apex:param name="sortField" assignTo="{!sortField}" value="Partner_Contract_Rules__r.Name"/>
+						    			</apex:commandLink>
+						    		</apex:facet>
+						    		<apex:outputText value="{!so.Partner_Contract_Rules__r.Name}" />
+						    	</apex:column>
+						    	
+						    	<apex:column >
+						    		<apex:facet name="header">
+						    			<apex:commandLink value="{!$Label.channel_orders__OrderUI_OrderStartDate}" action="{!dataTableSort}">
+						    				<apex:param name="sortField" assignTo="{!sortField}" value="Service_Start_Date__c"/>
+						    			</apex:commandLink>
+						    		</apex:facet>
+						    		<apex:outputField value="{!so.CHANNEL_ORDERS__Service_Start_Date__c}" />
+						    	</apex:column>
+						    	
+						    	<apex:column >
+						    		<apex:facet name="header">
+						    			<apex:commandLink value="{!$Label.channel_orders__OrderUI_OrderStatus}" action="{!dataTableSort}">
+						    				<apex:param name="sortField" assignTo="{!sortField}" value="Service_Order_Status__c"/>
+						    			</apex:commandLink>
+						    		</apex:facet>
+						    		<apex:outputText value="{!so.CHANNEL_ORDERS__Service_Order_Status__c}" />
+						    	</apex:column>
+						    	
+						    	<apex:column headerValue="{!$Label.channel_orders__OrderUI_Action}">
+						        	<apex:outputLink value="/apex/serviceordercreate?id={!so.Id}" rendered="{!so.CHANNEL_ORDERS__Service_Order_Status__c=='Draft' && so.CHANNEL_ORDERS__Created_with_new_COA__c}">{!$Label.channel_orders__OrderUI_Edit}</apex:outputLink>
+						        	<apex:outputLink value="/apex/serviceorderview?id={!so.Id}" rendered="{!so.CHANNEL_ORDERS__Service_Order_Status__c!='Draft'||so.CHANNEL_ORDERS__Created_with_new_COA__c == false}">{!$Label.channel_orders__OrderUI_View}</apex:outputLink>
+						    	</apex:column>
+						    	
+							</apex:pageBlockTable>
+						</apex:pageBlockSectionItem>
+						
+						<apex:pageBlockSectionItem dataStyleClass="paginationControls">
+							<apex:outputPanel >
+								<apex:commandLink value="" action="{!prev}" rendered="{!orderSSC.hasPrevious}" rerender="pbsDataTable" styleClass="paginationBtnLeft"/>
+								
+								<apex:repeat value="{!PageNums}" var="pn" >
+									<a onclick="pageBtnNav('{!pn}');" class="{!IF(pn == pageNumber,'currentPage','navPage')}" >{!pn}</a>
+								</apex:repeat>
+								
+								<apex:commandLink value="" action="{!next}" rendered="{!orderSSC.hasNext}" rerender="pbsDataTable" styleClass="paginationBtnRight"/>
+							</apex:outputPanel>
+						</apex:pageBlockSectionItem>
+					</apex:pageBlockSection>
+				</div>
+			</apex:pageBlock>
+		</div>
+	</apex:form>
+
+	<script type="text/javascript">
+		var $jk = jQuery.noConflict();
+		
+		$jk(document).ready(function() {
+			var def_value = '{!$Label.OrderUI_SearchMsg}';
+			var sbInput = $jk('.searchboxInput');
+			
+			//onload setup of searchbox
+			sbInput.val(def_value);
+			sbInput.addClass('searchboxMsg');
+		
+			sbInput.focus(function(){
+				$jk('.searchbox').addClass('searchboxFocus');
+				
+				if(sbInput.val() == def_value ){
+					sbInput.val('');
+					sbInput.removeClass('searchboxMsg');
+				}
+					
+			}).focusout(function(){
+				$jk('.searchbox').removeClass('searchboxFocus');
+				
+				if(sbInput.val().length == 0 ){
+					sbInput.val(def_value);
+					sbInput.addClass('searchboxMsg');
+				}
+				
+			});
+			
+			//this function makes sure we clean searchbox hidden input id when changing search parameters
+			$jk('.searchboxInput').bind('keyup', function() {
+				if($jk(this).val() == ''){
+					$jk('.hideInput').val('');
+					$jk('.searchboxReset').remove();
+				}else if($jk('.searchboxReset').length == 0 ){
+					$jk('.searchboxWrap').append('<div class="searchboxReset"><a onclick="coa.searchboxReset();"></a></div>');
+				}
+			});
+			
+			//bootstap, controls info popover
+			$jk('#infoToggle').popover('hide');
+			
+			//makes search component execute on enter
+			$jk('.searchboxInput').bind('keydown', function(e){
+				if(e.keyCode === $jk.ui.keyCode.ENTER ){
+					$jk(this).blur();
+					refreshTableDataJS();
+				}
+			});
+						
+		});
+		
+		coa.searchboxReset.SearchMsg = '{!$Label.OrderUI_SearchMsg}';
+		
+		//this prevents first input focus on page load
+		function setFocusOnLoad() {} 
+	</script>
+</apex:page>

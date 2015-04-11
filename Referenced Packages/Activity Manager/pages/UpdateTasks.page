@@ -1,0 +1,28 @@
+<apex:page id="pg" controller="activities.UpdateTasksController">
+  
+    <apex:sectionHeader title="Task" subtitle="Mass Update Tasks" help="http://VersatileCapitalist.com"/>
+    <style>
+        .requiredBlock{ 
+            display:none;
+        }
+    </style>
+    <apex:outputPanel id="error" >
+        <apex:pageMessages />
+    </apex:outputPanel>
+   <apex:actionStatus startText="Processing..." id="processing" startStyle="color:red;font-weight:bold"/>
+    <apex:form id="frm">
+        <apex:pageBlock title="Provide Value to Update Field(s)" id="pb">
+           <apex:pageBlockSection id="pbsection">
+                <apex:inputField id="date" value="{!taskObj.Activitydate}" required="false"/>
+                <apex:inputField id="status" value="{!taskObj.Status}"  required="false"/>
+                <apex:inputField value="{!taskObj.ownerId}"  required="false"/>
+                <apex:inputField value="{!taskObj.Subject}"  required="false"/>
+           </apex:pageBlockSection>
+           <apex:pageBlockButtons location="bottom" >
+               <apex:commandButton value="Submit" action="{!modifyDate}" disabled="{!isError}" status="processing" rerender="pb,error,scriptPanel" />
+               <apex:commandButton value="Cancel" action="{!cancel}" immediate="true"/>
+           </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+  
+</apex:page>

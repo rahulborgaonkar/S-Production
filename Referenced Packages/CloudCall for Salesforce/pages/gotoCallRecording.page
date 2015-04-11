@@ -1,0 +1,242 @@
+<apex:page controller="synety.gotoCallRecordingController" action="{!init}" showHeader="false" sidebar="false"
+standardStylesheets="false"
+>
+  <html>
+  <head>
+
+    <title>SYNETY: Call Recording</title>
+<!--
+    <style>
+
+    audio {
+        display: block;
+        width: 300px;
+        height: 30px;
+        padding: 0.5em;
+        border: medium solid gray;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        position: absolute;
+        
+    }
+    
+    </style>
+-->
+
+<link href="{!URLFOR($Resource.jPlayer,'skin/blue.monday/jplayer.blue.monday.css')}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="{!URLFOR($Resource.jPlayer,'js/jquery.jplayer.min.js')}"></script>
+
+  </head>
+  <body style="font-family: Arial,Helvetica,sans-serif;color: #222;font-size: 24px">
+      <apex:outputLabel rendered="{!not(isAvailable)}">Call recording is NOT available for this activity<br/></apex:outputLabel>
+      <apex:outputpanel rendered="{!NOT(isEnabled)}">
+          Call Recording has NOT been enabled for you<br/>
+          To have Call Recording enabled please visit <a href="https://www.synety.com">www.synety.com</a><br/>
+      </apex:outputpanel>
+      
+      <apex:outputLabel rendered="{!isAvailable && isEnabled}">
+          <script type="text/javascript">
+          	
+          	var xmlhttp;
+			var url = '{!url}&type=mp3&account={!account}';
+			var is_xdr = false;
+            function getMP3File()
+            {
+                
+                if(window.XDomainRequest) 
+                {
+                	console.log('1');
+                	xmlhttp = new XDomainRequest();
+                	is_xdr = true;
+                	
+                	xmlhttp.onload=response_loaded;
+                	xmlhttp.onerror = response_error;
+               	}
+			    else if (window.XMLHttpRequest) 
+			    {	
+			    	console.log('2');
+			    	xmlhttp = new XMLHttpRequest(); 
+			    	
+			    	xmlhttp.onreadystatechange=response_loaded;
+			    }   
+			    else 
+			    { 
+			    	console.log('3');
+			    	xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+			    	
+			    	xmlhttp.onreadystatechange=response_loaded; 
+			    }
+                
+                xmlhttp.open("GET",url,true);
+                console.log('setting AJAX request');
+                xmlhttp.send();
+            }
+            
+            function response_error()
+            {
+            	alert("Error executing request or You are not authorised to retrieve this call recording");
+            	window.close();
+            }
+            
+            function response_loaded()
+            {
+            	if (is_xdr || (xmlhttp.readyState==4 && xmlhttp.status==200))
+                {
+                    //document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+                    if("{!doPlay}" == "false")
+                        document.getElementById("mainFrame").src = url;
+                    else
+                    {
+                        //document.getElementById("audioSource").src = url;
+                        //document.getElementById("audioPlayer").load();
+                        //document.getElementById("audioPlayer").width="200px";
+                        var audioHTML = '';
+                        var contentType;
+                        if(is_xdr)
+                        	contentType = xmlhttp.contentType;
+                        else
+                        	contentType = xmlhttp.getResponseHeader('content-type');
+                        	 
+                        if(contentType == 'audio/wav')
+                        {
+                            //audioHTML = '<embed src="'+url+'" hidden="false" autostart="true">';
+                            //audioHTML = '<audio controls="controls" autoplay="autoplay"><source src="'+url+'" type="audio/wav" /></audio>';
+                            //audioHTML = 'There is no MP3 file for this call yet. Please check back later or <a href="'+url+'">click here</a> to download the recording file in currently available format.';
+                            
+                            $("#jquery_jplayer_1").jPlayer({
+								ready: function () {
+									$(this).jPlayer("setMedia", {
+										wav:url
+									});
+								},
+								swfPath: "js",
+								supplied: "wav",
+								wmode: "window",
+								smoothPlayBar: true,
+								keyEnabled: true,
+								size: {
+			                         width: "500px",
+			                         height: "100px"
+			                    }
+							});
+							document.getElementById("divAudioPlayer").style.display = "block";
+                        }
+                        else if(contentType == 'audio/mpeg')
+                        {           
+                            //audioHTML = '<audio controls="controls" autoplay="autoplay"><source src="'+url+'" type="audio/mpeg" /></audio>';
+	                            
+                            $("#jquery_jplayer_1").jPlayer({
+								ready: function () {
+									$(this).jPlayer("setMedia", {
+										mp3:url
+									});
+								},
+								swfPath: "js",
+								supplied: "mp3",
+								wmode: "window",
+								smoothPlayBar: true,
+								keyEnabled: true
+							});
+						
+							document.getElementById("divAudioPlayer").style.display = "block";
+                       	}
+                        else
+                        {
+                        	
+                           	alert(xmlhttp.responseText);
+                           	window.close();
+                        }
+                        //document.getElementById("divAudioPlayer").innerHTML = audioHTML;
+                    }
+                    //window.close();
+                }
+                else if (xmlhttp.readyState==4)
+                {
+                    //alert(xmlhttp.responseText);
+                    var responseJSON = JSON.parse(xmlhttp.responseText);
+                    alert(responseJSON.errorMessage);
+                    window.close();
+                }
+            }
+          </script>
+          <br /><b>Please wait while call recording loads...</b><br /><br />          
+          <apex:outputpanel rendered="{!doPlay}">
+          	<!--
+          	<div id="divAudioPlayer">
+          	</div>
+          	--> 
+            <div id="divAudioPlayer" style="display:none;">
+            	
+            	<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+
+				<div id="jp_container_1" class="jp-audio">
+					<div class="jp-type-single">
+						<div class="jp-gui jp-interface">
+							<ul class="jp-controls">
+								<li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+								<li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+								<li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+								<li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+								<li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+								<li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+							</ul>
+							<div class="jp-progress">
+								<div class="jp-seek-bar">
+									<div class="jp-play-bar"></div>
+								</div>
+							</div>
+							<div class="jp-volume-bar">
+								<div class="jp-volume-bar-value"></div>
+							</div>
+							<div class="jp-time-holder">
+								<div class="jp-current-time"></div>
+								<div class="jp-duration"></div>
+		
+								<ul class="jp-toggles">
+									<li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+									<li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="jp-title">
+							<ul>
+								<li id="title"></li>
+							</ul>
+						</div>
+						<div class="jp-no-solution">
+							<span>Update Required</span>
+							To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+						</div>
+					</div>
+				</div>
+            </div>   
+			
+			 
+          </apex:outputpanel>
+          <apex:outputpanel rendered="{!not(doPlay)}">
+            <iframe id="mainFrame" width="1" height="1" frameborder="0"></iframe>
+          </apex:outputpanel>
+          <script>getMP3File();</script>
+          <!-- 
+          <br />
+          <a href='javascript:document.getElementById("divAudioPlayer");'>hide</a>
+           -->
+           
+        <script type="text/javascript">
+	    	try
+	    	{
+		    	self.resizeTo(500, 400);
+		    	self.moveTo(50,10);
+				self.focus();
+			}
+			catch(ex)
+			{
+			}
+			//alert(document.body.style.zoom.toString());
+			
+		</script>
+      </apex:outputLabel>
+  </body>
+  </html>
+</apex:page>

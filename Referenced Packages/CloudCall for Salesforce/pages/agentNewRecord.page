@@ -1,0 +1,27 @@
+<apex:page showHeader="false" sidebar="false" controller="synety.ajaxCall" action="{!initNewRecord}">
+
+<head>
+
+<script type="text/javascript">
+var newId = "{!$CurrentPage.parameters.newid}";
+var type = "{!$CurrentPage.parameters.type}";
+var newName = "{!recordName}";
+if(newId == "")
+    alert("Error: An unexpected error occurred while processing request. Please try searching for the record or try again later.");
+else
+{
+    //alert(type+":"+newId);
+    
+    window.opener.document.getElementById("pg:frm:"+type).value=newName;
+    window.opener.document.getElementById("pg:frm:"+type+"_lkid").value=newId;
+}    
+window.close(); 
+
+
+</script>
+
+</head>
+<body>
+</body>
+
+</apex:page>

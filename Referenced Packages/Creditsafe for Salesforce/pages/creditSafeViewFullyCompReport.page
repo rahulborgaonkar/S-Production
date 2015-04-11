@@ -1,0 +1,464 @@
+<apex:page id="thePage" controller="bottomline.creditSafeView" tabStyle="creditsafeTab__tab" action="{!logReportView}">
+    <style>
+        .rightAlign { text-align:right; width:120px; }
+        .tree0 { width: 15px; background-image: url({!URLFOR($Resource.bottomline__CreditsafeResource,'tree0.png')}); background-repeat: no-repeat; }
+        .tree1 { width: 15px; background-image: url({!URLFOR($Resource.bottomline__CreditsafeResource,'tree1.png')}); background-repeat: no-repeat; }
+        .tree2 { width: 15px; background-image: url({!URLFOR($Resource.bottomline__CreditsafeResource,'tree2.png')}); background-repeat: no-repeat; }
+        .tree3 { width: 15px; background-image: url({!URLFOR($Resource.bottomline__CreditsafeResource,'tree3.png')}); background-repeat: no-repeat; }
+        .contentClass     { font-size: 100%; background-color:#fff; }
+        .activeTabClass   { background-color: rgb(209, 45, 51); color: white; background-image: none; font-size: 100%; font-weight: bold; }
+        .inactiveTabClass { background-color: lightgrey; color: black; background-image: none; font-size: 100%; }
+        a.btnLink       { margin-left:10px; font-size:91%; color:#015ba7; text-decoration:none; }
+        a.btnLink:hover { text-decoration:underline; }
+    </style>
+    <apex:outputPanel layout="block" styleClass="bPageTitle">
+		<apex:outputPanel layout="block" styleClass="ptBody secondaryPalette brandSecondaryBrd">
+			<apex:outputPanel layout="block" styleClass="content">
+				<apex:image style="background-position:0px 0px; background-image:url({!URLFOR($Resource.bottomline__CreditsafeResource,'cs.png')});" styleClass="pageTitleIcon" value="/s.gif"/>
+				<h1 class="pageType">Creditsafe</h1>
+				<apex:outputPanel styleClass="titleSeparatingColon"/>
+				<h2 class="pageDescription">{!if(company.companyName=='','Company Report',company.companyName)}</h2>
+			</apex:outputPanel>
+			<apex:outputPanel layout="block" styleClass="links">
+				<apex:outputLink value="http://www.creditsafeuk.com" target="_blank">
+					<apex:image value="{!URLFOR($Resource.bottomline__CreditsafeResource,'creditSafeSmall.png')}"/>
+				</apex:outputLink>
+			</apex:outputPanel>
+		</apex:outputPanel>
+	</apex:outputPanel>
+    <apex:form id="theForm">
+    <apex:pageMessages />
+    <apex:pageBlock mode="maindetail" rendered="{!renderPage}">
+        <apex:pageBlockButtons location="bottom">
+            <apex:commandButton action="{!updateAccount}" value="Save" rendered="{!renderSaveAcc}" />
+            <apex:commandButton action="{!updateLead}" value="Save" rendered="{!renderSaveLead}" />
+            <apex:outputLink value="/{!accountId}" styleClass="btnLink" rendered="{!renderSaveAcc}">Cancel</apex:outputLink>
+            <apex:outputLink value="/{!leadId}" styleClass="btnLink" rendered="{!renderSaveLead}">Cancel</apex:outputLink>
+        </apex:pageBlockButtons>
+        <apex:facet name="header">
+            <apex:panelGrid columns="3" columnClasses="pbTitle,pbHelp">
+                <h2 class="mainTitle" style="white-space:nowrap">Company Information</h2>
+                <apex:outputPanel styleClass="help" style="vertical-align:baseline;">
+                    <apex:outputPanel styleClass="accountMru" rendered="{!renderCreateAcc}">
+                        <apex:image styleClass="mruIcon" url="/s.gif"/>
+                    </apex:outputPanel>
+                    <apex:outputLink style="padding-left:4px;" styleClass="linkCol" target="_blank" value="/apex/creditSafeNewAccount?{!company.companyInfo.shipAddressURL}{!accCreateURL}" rendered="{!renderCreateAcc}">
+                        <apex:outputPanel styleClass="linkSpan">Create an Account</apex:outputPanel>
+                    </apex:outputLink>
+                    <apex:image styleClass="mruIcon" value="{!URLFOR($Resource.bottomline__CreditsafeResource,'acrobat.png')}" rendered="{!renderAttachPDF}"/>
+                    <apex:outputLink style="padding-left:4px;" styleClass="linkCol" target="_blank" value="/apex/creditSafeNewAttachment?id={!parentId}&type=ltd&cn={!company.companyNumber}" rendered="{!renderAttachPDF}">
+                        <apex:outputPanel styleClass="linkSpan">Create PDF Attachment</apex:outputPanel>
+                    </apex:outputLink>
+                    <apex:image styleClass="mruIcon" value="{!URLFOR($Resource.bottomline__CreditsafeResource,'acrobat.png')}" rendered="{!renderAsPDF}"/>
+                    <apex:outputLink style="padding-left:4px;" styleClass="linkCol" target="_blank" value="/apex/creditSafePrintFullyCompReport?type=ltd&cn={!company.companyNumber}" rendered="{!renderAsPDF}">
+                        <apex:outputPanel styleClass="linkSpan">View as PDF</apex:outputPanel>
+                    </apex:outputLink>
+                </apex:outputPanel>
+            </apex:panelGrid>
+        </apex:facet>
+        <apex:pageBlockSection >
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Name" />
+                <apex:outputText value="{!company.companyName}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Creditsafe Rating" />
+                <apex:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                    <apex:image value="{!URLFOR($Resource.bottomline__CreditsafeResource,company.todaysRatingImg)}" style="margin:-2px 6px 0px 0px;"/>
+                    <apex:outputText value="{!company.todaysRating}" escape="false" style="padding:0px 6px 0px 0px;"/>
+                </apex:panelGrid>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Reg. Number" />
+                <apex:outputText value="{!company.companyNumber}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Credit Limit" />
+                <apex:outputText value="{!company.todaysLimit}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Telephone" />
+                <apex:outputText value="{!company.companyInfo.telephone}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Status" />
+                <apex:outputText value="{!company.companyInfo.companyStatus}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Website" />
+                <apex:outputLink value="http://{!company.companyInfo.website}" target="_blank">{!company.companyInfo.website}</apex:outputLink>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Company Type" />
+                <apex:outputText value="{!company.companyInfo.companyType}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Address" />
+                <apex:outputText value="{!company.companyInfo.address}" escape="false" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Incorporation Date" />
+                <apex:outputText value="{!company.companyInfo.companyRegistrationDate}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="SIC" />
+                <apex:outputText value="{!company.companyInfo.sicCode}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Outstanding CCJs" />
+                <apex:outputText value="{!company.ccjMatched}" /> 
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="SIC Group" />
+                <apex:outputText value="{!company.companyInfo.sicGroup}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Number Of Writs" />
+                <apex:outputText value="{!company.ccjWrits}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="SIC Description" />
+                <apex:outputText value="{!company.companyInfo.sicDescription}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Mortgages Outstanding" />
+                <apex:outputText value="{!company.mortgageOutstanding}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Principal Activity" />
+                <apex:outputText value="{!company.principalActivity}" />
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="Mortgages Satisfied" />
+                <apex:outputText value="{!company.mortgageSatisfied}" />
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    <apex:tabPanel id="mainPanel"  switchType="client" activeTabClass="activeTabClass" inactiveTabClass="inactiveTabClass" contentClass="contentClass" rendered="{!renderPage}">
+        <apex:tab label="Summary">
+            <apex:pageBlock title="Rating & Limit History">
+            	<c:creditSafeNoResults rendered="{!company.ratingLimits.size<=0}" />
+                <apex:pageBlockTable value="{!company.ratingLimits}" var="rl" rendered="{!company.ratingLimits.size>0}">
+                    <apex:column value="{!rl.label}" headerValue="Date"/>
+                    <apex:column headerValue="Creditsafe Rating">
+                        <apex:outputText value="{!rl.creditRating}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!rl.creditLimit}" headerValue="Credit Limit" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Trading Addresses">
+                <c:creditSafeNoResults rendered="{!company.tradingAddresses.size<=0}" />
+                <apex:pageBlockTable value="{!company.tradingAddresses}" var="ta" rendered="{!company.tradingAddresses.size>0}">
+                    <apex:column value="{!ta.address}" headerValue="Address"/>
+                    <apex:column value="{!ta.telephone}" headerValue="Telephone" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column value="{!ta.registeredWithTPS}" headerValue="TPS" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column styleClass="actionColumn" rendered="{!renderCreateAddr}" style="padding-left:20px;">
+	                    <apex:outputPanel styleClass="accountMru">
+	                        <apex:image styleClass="mruIcon" url="/s.gif"/>
+	                    </apex:outputPanel>
+	                    <apex:outputLink styleClass="actionLink" style="padding-left:4px; font-size:91%" target="_blank" value="/apex/creditSafeNewAccount?{!ta.shipAddressURL}{!accCreateURL}">Create an Account</apex:outputLink>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Previous Names">
+            	<c:creditSafeNoResults rendered="{!company.previousNames.size<=0}" />
+                <apex:pageBlockTable value="{!company.previousNames}" var="p" rendered="{!company.previousNames.size>0}">
+                    <apex:column value="{!p.previousNameDate}" headerValue="Date"/>
+                    <apex:column value="{!p.previousName}" headerValue="Previous Name"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Key Financials">
+            	<c:creditSafeNoResults rendered="{!company.financialDetails.summary.size<=0}" />
+                <apex:pageBlockTable value="{!company.financialDetails.summary}" var="kf" rendered="{!company.financialDetails.summary.size>0}">
+                    <apex:column value="{!kf.summaryYear}" headerValue="Year to Date" />
+                    <apex:column value="{!kf.turnover}" headerValue="Turnover" headerClass="rightAlign" styleClass="rightAlign" />
+                    <apex:column value="{!kf.pretaxProfit}" headerValue="Pre Tax Profit" headerClass="rightAlign" styleClass="rightAlign" />
+                    <apex:column value="{!kf.shareholderFunds}" headerValue="Shareholder Funds" headerClass="rightAlign" styleClass="rightAlign" />
+                    <apex:column value="{!kf.numberOfEmployees}" headerValue="Employees" headerClass="rightAlign" styleClass="rightAlign" />
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock >
+                <apex:facet name="header">
+                    <apex:panelGrid columns="1" columnClasses="pbTitle">
+                        <h2 class="mainTitle" style="white-space:nowrap">Record Of CCJ Payments (Last 3 Years)</h2>
+                    </apex:panelGrid>
+                </apex:facet>
+                <c:creditSafeNoResults rendered="{!company.recordOfPayments.size<=0}" />
+                <apex:pageBlockTable value="{!company.recordOfPayments}" var="rop" rendered="{!company.recordOfPayments.size>0}">
+                    <apex:column value="{!rop.ccjCaseNumber}" headerValue="Case Number"/>
+                    <apex:column value="{!rop.ccjDate}" headerValue="Date"/>
+                    <apex:column value="{!rop.ccjCourt}" headerValue="Court"/>
+                    <apex:column value="{!rop.ccjDatePaid}" headerValue="Date Paid"/>
+                    <apex:column value="{!rop.ccjStatus}" headerValue="Status"/>
+                    <apex:column value="£ {!rop.ccjAmount}" headerValue="Amount" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Directors & Shareholders">
+            <apex:pageBlock title="Top 20 Shareholders">
+            	<c:creditSafeNoResults rendered="{!company.shareholders.size<=0}" />
+                <apex:pageBlockTable value="{!company.shareholders}" var="sh" rendered="{!company.shareholders.size>0}">
+                    <apex:column value="{!sh.name}" headerValue="Shareholder Name"/>
+                    <apex:column value="{!sh.amount}" headerValue="Number of Shares"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:repeat value="{!company.directors}" var="d">
+                <apex:pageBlock >
+                    <apex:facet name="header">
+                        <apex:panelGrid columns="2" columnClasses="pbTitle,pbHelp">
+                            <h2 class="mainTitle" style="white-space:nowrap">{!d.function} - {!d.title} {!d.name}</h2>
+                            <apex:outputPanel styleClass="help" style="vertical-align:baseline;">
+                                <apex:outputPanel styleClass="contactMru" rendered="{!renderCreateCnt}">
+                                    <apex:image styleClass="mruIcon" url="/s.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputLink style="padding-left:4px;" styleClass="linkCol" target="_blank" value="/003/e?accid={!accountId}{!d.contactURL}" rendered="{!renderCreateCnt}">
+                                    <apex:outputPanel styleClass="linkSpan">Create a Contact</apex:outputPanel>
+                                </apex:outputLink>
+                                <apex:outputPanel styleClass="leadMru" rendered="{!renderCreateLead}">
+                                    <apex:image styleClass="mruIcon" url="/s.gif"/>
+                                </apex:outputPanel>
+                                <apex:outputLink style="padding-left:4px;" styleClass="linkCol" target="_blank" value="/apex/creditSafeNewLead?{!leadCreateURL}{!d.leadURL}" rendered="{!renderCreateLead}">
+                                    <apex:outputPanel styleClass="linkSpan">Create a Lead</apex:outputPanel>
+                                </apex:outputLink>
+                            </apex:outputPanel>
+                        </apex:panelGrid>
+                    </apex:facet>
+                    <apex:pageBlockSection >
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Present Appointments" />
+                            <apex:outputText value="{!d.totalDirectorships}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Date Of Birth" />
+                            <apex:outputText value="{!d.birthdate}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Function" />
+                            <apex:outputText value="{!d.function}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Nationality" />
+                            <apex:outputText value="{!d.nationality}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Address" />
+                            <apex:outputText value="{!d.address}" escape="false"/>
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockTable value="{!d.directorships}" var="ds" rendered="{!d.directorships.size>=0}">
+                    	<apex:column headerValue="Company No.">
+                    		<apex:outputLink value="/apex/creditSafeViewFullyCompReport?type=ltd&cn={!ds.companyNumber}">{!ds.companyNumber}</apex:outputLink>
+                    	</apex:column>
+                        <apex:column value="{!ds.companyName}" headerValue="Company Name"/>
+                        <apex:column value="{!ds.companyStatus}" headerValue="Status"/>
+                        <apex:column value="{!ds.function}" headerValue="Function"/>
+                        <apex:column value="{!ds.appointedDate}" headerValue="Appointed Date"/>
+                    </apex:pageBlockTable>
+                </apex:pageBlock>
+            </apex:repeat>
+        </apex:tab>
+        <apex:tab label="Financials">
+            <apex:pageBlock title="Profit & Loss">
+                <apex:pageBlockTable value="{!company.financialDetails.profitAndLossTable.tableLines}" var="fl">
+                    <apex:column headerValue="Annual Account">
+                        <apex:outputText value="{!fl.label}" escape="false"/> 
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.profitAndLossTable.headerYear1}" rendered="{!company.financialDetails.profitAndLossTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.profitAndLossTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear1}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.profitAndLossTable.headerYear2}" rendered="{!company.financialDetails.profitAndLossTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.profitAndLossTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear2}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.profitAndLossTable.headerYear3}" rendered="{!company.financialDetails.profitAndLossTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Balance Sheet">
+                <apex:pageBlockTable value="{!company.financialDetails.balanceSheetsTable.tableLines}" var="fl">
+                    <apex:column headerValue="Annual Account">
+                        <apex:outputText value="{!fl.label}" escape="false"/> 
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.balanceSheetsTable.headerYear1}" rendered="{!company.financialDetails.balanceSheetsTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.balanceSheetsTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear1}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.balanceSheetsTable.headerYear2}" rendered="{!company.financialDetails.balanceSheetsTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.balanceSheetsTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear2}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.balanceSheetsTable.headerYear3}" rendered="{!company.financialDetails.balanceSheetsTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Capital & Reserves">
+                <apex:pageBlockTable value="{!company.financialDetails.capitalReservesTable.tableLines}" var="fl">
+                    <apex:column headerValue="Annual Account">
+                        <apex:outputText value="{!fl.label}" escape="false"/> 
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.capitalReservesTable.headerYear1}" rendered="{!company.financialDetails.capitalReservesTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.capitalReservesTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear1}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.capitalReservesTable.headerYear2}" rendered="{!company.financialDetails.capitalReservesTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.capitalReservesTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear2}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.capitalReservesTable.headerYear3}" rendered="{!company.financialDetails.capitalReservesTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Other Financial Items">
+                <apex:pageBlockTable value="{!company.financialDetails.otherTable.tableLines}" var="fl">
+                    <apex:column value="{!fl.label}" headerValue="Annual Account"/>
+                    <apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.otherTable.headerYear1}" rendered="{!company.financialDetails.otherTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.otherTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear1}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.otherTable.headerYear2}" rendered="{!company.financialDetails.otherTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.otherTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear2}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.otherTable.headerYear3}" rendered="{!company.financialDetails.otherTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Cash Flow">
+                <apex:pageBlockTable value="{!company.financialDetails.cashFlowTable.tableLines}" var="fl">
+                    <apex:column value="{!fl.label}" headerValue="Annual Account"/>
+                    <apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.cashFlowTable.headerYear1}" rendered="{!company.financialDetails.cashFlowTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.cashFlowTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear1}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.cashFlowTable.headerYear2}" rendered="{!company.financialDetails.cashFlowTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.cashFlowTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear2}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.cashFlowTable.headerYear3}" rendered="{!company.financialDetails.cashFlowTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Ratios">
+                <apex:pageBlockTable value="{!company.financialDetails.ratiosTable.tableLines}" var="fl">
+                    <apex:column value="{!fl.label}" headerValue="Annual Account"/>
+                    <apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.ratiosTable.headerYear1}" rendered="{!company.financialDetails.ratiosTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.ratiosTable.headerYear2}" rendered="{!company.financialDetails.ratiosTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.ratiosTable.headerYear3}" rendered="{!company.financialDetails.ratiosTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Miscellaneous">
+                <apex:pageBlockSection columns="2">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Auditors"/>
+                        <apex:outputText value="{!company.financialDetails.auditors}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Bankers"/>
+                        <apex:outputText value="{!company.financialDetails.bank}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Audit Qualification"/>
+                        <apex:outputText value="{!company.financialDetails.auditComments}"/>
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Bank Branch Code"/>
+                        <apex:outputText value="{!company.financialDetails.bankBranchCode}"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:pageBlockTable value="{!company.financialDetails.miscTable.tableLines}" var="fl">
+                    <apex:column value="{!fl.label}" headerValue="Annual Account"/>
+                    <apex:column value="{!fl.valueYear1}" headerValue="{!company.financialDetails.miscTable.headerYear1}" rendered="{!company.financialDetails.miscTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.miscTable.renderYear1}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear1}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear2}" headerValue="{!company.financialDetails.miscTable.headerYear2}" rendered="{!company.financialDetails.miscTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign"/>
+                    <apex:column headerValue="(%)" rendered="{!company.financialDetails.miscTable.renderYear2}" headerClass="rightAlign" styleClass="rightAlign">
+                        <apex:outputText value="{!fl.changeYear2}" escape="false"/>
+                    </apex:column>
+                    <apex:column value="{!fl.valueYear3}" headerValue="{!company.financialDetails.miscTable.headerYear3}" rendered="{!company.financialDetails.miscTable.renderYear3}" headerClass="rightAlign" styleClass="rightAlign"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Event History">
+            <apex:pageBlock title="Status History">
+            	<c:creditSafeNoResults rendered="{!company.statusHist.size<=0}" />
+                <apex:pageBlockTable value="{!company.statusHist}" var="sh" rendered="{!company.statusHist.size>0}">
+                    <apex:column value="{!sh.statusDate}" headerValue="Date"/>
+                    <apex:column value="{!sh.statusDetail}" headerValue="Status"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+            <apex:pageBlock title="Event History">
+            	<c:creditSafeNoResults rendered="{!company.events.size<=0}" />
+                <apex:pageBlockTable value="{!company.events}" var="ev" rendered="{!company.events.size>0}">
+                    <apex:column value="{!ev.eventDate}" headerValue="Date"/>
+                    <apex:column value="{!ev.eventDetail}" headerValue="Event"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Group Structure">
+            <apex:pageBlock title="Group Structure">
+            	<c:creditSafeNoResults rendered="{!company.companyStructure.companyName==null}" />
+                <apex:pageBlockSection columns="1" rendered="{!company.companyStructure.companyName!=null}">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Ultimate Parent" />
+                        <apex:outputText value="{!company.companyStructure.companyName}" />
+                    </apex:pageBlockSectionItem>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="Companies in Group" />
+                        <apex:outputText value="{!company.companyStructure.numCompaniesInGroup}" />
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+                <apex:pageBlockTable value="{!company.companyStructure.groups}" var="grp" rendered="{!company.companyStructure.companyName!=null}">
+                    <apex:column headerValue="Company Name">
+                        <apex:outputText value="{!grp.companyName}" escape="false"/> 
+                    </apex:column>
+                    <apex:column value="{!grp.companyNumber}" headerValue="Company No."/>
+                    <apex:column value="{!grp.latestAnnualAccount}" headerValue="Latest Accounts"/>
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+        </apex:tab>
+        <apex:tab label="Mortgages">
+			<apex:pageBlock title="Mortgages"  rendered="{!company.mortgages.size<=0}">
+				<c:creditSafeNoResults />
+			</apex:pageBlock>
+            <apex:repeat value="{!company.mortgages}" var="m">
+                <apex:pageBlock >
+	                <apex:facet name="header">
+	                    <apex:panelGrid columns="1" columnClasses="pbTitle">
+	                        <h2 class="mainTitle" style="white-space:nowrap">{!m.status} Mortgage - Registered {!m.registeredDate}</h2>
+	                    </apex:panelGrid>
+	                </apex:facet>
+                    <apex:pageBlockSection >
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Mortgage Type" />
+                            <apex:outputText value="{!m.mortgageType}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Date Charge Created" />
+                            <apex:outputText value="{!m.createdDate}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Status" />
+                            <apex:outputText value="{!m.status}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Date Charge Satisfied" />
+                            <apex:outputText value="{!m.satisfiedDate}" />
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                    <apex:pageBlockSection columns="1">
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Person(s) Entitled" />
+                           	<apex:outputText value="{!m.personsEntitled}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Amount Secured" />
+                            <apex:outputText value="{!m.amount}" />
+                        </apex:pageBlockSectionItem>
+                        <apex:pageBlockSectionItem >
+                            <apex:outputLabel value="Details" />
+                            <apex:outputText value="{!m.detail}" />
+                        </apex:pageBlockSectionItem>
+                    </apex:pageBlockSection>
+                </apex:pageBlock>
+            </apex:repeat>
+        </apex:tab>
+    </apex:tabPanel>
+    </apex:form>
+</apex:page>

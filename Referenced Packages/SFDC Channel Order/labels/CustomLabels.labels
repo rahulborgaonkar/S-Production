@@ -1,0 +1,999 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>API_Authentication_Error</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Authentication Error</shortDescription>
+        <value>There was an error on authentication, please review your SFDC Integration Credentials and try again.</value>
+    </labels>
+    <labels>
+        <fullName>API_Callout_Error</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Callout Error</shortDescription>
+        <value>An unexpected error occurred, please contact salesforce.com.</value>
+    </labels>
+    <labels>
+        <fullName>API_Callout_Success</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Callout Success</shortDescription>
+        <value>Success</value>
+    </labels>
+    <labels>
+        <fullName>API_Callout_Timeout_Error</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Callout Timeout Error</shortDescription>
+        <value>COA transaction timed out. Please try again later.</value>
+    </labels>
+    <labels>
+        <fullName>API_Error_400</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Error 400</shortDescription>
+        <value>Bad Request, invalid URI or parameters.</value>
+    </labels>
+    <labels>
+        <fullName>API_Error_404</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Error 404</shortDescription>
+        <value>There are no associated Partner Product Catalogs for the selected Partner Channel Contract Term, please contact salesforce.com if you feel you have received this message in error.</value>
+    </labels>
+    <labels>
+        <fullName>API_Error_500</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Error 500</shortDescription>
+        <value>An error has occurred and the request couldn’t be completed. Please try again and contact salesforce.com if errors continue.</value>
+    </labels>
+    <labels>
+        <fullName>API_Error_OldOrder</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Error OldOrder</shortDescription>
+        <value>Invalid Order - Orders created with a previous COA version cannot be sent.</value>
+    </labels>
+    <labels>
+        <fullName>API_Error_OrderStartDate</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Error OrderStartDate</shortDescription>
+        <value>Invalid Service Start Date - Service Orders cannot be sent with Start Date for past dates.</value>
+    </labels>
+    <labels>
+        <fullName>API_Order_Unexpected_Error</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Order Unexpected Error</shortDescription>
+        <value>An unexpected error happened when processing the order.</value>
+    </labels>
+    <labels>
+        <fullName>API_UncommitedWork_Error</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API UncommitedWork Error</shortDescription>
+        <value>There was an error on callout caused by uncommited records. Please review your changes and try again.</value>
+    </labels>
+    <labels>
+        <fullName>API_Unknown_Error</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>API Unknown Error</shortDescription>
+        <value>An unknown error has occurred and the request couldn&apos;t be completed. Please try again and contact salesforce.com if errors continue.</value>
+    </labels>
+    <labels>
+        <fullName>Add_Invoice_Description</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>show a Invoice Description text field below the product name</shortDescription>
+        <value>Add Invoice Description</value>
+    </labels>
+    <labels>
+        <fullName>CancellationOrderDetailsError</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CancellationOrderDetailsError</shortDescription>
+        <value>Invalid Service Order - Cancellation Service Orders can not have Service Order Details.</value>
+    </labels>
+    <labels>
+        <fullName>Clone_This_Product</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Creates a new product based on an existing one</shortDescription>
+        <value>Clone This Product</value>
+    </labels>
+    <labels>
+        <fullName>CustomerPriceMonthUI</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CustomerPriceMonthUI</shortDescription>
+        <value>Total Customer Price/Month</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_AcceptedSFDCAgmt</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_AcceptedSFDCAgmt</shortDescription>
+        <value>Date Customer Accepted SFDC Service Agmt is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_CancellationTermsInvalid</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_CancellationTermsInvalid</shortDescription>
+        <value>Invalid Cancellation Terms - Cancellation Terms is a numeric field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_CancellationTermsRequired</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_CancellationTermsRequired</shortDescription>
+        <value>Cancellation Terms is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_City</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_City</shortDescription>
+        <value>City is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_CompanyName</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_CompanyName</shortDescription>
+        <value>Company Name is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_Contract</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_Contract</shortDescription>
+        <value>Contract is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_ContractLengthInvalid</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_ContractLengthInvalid</shortDescription>
+        <value>Invalid Contract Length - Contract Length is a numeric field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_ContractLengthRequired</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_ContractLengthRequired</shortDescription>
+        <value>Contract Length is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_Country</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_Country</shortDescription>
+        <value>Country is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_CustPriceInvalid</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_CustPriceInvalid</shortDescription>
+        <value>Invalid Customer Price - Customer Price is a numeric field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_CustPriceRequired</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_CustPriceRequired</shortDescription>
+        <value>Customer Price is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_DatePartnerReceiveOrder</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_DatePartnerReceiveOrder</shortDescription>
+        <value>Date Partner Received Customer Order is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_DuplicatedOrgId</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_DuplicatedOrgId</shortDescription>
+        <value>There is a different customer with same Org Id. Please enter a unique Org Id in the customer information section.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_NoCatalogForTheSelectedContractTerm</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No Catalog for the selected Contract Term</shortDescription>
+        <value>There are no associated Partner Product Catalogs for the selected Partner Channel Contract Term, please contact salesforce.com if you feel you have received this message in error.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_NoCustomerResults</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_NoCustomerResults</shortDescription>
+        <value>No results found - search by full Customer Name to locate your customer.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_NoCustomerResultsByOrgId</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_NoCustomerResultsByOrgId</shortDescription>
+        <value>No results found - search by full Org ID to locate your customer.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_OrderType</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_OrderType</shortDescription>
+        <value>Order Type is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_OrgId</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_OrgId</shortDescription>
+        <value>Org ID is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_RenewalTermsInvalid</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_RenewalTermsInvalid</shortDescription>
+        <value>Invalid Renewal Terms - Renewal Terms is a numeric field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_RenewalTermsRequired</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_RenewalTermsRequired</shortDescription>
+        <value>Renewal Terms is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_StartDate</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_StartDate</shortDescription>
+        <value>Service Start Date is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_State</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_State</shortDescription>
+        <value>State/Province/Region is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_Street</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_Street</shortDescription>
+        <value>Street is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_TotalQuantity</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_TotalQuantity</shortDescription>
+        <value>Total Quantity is required for at least one product when submitting an order. Quantity must be a positive value unless submitting a reduction order. Please verify product quantities.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_Zip</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_Zip</shortDescription>
+        <value>ZIP/Postal Code is a required field.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_Zip_CA</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_Zip_CA</shortDescription>
+        <value>&quot;ZIP/Postal Code for Canada must be in A1A 1A1 format.</value>
+    </labels>
+    <labels>
+        <fullName>ErrorMsg_Zip_USA</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ErrorMsg_Zip_USA</shortDescription>
+        <value>ZIP/Postal Code for US must be either 5 digits (99999) or ZIP+4 format (99999-9999).</value>
+    </labels>
+    <labels>
+        <fullName>None_selected</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>None selected</shortDescription>
+        <value>None selected</value>
+    </labels>
+    <labels>
+        <fullName>OrderUIBtn_Back</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUIBtn_Back</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
+        <fullName>OrderUIBtn_Cancel</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUIBtn_Cancel</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>OrderUIBtn_Clone</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUIBtn_Clone</shortDescription>
+        <value>Clone</value>
+    </labels>
+    <labels>
+        <fullName>OrderUIBtn_Confirm</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUIBtn_Confirm</shortDescription>
+        <value>Confirm &amp; Submit</value>
+    </labels>
+    <labels>
+        <fullName>OrderUIBtn_Modify</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUIBtn_Modify</shortDescription>
+        <value>Modify</value>
+    </labels>
+    <labels>
+        <fullName>OrderUIBtn_Submit</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUIBtn_Submit</shortDescription>
+        <value>Save &amp; Next</value>
+    </labels>
+    <labels>
+        <fullName>OrderUIBtn_SubmitNewOrder</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUIBtn_SubmitNewOrder</shortDescription>
+        <value>Submit New Order</value>
+    </labels>
+    <labels>
+        <fullName>OrderUIBtn_SyncCatalog</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUIBtn_SyncCatalog</shortDescription>
+        <value>Refresh Product Details</value>
+    </labels>
+    <labels>
+        <fullName>OrderUITitle_MyOrders</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUITitle_MyOrders</shortDescription>
+        <value>My Orders</value>
+    </labels>
+    <labels>
+        <fullName>OrderUITitle_SFCOA</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUITitle_SFCOA</shortDescription>
+        <value>Salesforce.com Channel Order App</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_Action</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_Action</shortDescription>
+        <value>Action</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_CancelLegalTxt</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_CancelLegalTxt</shortDescription>
+        <value>By submitting below, you are confirming that a corresponding order was received for this customer.  You agree to be bound by the terms and conditions of and be a party to this agreement. You warrant that you are at least eighteen years old and that you have the legal capacity to enter into contracts. If you are entering into this Agreement on behalf of a company, organization, or other entity, then (a) &quot;you&quot; includes you and that entity, and (b) you represent and warrant that you are an authorized representative of the entity with the authority to bind the entity to this Agreement, and that you agree to this Agreement on the entity’s behalf.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_CancelMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_CancelMsg</shortDescription>
+        <value>This order will terminate the contract with</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_Contract</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_Contract</shortDescription>
+        <value>2. Select a Contract</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_ContractTitle</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_ContractTitle</shortDescription>
+        <value>Contract</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_Customer</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_Customer</shortDescription>
+        <value>1. Enter Customer Information</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_CustomerMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_CustomerMsg</shortDescription>
+        <value>To begin your order, enter the customer information below. Customer data is stored once an order is submitted for the first time. To auto-populate the fields, search on the Company Name or Org ID.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_CustomerName</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_CustomerName</shortDescription>
+        <value>Customer Name</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_Edit</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_Edit</shortDescription>
+        <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_EditOrder</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI EditOrder</shortDescription>
+        <value>Edit Order</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_HeaderSubtitle</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_HeaderSubtitle</shortDescription>
+        <value>The Channel Order App allows partners to create, manage and submit orders directly to the Salesforce.com Partner Operations team. Orders should be submitted based on the sales and licensing of applications to customers, as required by your partner agreement.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_InitialAddOLegalTxt</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_InitialAddOLegalTxt</shortDescription>
+        <value>By submitting below, you are confirming that a corresponding order was received for this customer.  You agree to be bound by the terms and conditions of and be a party to this agreement. You warrant that you are at least eighteen years old and that you have the legal capacity to enter into contracts. If you are entering into this Agreement on behalf of a company, organization, or other entity, then (a) &quot;you&quot; includes you and that entity, and (b) you represent and warrant that you are an authorized representative of the entity with the authority to bind the entity to this Agreement, and that you agree to this Agreement on the entity’s behalf.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_InitialAddOnMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_InitialAddOnMsg</shortDescription>
+        <value>This order will add the following products to</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OldCOAOrderErrorMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OldCOAOrderErrorMsg</shortDescription>
+        <value>This order was created with an older version of the Channel Order App and will need to be re-created in order to submit for provisioning.  Clone the order to pull in relevant details for the new order.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_Order</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_Order</shortDescription>
+        <value>3. Enter Order Details</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OrderCancelMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OrderCancelMsg</shortDescription>
+        <value>Cancellation orders should be used to terminate the contractual relationship with the customer, which includes all products on this contract. If you are cancelling individual products purchased by this customer, submit a reduction order.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OrderConfirmation</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OrderConfirmation</shortDescription>
+        <value>Order Confirmation</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OrderMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OrderMsg</shortDescription>
+        <value>To place an order, select the contract for the products that were sold.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OrderNum</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OrderNum</shortDescription>
+        <value>Order Number</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OrderServiceDates</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OrderServiceDates</shortDescription>
+        <value>4. Enter Service and Order Dates</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OrderStartDate</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OrderStartDate</shortDescription>
+        <value>Order Start Date</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OrderStatus</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OrderStatus</shortDescription>
+        <value>Order Status</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OrgID</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_OrgID</shortDescription>
+        <value>Org ID</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_OverrideTermsMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI OverrideTermsMsg</shortDescription>
+        <value>To override the terms of this contract, please specify the new values below.  Note that these terms will be applied to all products on this order.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_ReductionLegalTxt</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_ReductionLegalTxt</shortDescription>
+        <value>By submitting below, you are confirming that a corresponding order was received for this customer.  You agree to be bound by the terms and conditions of and be a party to this agreement. You warrant that you are at least eighteen years old and that you have the legal capacity to enter into contracts. If you are entering into this Agreement on behalf of a company, organization, or other entity, then (a) &quot;you&quot; includes you and that entity, and (b) you represent and warrant that you are an authorized representative of the entity with the authority to bind the entity to this Agreement, and that you agree to this Agreement on the entity’s behalf.</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_ReductionMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_ReductionMsg</shortDescription>
+        <value>This order will reduce the following products for</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_SearchMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_SearchMsg</shortDescription>
+        <value>Search by Org ID or Customer Name</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_SubmitNewOrder</fullName>
+        <categories>COA</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_SubmitNewOrder</shortDescription>
+        <value>Submit New Order</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_Title</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_Title</shortDescription>
+        <value>Channel Order App</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_UpgradeMsg</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_UpgradeMsg</shortDescription>
+        <value>This order will upgrade the following products for</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_View</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI_View</shortDescription>
+        <value>View</value>
+    </labels>
+    <labels>
+        <fullName>OrderUI_ViewOrder</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OrderUI ViewOrder</shortDescription>
+        <value>View Order</value>
+    </labels>
+    <labels>
+        <fullName>RequiredInput</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RequiredInput</shortDescription>
+        <value>is required. Please enter a value.</value>
+    </labels>
+    <labels>
+        <fullName>SFDC_Invoice_description_too_long</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SFDC Invoice description too long</shortDescription>
+        <value>The SFDC Invoice description is too long (more than 100 characters), please shorten it.</value>
+    </labels>
+    <labels>
+        <fullName>SFDC_Line_Item_Invoice_Description</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SFDC Line Item Invoice Description</shortDescription>
+        <value>SFDC Line Item Invoice Description</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderApiKeyError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderApiKeyError</shortDescription>
+        <value>There is no Partner API Key defined for the Contract Term selected for this Service Order.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderCustomSettingError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderCustomSettingError</shortDescription>
+        <value>Salesforce.com Integration Credentials have not been defined.  Please contact your system administrator.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderDraftStatus</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderDraftStatus</shortDescription>
+        <value>Draft</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderErrorStatus</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderErrorStatus</shortDescription>
+        <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderISVforceError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderISVforceError</shortDescription>
+        <value>Your order contains products for more than one ISVforce application. You must submit a separate order for each application.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderInsufficientAccessServiceOrderDetailFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderInsufficientAccessServiceOrderDetailFields</shortDescription>
+        <value>An error occurred while submitting your order.  Please provide the following error key to salesforce.com (Error Key: Insufficient access on Service Order Detail fields.)</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderInsufficientAccessServiceOrderFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderInsufficientAccessServiceOrderFields</shortDescription>
+        <value>An error occurred while submitting your order.  Please provide the following error key to salesforce.com (Error Key: Insufficient access on Service Order fields.)</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationAcceptEmailFromError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationAcceptEmailFromError</shortDescription>
+        <value>The &quot;accept from&quot; field on the provided email address should be empty. Please  go to setup and remove values in the accept from field for this email service&apos;s email address.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCredsOrgEmailAddress</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationCredsOrgEmailAddress</shortDescription>
+        <value>Partner Org Email Address:</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCredsPass</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service order integration credentials password</shortDescription>
+        <value>Password:</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCredsSave</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service order integration credentials save button</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCredsTest</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service order integration credentials test connection button</shortDescription>
+        <value>Test Connection</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCredsTitle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service order integration credentials title</shortDescription>
+        <value>Partner Order</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCredsURL</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service order integration credentials login url</shortDescription>
+        <value>Login URL:</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCredsUser</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service order integration credentials username</shortDescription>
+        <value>UserName:</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCreds_DefaultEndPoint</fullName>
+        <categories>Service Order Integration Credentials</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationCreds_DefaultEndPoint</shortDescription>
+        <value>https://na1-api.salesforce.com</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCreds_DefaultURL</fullName>
+        <categories>Service Order Integration Credentials</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationCreds_DefaultURL</shortDescription>
+        <value>https://login.salesforce.com/services/Soap/u/26.0</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCreds_Endpoint</fullName>
+        <categories>Service Order Integration Credentials</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationCreds_Endpoint</shortDescription>
+        <value>End Point:</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCreds_EndpointHelpTxt</fullName>
+        <categories>Service Order Integration Credentials</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationCreds_EndpointHelpTxt</shortDescription>
+        <value>To send orders to production, set the end point to https://na1-api.salesforce.com</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCreds_ServiceType</fullName>
+        <categories>Service Order Integration Credentials</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationCreds_ServiceType</shortDescription>
+        <value>Service Type:</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationCreds_Subtitle</fullName>
+        <categories>Service Order Integration Credentials</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationCreds_Subtitle</shortDescription>
+        <value>SFDC Integration Credentials</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderIntegrationOrgEmailAddressError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderIntegrationOrgEmailAddressError</shortDescription>
+        <value>The email address does not match the email configured in the email service within setup.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderInvalidLoginError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderInvalidLoginError</shortDescription>
+        <value>Your login attempt has failed. The username or password may be incorrect, or your location may be restricted. Please contact salesforce.com for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderInvalidUrlError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderInvalidUrlError</shortDescription>
+        <value>Your login attempt has failed. The URL provided is incorrect. Please contact the administrator for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderNoAccessToIntegrationCredsPage</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderNoAccessToIntegrationCredsPage</shortDescription>
+        <value>You do not have Privileges to access this page.  Only System Administrators with Customize Application permissions may access this page.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderNoOrderDetailError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderNoOrderDetailError</shortDescription>
+        <value>Service Order must contain at least one Service Order Detail (product) record.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderNoOrderStatusAllowed</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderNoOrderStatusAllowed</shortDescription>
+        <value>This Service Order cannot be resubmitted. If changes are required to this service order please contact salesforce.com.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderSaveCredsFieldRequired</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderSaveCredsFieldRequired</shortDescription>
+        <value>{field} You must enter a value.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderSaveCredsSuccessful</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderSaveCredsSuccessful</shortDescription>
+        <value>Thank you, the information you provided has been updated.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderStartDateError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderStartDateError</shortDescription>
+        <value>Service start date must be equal or greater than today.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderSubmittedStatus</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderSubmittedStatus</shortDescription>
+        <value>Submitted</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderSyncConfig</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderSyncConfig</shortDescription>
+        <value>Import/Update Data</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderTermsAndConditions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderTermsAndConditions</shortDescription>
+        <value>By clicking the &quot;OK&quot; button below, you agree to be bound by the terms and conditions of and be a party to this agreement.  You warrant that you are at least eighteen years old and that you have the legal capacity to enter into contracts.  \nIf you are entering into this Agreement on behalf of a company, organization, or other entity, then (a) &quot;you&quot;  includes you and that entity, and (b) you represent and warrant that you are an authorized representative of the entity with the authority to bind the entity to this Agreement, and that you agree to this Agreement on the entity’s behalf.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderTestConnectionSuccessful</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderTestConnectionSuccessful</shortDescription>
+        <value>The test connection was successful.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderTimeoutError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderTimeoutError</shortDescription>
+        <value>The Service Order submission failed to complete within the allowed time.  Please retry your order submission.  If you continue to experience issues please contact salesforce.com.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderUnauthorizedEndpointError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderUnauthorizedEndpointError</shortDescription>
+        <value>Unauthorized endpoint.  Please contact your system administrator or verify that the Remote Site Settings have been properly configured.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrderUnknownError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrderUnknownError</shortDescription>
+        <value>An error occurred while processing your order.  Please contact salesforce.com for assistance.</value>
+    </labels>
+    <labels>
+        <fullName>ServiceOrder_MngPkgName</fullName>
+        <categories>Service Order Integration Credentials</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ServiceOrder_MngPkgName</shortDescription>
+        <value>coa_test_svc</value>
+    </labels>
+    <labels>
+        <fullName>Sync_Btn_Error</fullName>
+        <categories>COA, Partner Portal</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sync Btn Error</shortDescription>
+        <value>There was an unexpected error on the data sync process.</value>
+    </labels>
+    <labels>
+        <fullName>View_Product_Details</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Show Partner Product Catalog information in a new tab</shortDescription>
+        <value>View Product Details</value>
+    </labels>
+</CustomLabels>
